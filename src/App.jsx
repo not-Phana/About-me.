@@ -11,6 +11,7 @@ import JourneySection from './components/JourneySection';
 import ContactSection from './components/ContactSection';
 import Footer from './components/Footer';
 import CommandPalette from './components/CommandPalette';
+import ContextMenu from './components/ContextMenu';
 import CustomCursor from './components/CustomCursor';
 import { PROJECTS } from './data/projects';
 import { playTactileClick } from './utils/sound';
@@ -254,6 +255,20 @@ export default function App() {
         projects={PROJECTS}
         onSelectProject={handleSelectProject}
         onNavigateHome={handleNavigateHome}
+        theme={theme}
+        onToggleTheme={toggleTheme}
+        accentPreset={accentPreset}
+        onChangeAccent={handleChangeAccent}
+        soundEnabled={soundEnabled}
+        onToggleSound={handleToggleSound}
+      />
+
+      <ContextMenu
+        onNavigateHome={handleNavigateHome}
+        onOpenCommandPalette={() => {
+          triggerSound('switch');
+          setCommandPaletteOpen(true);
+        }}
         theme={theme}
         onToggleTheme={toggleTheme}
         accentPreset={accentPreset}

@@ -189,6 +189,7 @@ export default function CustomCursor() {
     // Click & Sparks
     // ------------------------------------------------------------------------
     const handleMouseDown = (e) => {
+      if (e.button !== 0) return;
       isMouseDown = true;
 
       // Requirement 24: Hide keyboard focus outline after mouse click
@@ -228,7 +229,8 @@ export default function CustomCursor() {
       }
     };
 
-    const handleMouseUp = () => {
+    const handleMouseUp = (e) => {
+      if (e.button !== 0) return;
       isMouseDown = false;
       dot.classList.remove('dot-flash', 'is-pressed');
 
