@@ -126,6 +126,7 @@ export default function App() {
       const parsed = parseHashRoute(window.location.hash);
       setRoute(parsed);
       if (parsed.view === 'home' && parsed.section) {
+        setActiveSection(parsed.section);
         const el = document.getElementById(parsed.section);
         if (el) {
           el.scrollIntoView({ behavior: 'smooth' });
@@ -147,8 +148,6 @@ export default function App() {
       'projects',
       'console',
       'github',
-      'building',
-      'journey',
       'contact',
     ];
     const elements = sectionIds
@@ -159,20 +158,27 @@ export default function App() {
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            const id = entry.target.id;
-            if (id === 'building' || id === 'journey') {
-              setActiveSection('about');
-            } else {
-              setActiveSection(id);
-            }
+            setActiveSection(entry.target.id);
           }
         });
       },
-      { rootMargin: '-30% 0px -55% 0px' }
+      { rootMargin: '-25% 0px -45% 0px' }
     );
 
     elements.forEach((el) => observer.observe(el));
-    return () => observer.disconnect();
+
+    // Fallback: If scrolled to the very top, always snap activeSection to 'home'
+    const handleScrollSnap = () => {
+      if (window.scrollY < 80) {
+        setActiveSection('home');
+      }
+    };
+    window.addEventListener('scroll', handleScrollSnap, { passive: true });
+
+    return () => {
+      observer.disconnect();
+      window.removeEventListener('scroll', handleScrollSnap);
+    };
   }, [route.view]);
 
   const handleSelectProject = useCallback(

@@ -851,7 +851,9 @@ body {
   body.cursor-over-input #pk-cursor-dot,
   body.cursor-over-input #pk-cursor-ring {
     opacity: 0 !important;
-    transition: opacity 0.18s ease;
+    visibility: hidden !important;
+    pointer-events: none !important;
+    transition: opacity 0.15s ease, visibility 0.15s ease;
   }
 
   /* Core Dot (Requirement 1) */

@@ -33,7 +33,7 @@ export default function CustomCursor() {
 
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    document.body.classList.add('has-custom-cursor', 'pk-has-custom-cursor');
+    document.body.classList.add('has-custom-cursor', 'pk-has-custom-cursor', 'cursor-hidden');
 
     const dot = dotRef.current;
     const ring = ringRef.current;
@@ -109,13 +109,46 @@ export default function CustomCursor() {
     refreshElementCaches();
 
     // ------------------------------------------------------------------------
+    // Visibility State Helpers
+    // ------------------------------------------------------------------------
+    const hideCursor = () => {
+      document.body.classList.add('cursor-hidden');
+      lockedTargetElement = null;
+      isLargeRow = false;
+      ring.classList.remove('is-locked', 'is-labeled', 'is-large-row', 'dark-cursor');
+      dot.classList.remove('dark-cursor');
+      mouseX = -100;
+      mouseY = -100;
+      targetRingX = -100;
+      targetRingY = -100;
+      ringX = -100;
+      ringY = -100;
+    };
+
+    const showCursor = () => {
+      document.body.classList.remove('cursor-hidden');
+    };
+
+    // ------------------------------------------------------------------------
     // Mouse Move
     // ------------------------------------------------------------------------
     const handleMouseMove = (e) => {
+      if (
+        e.clientX <= 0 ||
+        e.clientY <= 0 ||
+        e.clientX >= window.innerWidth ||
+        e.clientY >= window.innerHeight
+      ) {
+        hideCursor();
+        return;
+      }
+
+      showCursor();
+
       mouseX = e.clientX;
       mouseY = e.clientY;
 
-      if (isFirstMove) {
+      if (isFirstMove || ringX < 0 || ringY < 0) {
         isFirstMove = false;
         prevMouseX = mouseX;
         prevMouseY = mouseY;
@@ -123,7 +156,6 @@ export default function CustomCursor() {
         ringY = mouseY;
         targetRingX = mouseX;
         targetRingY = mouseY;
-        document.body.classList.remove('cursor-hidden');
       }
 
       // Reset Idle Breathing
@@ -384,12 +416,40 @@ export default function CustomCursor() {
 
     const handleMouseOut = (e) => {
       const related = e.relatedTarget;
-      if (!related) {
-        lockedTargetElement = null;
-        isLargeRow = false;
-        ring.classList.remove('is-locked', 'is-labeled', 'is-large-row', 'dark-cursor');
-        dot.classList.remove('dark-cursor');
+      if (
+        !related ||
+        e.clientY <= 0 ||
+        e.clientX <= 0 ||
+        e.clientX >= window.innerWidth ||
+        e.clientY >= window.innerHeight
+      ) {
+        hideCursor();
       }
+    };
+
+    const handleMouseLeave = () => {
+      hideCursor();
+    };
+
+    const handleMouseEnter = (e) => {
+      if (
+        e.clientX > 0 &&
+        e.clientY > 0 &&
+        e.clientX < window.innerWidth &&
+        e.clientY < window.innerHeight
+      ) {
+        showCursor();
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+        ringX = mouseX;
+        ringY = mouseY;
+        targetRingX = mouseX;
+        targetRingY = mouseY;
+      }
+    };
+
+    const handleWindowBlur = () => {
+      hideCursor();
     };
 
     // ------------------------------------------------------------------------
@@ -626,6 +686,11 @@ export default function CustomCursor() {
     window.addEventListener('mouseup', handleMouseUp, { passive: true });
     window.addEventListener('mouseover', handleMouseOver, { passive: true });
     window.addEventListener('mouseout', handleMouseOut, { passive: true });
+    window.addEventListener('mouseleave', handleMouseLeave, { passive: true });
+    window.addEventListener('mouseenter', handleMouseEnter, { passive: true });
+    window.addEventListener('blur', handleWindowBlur);
+    document.documentElement.addEventListener('mouseleave', handleMouseLeave, { passive: true });
+    document.documentElement.addEventListener('mouseenter', handleMouseEnter, { passive: true });
     window.addEventListener('scroll', handleScroll, { passive: true });
     window.addEventListener('wheel', handleWheel, { passive: true });
 
@@ -640,6 +705,11 @@ export default function CustomCursor() {
       window.removeEventListener('mouseup', handleMouseUp);
       window.removeEventListener('mouseover', handleMouseOver);
       window.removeEventListener('mouseout', handleMouseOut);
+      window.removeEventListener('mouseleave', handleMouseLeave);
+      window.removeEventListener('mouseenter', handleMouseEnter);
+      window.removeEventListener('blur', handleWindowBlur);
+      document.documentElement.removeEventListener('mouseleave', handleMouseLeave);
+      document.documentElement.removeEventListener('mouseenter', handleMouseEnter);
       window.removeEventListener('scroll', handleScroll);
       window.removeEventListener('wheel', handleWheel);
       document.body.classList.remove(
