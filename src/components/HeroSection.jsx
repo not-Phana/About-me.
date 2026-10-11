@@ -331,7 +331,15 @@ export default function HeroSection({
 
               {/* Verified Quick Architecture Summary with Interactive Hover Cards */}
               <div className="mt-8 grid grid-cols-3 gap-3 sm:gap-4 pt-6 border-t border-lineSoft font-mono">
-                <div className="hud-frame p-2.5 sm:p-3 border border-line/60 bg-surface/30 hover-anim-pulse transition-all duration-200 cursor-pointer">
+                <button
+                  type="button"
+                  onClick={() => {
+                    onPlaySound?.('switch');
+                    onExploreProjects?.();
+                  }}
+                  className="hud-frame p-2.5 sm:p-3 border border-line/60 bg-surface/30 hover:bg-surface/80 hover:border-accent hover-anim-pulse transition-all duration-200 cursor-pointer text-left focus:outline-none focus-visible:ring-1 focus-visible:ring-accent"
+                  title="Explore Web Apps"
+                >
                   <div className="text-[10px] sm:text-[11px] text-muted uppercase tracking-wider flex items-center gap-1.5">
                     <span className="w-1.5 h-1.5 rounded-full bg-[#4ade80] beacon-pulse" />
                     <span className="truncate">PAGES</span>
@@ -339,8 +347,16 @@ export default function HeroSection({
                   <div className="mt-1 text-base sm:text-xl font-bold text-ink">
                     3 Web Apps
                   </div>
-                </div>
-                <div className="hud-frame p-2.5 sm:p-3 border border-line/60 bg-surface/30 hover-anim-tilt transition-all duration-200 cursor-pointer">
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    onPlaySound?.('switch');
+                    onExploreProjects?.();
+                  }}
+                  className="hud-frame p-2.5 sm:p-3 border border-line/60 bg-surface/30 hover:bg-surface/80 hover:border-accent hover-anim-tilt transition-all duration-200 cursor-pointer text-left focus:outline-none focus-visible:ring-1 focus-visible:ring-accent"
+                  title="View Projects"
+                >
                   <div className="text-[10px] sm:text-[11px] text-muted uppercase tracking-wider flex items-center gap-1.5">
                     <span className="w-1.5 h-1.5 rounded-full bg-accent" />
                     <span className="truncate">BUILDS</span>
@@ -348,8 +364,15 @@ export default function HeroSection({
                   <div className="mt-1 text-base sm:text-xl font-bold text-ink">
                     {PROJECTS.length} Projects
                   </div>
-                </div>
-                <div className="hud-frame p-2.5 sm:p-3 border border-line/60 bg-surface/30 hover-anim-sweep transition-all duration-200 cursor-pointer">
+                </button>
+                <a
+                  href="#console"
+                  onClick={() => {
+                    onPlaySound?.('switch');
+                  }}
+                  className="hud-frame p-2.5 sm:p-3 border border-line/60 bg-surface/30 hover:bg-surface/80 hover:border-accent hover-anim-sweep transition-all duration-200 cursor-pointer text-left focus:outline-none focus-visible:ring-1 focus-visible:ring-accent block"
+                  title="Inspect Architecture Stack"
+                >
                   <div className="text-[10px] sm:text-[11px] text-muted uppercase tracking-wider flex items-center gap-1.5">
                     <span className="w-1.5 h-1.5 rounded-full bg-[#818cf8]" />
                     <span className="truncate">STACK</span>
@@ -357,7 +380,7 @@ export default function HeroSection({
                   <div className="mt-1 text-base sm:text-xl font-bold text-accent">
                     Zero Templates
                   </div>
-                </div>
+                </a>
               </div>
             </div>
           </div>

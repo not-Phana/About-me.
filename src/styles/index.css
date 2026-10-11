@@ -211,6 +211,8 @@ body {
 .hud-frame:hover::before,
 .hud-frame:hover::after {
   opacity: 1;
+  filter: drop-shadow(0 0 4px var(--accent));
+  transform: scale(1.2);
 }
 
 /* Mechanical keycap button styling */
@@ -1263,12 +1265,13 @@ body {
 }
 
 .hover-anim-pulse {
-  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease, background-color 0.2s ease;
 }
 
 .hover-anim-pulse:hover {
   animation: hoverPulseKeyframes 1.3s cubic-bezier(0.4, 0, 0.2, 1) infinite;
   border-color: var(--accent, #d4a528) !important;
+  background-color: var(--surface-2, #17191e) !important;
 }
 
 /* ==========================================================================
@@ -1276,15 +1279,16 @@ body {
    ========================================================================== */
 .hover-anim-tilt {
   transform: perspective(600px) rotateX(0deg) rotateY(0deg) translateZ(0);
-  transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.35s ease, border-color 0.2s ease;
+  transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.3s ease, border-color 0.2s ease, background-color 0.2s ease;
   transform-style: preserve-3d;
   will-change: transform;
 }
 
 .hover-anim-tilt:hover {
-  transform: perspective(600px) rotateX(4deg) rotateY(-4deg) translateY(-3px) translateZ(8px);
-  box-shadow: 0 12px 28px -6px rgba(0, 0, 0, 0.5), 0 0 16px var(--accent-dim, rgba(212, 165, 40, 0.25));
+  transform: perspective(600px) rotateX(6deg) rotateY(-6deg) translateY(-5px) translateZ(12px) scale(1.025);
+  box-shadow: 0 16px 36px -6px rgba(0, 0, 0, 0.75), 0 0 24px var(--accent-dim, rgba(212, 165, 40, 0.35));
   border-color: var(--accent, #d4a528) !important;
+  background-color: var(--surface-2, #17191e) !important;
 }
 
 /* ==========================================================================
@@ -1293,7 +1297,7 @@ body {
 .hover-anim-sweep {
   position: relative;
   overflow: hidden;
-  transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.25s ease;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.25s ease, background-color 0.2s ease;
 }
 
 .hover-anim-sweep::before {
@@ -1339,8 +1343,9 @@ body {
 
 .hover-anim-sweep:hover {
   border-color: var(--accent, #d4a528) !important;
-  box-shadow: 0 0 20px var(--accent-dim, rgba(212, 165, 40, 0.22));
-  transform: translateY(-2px);
+  background-color: var(--surface-2, #17191e) !important;
+  box-shadow: 0 0 24px var(--accent-dim, rgba(212, 165, 40, 0.3));
+  transform: translateY(-3px) scale(1.015);
 }
 
 .hover-anim-sweep:hover::before {

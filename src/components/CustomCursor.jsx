@@ -301,8 +301,23 @@ export default function CustomCursor() {
         ring.classList.remove('mode-text');
       }
 
-      // Small Links & Buttons (<= 380x80)
-      const clickTarget = target.closest('a, button, [role="button"], [role="tab"], .pk-keycap');
+      // 1. Custom Labeled Elements (Requirement 8)
+      const customTag = target.closest('[data-cursor]');
+      if (customTag) {
+        const labelType = customTag.getAttribute('data-cursor');
+        if (['view', 'open', 'drag', 'type'].includes(labelType)) {
+          isLargeRow = true;
+          currentLabel = labelType;
+          ring.classList.add('is-labeled');
+          if (ringLabel) ringLabel.textContent = labelType;
+          return;
+        }
+      }
+
+      // 2. Small Links & Interactive Buttons (<= 380x80)
+      const clickTarget = target.closest(
+        'a, button, [role="button"], [role="tab"], .pk-keycap, .cursor-pointer, .hud-frame, .spotlight-card, [tabindex="0"]'
+      );
       if (clickTarget) {
         const rect = clickTarget.getBoundingClientRect();
         if (rect.width > 0 && rect.height > 0 && rect.width <= 380 && rect.height <= 80) {
@@ -334,6 +349,13 @@ export default function CustomCursor() {
             ring.classList.add('is-locked');
           }
           return;
+        } else if (rect.width > 0 && rect.height > 0) {
+          // Large Elements & Cards (Requirement 8): 54px circle with amber tint
+          isLargeRow = true;
+          currentLabel = '';
+          ring.classList.remove('is-labeled');
+          ring.classList.add('is-large-row');
+          return;
         }
       }
 
@@ -345,20 +367,9 @@ export default function CustomCursor() {
         ring.classList.remove('dark-cursor', 'is-locked');
       }
 
-      // Large Rows / Labeled
-      const customTag = target.closest('[data-cursor]');
+      // Large Rows / Spotlight Cards
       const wideRow = target.closest('.row-item, .spotlight-card');
-
-      if (customTag) {
-        const labelType = customTag.getAttribute('data-cursor');
-        if (['view', 'open', 'drag', 'type'].includes(labelType)) {
-          isLargeRow = true;
-          currentLabel = labelType;
-          ring.classList.add('is-labeled');
-          if (ringLabel) ringLabel.textContent = labelType;
-          return;
-        }
-      } else if (wideRow) {
+      if (wideRow) {
         isLargeRow = true;
         currentLabel = '';
         ring.classList.remove('is-labeled');
