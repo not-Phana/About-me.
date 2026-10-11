@@ -11,7 +11,6 @@ import JourneySection from './components/JourneySection';
 import ContactSection from './components/ContactSection';
 import Footer from './components/Footer';
 import CommandPalette from './components/CommandPalette';
-import ScrollRail from './components/ScrollRail';
 import { PROJECTS } from './data/projects';
 import { playTactileClick } from './utils/sound';
 
@@ -247,12 +246,6 @@ export default function App() {
         onChangeAccent={handleChangeAccent}
         soundEnabled={soundEnabled}
         onToggleSound={handleToggleSound}
-      />
-
-      <ScrollRail
-        isDetailView={route.view === 'detail'}
-        onNavigateHome={handleNavigateHome}
-        onPlaySound={triggerSound}
       />
 
       <main id="main-content" className="flex-1">
