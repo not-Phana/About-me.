@@ -41,24 +41,27 @@ export function useScrollReveal() {
       }
     );
 
-    const observeAll = () => {
+    const observeAll = (isInitial = false) => {
       const elements = document.querySelectorAll('.reveal-on-scroll:not(.revealed)');
-      elements.forEach((el) => {
+      elements.forEach((el, idx) => {
         const rect = el.getBoundingClientRect();
-        // If already well within viewport on mount, reveal directly
         if (rect.top < window.innerHeight * 0.92 && rect.bottom > 0) {
-          revealElement(el);
+          if (isInitial) {
+            setTimeout(() => revealElement(el), 60 + idx * 70);
+          } else {
+            revealElement(el);
+          }
         } else {
           observer.observe(el);
         }
       });
     };
 
-    observeAll();
+    observeAll(true);
 
     // Listen to DOM mutations for dynamically mounted sections or route changes
     const mutationObserver = new MutationObserver(() => {
-      observeAll();
+      observeAll(false);
     });
 
     mutationObserver.observe(document.body, {

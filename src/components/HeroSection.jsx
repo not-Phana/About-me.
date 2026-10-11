@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { PROFILE } from '../data/profile';
 import { PROJECTS } from '../data/projects';
+import InteractiveCanvas from './InteractiveCanvas';
 import {
   IconArrowRight,
   IconArrowUpRight,
@@ -187,12 +188,23 @@ export default function HeroSection({
       id="home"
       className="relative border-b border-line bg-bg overflow-hidden"
     >
-      <div className="mx-auto max-w-[1400px] border-x border-line">
+      {/* Interactive Cyber-Celestial Constellation Canvas Background */}
+      <InteractiveCanvas />
+
+      <div className="relative z-10 mx-auto max-w-[1400px] border-x border-line">
         {/* Top architectural status bar */}
-        <div className="hero-enter-1 flex flex-wrap items-center justify-between border-b border-line px-5 py-2.5 sm:px-8 text-xs font-mono text-muted gap-3 bg-surface/40">
+        <div className="hero-enter-1 flex flex-wrap items-center justify-between border-b border-line px-5 py-2.5 sm:px-8 text-xs font-mono text-muted gap-3 bg-surface/40 backdrop-blur-xs">
           <div className="flex items-center gap-2.5">
             <span className="inline-block h-2 w-2 rounded-full bg-[#4ade80] beacon-pulse" />
             <span className="text-ink font-medium">{PROFILE.tagline}</span>
+            {/* Live Audio Frequency Spectrum Telemetry */}
+            <div className="hidden sm:inline-flex items-end gap-[3px] h-3 ml-2 opacity-85" title="Hardware Audio Telemetry Loop">
+              <span className="w-1 bg-[#4ade80] rounded-xs animate-eq-1 inline-block" />
+              <span className="w-1 bg-[#4ade80] rounded-xs animate-eq-2 inline-block" />
+              <span className="w-1 bg-[#4ade80] rounded-xs animate-eq-3 inline-block" />
+              <span className="w-1 bg-[#4ade80] rounded-xs animate-eq-4 inline-block" />
+              <span className="w-1 bg-[#4ade80] rounded-xs animate-eq-5 inline-block" />
+            </div>
           </div>
           <div className="flex items-center gap-4">
             <span>IDENTITY: {PROFILE.brand} // {PROFILE.fullName.toUpperCase()}</span>
@@ -238,7 +250,7 @@ export default function HeroSection({
                     onPlaySound?.('switch');
                     onExploreProjects();
                   }}
-                  className="inline-flex items-center justify-center gap-2.5 bg-invertBg text-invertFg px-6 py-3.5 hud-label hover:opacity-90 transition-opacity"
+                  className="btn-laser-sweep inline-flex items-center justify-center gap-2.5 bg-invertBg text-invertFg px-6 py-3.5 hud-label hover:opacity-90 shadow-md"
                 >
                   <span>Explore My Projects</span>
                   <IconArrowRight className="w-4 h-4" />
@@ -249,7 +261,7 @@ export default function HeroSection({
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={() => onPlaySound?.('switch')}
-                  className="inline-flex items-center justify-center gap-2.5 border border-line bg-surface hover:border-ink text-ink px-6 py-3.5 hud-label transition-colors"
+                  className="btn-laser-sweep inline-flex items-center justify-center gap-2.5 border border-line bg-surface hover:border-ink text-ink px-6 py-3.5 hud-label transition-colors"
                 >
                   <IconGitHub className="w-4 h-4" />
                   <span>Visit My GitHub</span>

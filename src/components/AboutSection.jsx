@@ -107,6 +107,7 @@ export default function AboutSection({ onExploreProjects, onPlaySound }) {
   const [activeMaximId, setActiveMaximId] = useState('gnothi');
   const [showScholiaTranslation, setShowScholiaTranslation] = useState(false);
   const [spotlightPos, setSpotlightPos] = useState({ x: 50, y: 40 });
+  const [sculptureTilt, setSculptureTilt] = useState({ rx: 0, ry: 0 });
 
   const stageRef = useRef(null);
 
@@ -146,10 +147,14 @@ export default function AboutSection({ onExploreProjects, onPlaySound }) {
     const x = Math.max(0, Math.min(100, ((e.clientX - rect.left) / rect.width) * 100));
     const y = Math.max(0, Math.min(100, ((e.clientY - rect.top) / rect.height) * 100));
     setSpotlightPos({ x, y });
+    const rx = -((e.clientY - rect.top) / rect.height - 0.5) * 18;
+    const ry = ((e.clientX - rect.left) / rect.width - 0.5) * 22;
+    setSculptureTilt({ rx, ry });
   };
 
   const handleMouseLeave = () => {
     setSpotlightPos({ x: 50, y: 40 });
+    setSculptureTilt({ rx: 0, ry: 0 });
   };
 
   return (
@@ -192,6 +197,26 @@ export default function AboutSection({ onExploreProjects, onPlaySound }) {
           className="epigraph-ambient absolute -bottom-10 -left-6 font-classical italic text-[5.5rem] sm:text-[8rem] lg:text-[10.5rem] tracking-[0.06em] leading-none text-[var(--ms-faint)] whitespace-nowrap"
         >
           Τέχνη // Ἐπιστήμη
+        </div>
+
+        {/* Ambient floating philosophical runes */}
+        <div
+          lang="el"
+          className="rune-float-slow pointer-events-none absolute top-1/6 left-2 font-classical text-xl lg:text-2xl text-[var(--ms-bronze)]/15 font-bold select-none"
+        >
+          Ψ // 01
+        </div>
+        <div
+          lang="el"
+          className="rune-float-medium pointer-events-none absolute top-3/4 right-3 font-classical text-xl lg:text-2xl text-[var(--ms-bronze)]/15 font-bold select-none"
+        >
+          Ω // 02
+        </div>
+        <div
+          lang="el"
+          className="rune-float-fast pointer-events-none absolute bottom-8 left-6 font-classical text-lg lg:text-xl text-[var(--ms-bronze)]/12 font-bold select-none"
+        >
+          Δ // 03
         </div>
       </div>
 
@@ -474,9 +499,19 @@ export default function AboutSection({ onExploreProjects, onPlaySound }) {
               </span>
             </div>
 
-            {/* Centerpiece Cutout Marble Sculpture Head */}
+            {/* Centerpiece Cutout Marble Sculpture Head with 3D Perspective Rotation */}
             <figure className="sculpture-stage relative z-10 my-auto py-6 sm:py-8 flex flex-col items-center justify-center">
-              <div className="relative w-full max-w-[360px] aspect-[4/5] flex items-center justify-center">
+              <div
+                className="relative w-full max-w-[360px] aspect-[4/5] flex items-center justify-center transition-transform duration-150 ease-out"
+                style={{
+                  transform: `perspective(850px) rotateX(${sculptureTilt.rx}deg) rotateY(${sculptureTilt.ry}deg)`,
+                }}
+              >
+                {/* Rotating Delphic halo orbit */}
+                <div
+                  className="delphic-ring-spin pointer-events-none absolute w-[330px] h-[330px] rounded-full border border-[var(--ms-bronze)]/25 border-dashed select-none"
+                  aria-hidden="true"
+                />
                 <img
                   key={currentPlate.src}
                   src={currentPlate.src}

@@ -177,7 +177,7 @@ export default function Navbar({
                       <span>{item.label}</span>
                       {isActive && (
                         <span
-                          className="h-1.5 w-1.5 rounded-full bg-accent"
+                          className="h-1.5 w-1.5 rounded-full bg-accent beacon-pulse"
                           aria-hidden="true"
                         />
                       )}
@@ -200,7 +200,7 @@ export default function Navbar({
             title="Local studio system clock"
           >
             <div className="flex items-center gap-2 border border-line bg-bg px-2.5 py-1 font-mono text-[10px] whitespace-nowrap">
-              <span className="h-1.5 w-1.5 rounded-full bg-[#4ade80] animate-pulse" />
+              <span className="h-1.5 w-1.5 rounded-full bg-[#4ade80] beacon-pulse" />
               <span className="text-ink font-semibold tracking-wider">
                 {clockText}
               </span>

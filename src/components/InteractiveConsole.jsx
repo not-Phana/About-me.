@@ -318,7 +318,11 @@ export default function InteractiveConsole({
               {/* Output Paragraphs */}
               <div className="mt-5 space-y-3.5 text-xs sm:text-sm leading-relaxed text-[#d1d5db]">
                 {displayed.lines.map((line, idx) => (
-                  <p key={idx} className="border-l-2 border-accent/70 pl-3.5 transition-all">
+                  <p
+                    key={`${displayed.command}-${idx}`}
+                    style={{ animationDelay: `${idx * 0.08}s` }}
+                    className="term-line-enter border-l-2 border-accent/70 pl-3.5"
+                  >
                     <span className="text-accent mr-2">0{idx + 1} //</span>
                     {line}
                   </p>
@@ -330,7 +334,7 @@ export default function InteractiveConsole({
                   <button
                     type="button"
                     onClick={() => onSelectProject(displayed.projectSlug)}
-                    className="inline-flex items-center gap-2 border border-accent bg-accent text-[#0b0b0c] px-4 py-2 text-xs font-bold hover:opacity-90 transition-opacity"
+                    className="btn-laser-sweep inline-flex items-center gap-2 border border-accent bg-accent text-[#0b0b0c] px-4 py-2 text-xs font-bold hover:opacity-90 shadow-md"
                   >
                     <span>Open Full Project Specification</span>
                     <IconArrowRight className="w-3.5 h-3.5" />
@@ -357,7 +361,7 @@ export default function InteractiveConsole({
               />
               <button
                 type="submit"
-                className="border border-[#2b2f3a] bg-[#14171f] px-3.5 py-1 text-xs text-[#eceae4] hover:border-accent hover:text-accent transition-colors shrink-0 font-bold"
+                className="btn-laser-sweep border border-[#2b2f3a] bg-[#14171f] px-3.5 py-1 text-xs text-[#eceae4] hover:border-accent hover:text-accent transition-colors shrink-0 font-bold"
               >
                 EXEC
               </button>
