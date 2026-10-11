@@ -15,6 +15,9 @@ import {
   IconArrowRight,
   IconCheck,
   IconCopy,
+  IconAlert,
+  IconShield,
+  IconFileText,
 } from './Icons';
 
 const FOOTER_TECH_DOSSIERS = [
@@ -104,9 +107,146 @@ const FOOTER_TECH_DOSSIERS = [
   },
 ];
 
+const LEGAL_COMPLIANCE_CLAUSES = [
+  {
+    id: 'trademarks',
+    num: 'CLAUSE 01',
+    category: 'TRADEMARK FAIR USE',
+    statute: '15 U.S.C. § 1115(b)(4)',
+    title: 'Nominative Fair Use & Third-Party Trademark Ownership',
+    summary:
+      'All third-party trademarks, product names, logos, and brand symbols displayed across this portfolio belong strictly to their respective registered owners. Any reference in this portfolio constitutes Nominative Fair Use solely for descriptive identification and technical compatibility.',
+    details: [
+      'GitHub and the GitHub Octocat logo are registered trademarks of GitHub, Inc., a subsidiary of Microsoft Corporation.',
+      'Microsoft, Monaco Editor, Windows, and Visual Studio Code are registered trademarks of Microsoft Corporation in the United States and other jurisdictions.',
+      'Meta, Facebook, and Messenger are registered trademarks or service marks of Meta Platforms, Inc.',
+      'Google, Gmail, Chrome, and Chromium are registered trademarks of Google LLC / Alphabet Inc.',
+      'React is open-source software maintained by Meta Open Source; Vite is maintained by Evan You and Vite Contributors; Electron is a project of the OpenJS Foundation.',
+      'Disclaimer of Affiliation: Phanna Kurosaki (PK) is an independent software developer. Neither this portfolio nor any hosted projects are sponsored, endorsed, certified, or formally affiliated with GitHub, Microsoft, Meta, Google, or any other trademark owner mentioned herein.',
+    ],
+    pills: ['Nominative Fair Use', 'No Endorsement Implied', 'Independent Development', '15 U.S.C. § 1115(b)(4)'],
+    badge: 'DISCLAIMER ACTIVE',
+    icon: IconShield,
+    externalLink: 'https://www.uspto.gov/trademarks',
+    externalLinkLabel: 'USPTO Fair Use Standards',
+  },
+  {
+    id: 'khmer-nida',
+    num: 'CLAUSE 02',
+    category: 'CULTURAL HERITAGE STANDARDS',
+    statute: 'Royal Government of Cambodia / NiDA Standard',
+    title: 'Khmer NiDA Keyboard Layout & National Digital Standards',
+    summary:
+      'PK Khmer Type is an independent, non-commercial cultural typing trainer created to advance Khmer Unicode digital literacy. The keyboard layout adheres to the national Khmer NiDA standard developed for the Royal Government of Cambodia.',
+    details: [
+      'Standard Attribution: The Khmer NiDA layout was formalized under the leadership of the National Information Communications Technology Development Authority (NiDA) under the Royal Government of Cambodia, in partnership with the Open Forum of Cambodia (KhmerOS initiative).',
+      'Orthographic Integrity: The typing engine respects traditional Khmer abugida orthography, correctly sequencing consonant stems, independent vowels, dependent vowels (srak nissay), and subjoined Coeng consonants (cheung aksar) mediated by the subscript shifter key [J] (U+17D2).',
+      'Educational & Non-Commercial Notice: PK Khmer Type is offered freely worldwide for educational, cultural preservation, and digital typing speed training. It is an independent project and does not claim ownership or official government agency status.',
+    ],
+    pills: ['Khmer NiDA Standard', 'KhmerOS Heritage', 'Subscript Coeng [J]', 'Non-Commercial Open Access'],
+    badge: 'CULTURAL ATTRIBUTION',
+    icon: IconKeyboard,
+    externalLink: 'https://phanaach4889.github.io/PK-Khmer-Type/',
+    externalLinkLabel: 'Launch PK Khmer Type Trainer',
+  },
+  {
+    id: 'met-museum-cc0',
+    num: 'CLAUSE 03',
+    category: 'PUBLIC DOMAIN ARTWORK',
+    statute: 'Creative Commons Zero (CC0 1.0 Universal)',
+    title: 'The Metropolitan Museum of Art Open Access (CC0 1.0)',
+    summary:
+      'The classical Hellenic bust of Epicurus presented in the hero visualizer is utilized pursuant to The Metropolitan Museum of Art Open Access policy and dedicated to the worldwide public domain under Creative Commons Zero (CC0 1.0 Universal).',
+    details: [
+      'Artifact Identification: Marble bust of Epicurus. Roman Imperial period, ca. 2nd century A.D. Pentelic marble, H. 18 1/2 in. (47 cm).',
+      'Accession & Provenance: Accession Number 11.90. The Metropolitan Museum of Art, New York (Rogers Fund, 1911).',
+      'Public Domain Dedication: Under The Met Open Access initiative, high-resolution imagery of artworks in the public domain is placed into the public domain under CC0 1.0 Universal. Users may copy, modify, distribute, and perform the work without asking permission.',
+      'Institutional Recognition: Sincere academic and artistic gratitude is expressed to The Metropolitan Museum of Art for their stewardship in making global cultural treasures open to all.',
+    ],
+    pills: ['The Met Open Access', 'Acc. No. 11.90', 'CC0 1.0 Universal', 'Public Domain Dedication'],
+    badge: 'CC0 PUBLIC DOMAIN',
+    icon: IconGrid,
+    externalLink: 'https://www.metmuseum.org/art/collection/search/247993',
+    externalLinkLabel: 'View Met Museum Acc. 11.90 Record',
+  },
+  {
+    id: 'as-is-warranty',
+    num: 'CLAUSE 04',
+    category: 'SOFTWARE LIABILITY WAIVER',
+    statute: 'MIT License Statutory Warranty Exclusion',
+    title: 'Statutory "AS IS" Disclaimer & Full Limitation of Liability',
+    summary:
+      'All source code, web applications, audio synthesizers, interactive canvas games (NEON PROTOCOL), developer tools, and algorithms published across this portfolio are provided on an "AS IS" and "AS AVAILABLE" basis without warranties of any kind.',
+    details: [
+      'Exclusion of Warranties: To the maximum extent permitted by applicable law, the author disclaims all representations and warranties, whether express, statutory, or implied, including but not limited to implied warranties of merchantability, fitness for a particular purpose, operational continuity, data accuracy, and non-infringement.',
+      'Limitation of Liability: Under no legal theory—whether in tort (including negligence), contract, strict liability, or otherwise—shall the author (Phanna Kurosaki / Phana Ach) be liable for any direct, indirect, incidental, special, exemplary, punitive, or consequential damages (including loss of data, loss of revenue, browser disruption, or hardware wear) arising from the use or inability to use this site, games, procedural audio routines, or associated code repositories.',
+      'Client Sandbox Execution: All games, procedural WebAudio oscillators, and 60 FPS canvas loops execute strictly client-side inside the visitor\'s own browser sandbox at the visitor\'s sole election.',
+    ],
+    pills: ['MIT License Disclaimer', 'AS IS / AS AVAILABLE', 'Zero Author Liability', 'Client Sandbox Only'],
+    badge: 'STATUTORY WAIVER',
+    icon: IconFileText,
+    externalLink: 'https://opensource.org/licenses/MIT',
+    externalLinkLabel: 'MIT Open Source License Reference',
+  },
+  {
+    id: 'privacy-sovereignty',
+    num: 'CLAUSE 05',
+    category: 'DATA PRIVACY & SOVEREIGNTY',
+    statute: 'Zero-Surveillance Architecture',
+    title: 'Zero Tracking Policy & Client-Side Data Sovereignty',
+    summary:
+      'This portfolio operates on an uncompromising Zero-Tracking architecture. No tracking cookies, analytics pixels, browser fingerprinting, marketing beacons, or remote telemetry scripts are deployed anywhere on this domain.',
+    details: [
+      'Zero Cookies & Zero Beacons: No third-party surveillance scripts (such as Google Analytics, Meta Pixel, Hotjar, or advertising cookies) are embedded in this codebase. No tracking cookies are placed on your machine.',
+      'Local Storage Sovereignty: User preferences (such as light/dark mode selection, WebAudio mechanical SFX toggle, signature accent preset, and console command history) are stored strictly inside your browser\'s local storage (localStorage) and never transmitted to external databases.',
+      'External Link Advisory: When following external links to GitHub, Facebook, or Gmail, the visitor enters third-party ecosystems governed by their respective independent privacy terms.',
+    ],
+    pills: ['Zero Tracking Cookies', 'Zero Telemetry Beacons', 'Local Storage Only', 'Client Data Sovereignty'],
+    badge: 'ZERO TRACKING',
+    icon: IconShield,
+    externalLink: '#footer-legal-section',
+    externalLinkLabel: 'Verified Local Storage Protocol',
+  },
+  {
+    id: 'dmca-contact',
+    num: 'CLAUSE 06',
+    category: 'SAFE HARBOR & DISPUTE PROTOCOL',
+    statute: '17 U.S.C. § 512 / Notice & Takedown Protocol',
+    title: 'Intellectual Property Inquiries & DMCA Safe Harbor Channel',
+    summary:
+      'Phanna Kurosaki upholds the intellectual property rights of all copyright holders, trademark owners, and cultural institutions. A good-faith expedited notice-and-takedown protocol is maintained for instant, amicable resolution.',
+    details: [
+      'Direct Notification Channel: If you are a copyright or trademark owner or an authorized agent and believe in good faith that any content, code, imagery, or reference on this website infringes upon your protected intellectual property, please submit an inquiry directly via email.',
+      'Official IP Inquiry Address: phleyphana@gmail.com with subject line: "[LEGAL / IP INQUIRY] Notice of Claimed Infringement".',
+      'Response SLA: The author commits to reviewing legitimate notices within 24 to 48 business hours and executing appropriate remedial measures—including immediate attribution updates, clarifying disclaimers, or complete removal of the disputed content.',
+      'Good-Faith Amicability: We are fully committed to legal integrity, constructive communication, and respectful cooperation with all rights holders without the necessity of formal adversarial proceedings.',
+    ],
+    pills: ['DMCA Safe Harbor', 'phleyphana@gmail.com', '24-48h Review SLA', 'Good-Faith Resolution'],
+    badge: 'NOTICE & TAKEDOWN',
+    icon: IconMail,
+    externalLink: 'mailto:phleyphana@gmail.com?subject=%5BLEGAL%20%2F%20IP%20INQUIRY%5D%20Notice%20of%20Claimed%20Infringement',
+    externalLinkLabel: 'Transmit Legal Inquiry to phleyphana@gmail.com',
+  },
+];
+
 export default function Footer({ onNavigateHome, onPlaySound }) {
   const currentYear = new Date().getFullYear();
   const [copiedEmail, setCopiedEmail] = useState(false);
+  const [activeLegalId, setActiveLegalId] = useState('trademarks');
+  const [legalAllExpanded, setLegalAllExpanded] = useState(false);
+
+  const activeClause =
+    LEGAL_COMPLIANCE_CLAUSES.find((c) => c.id === activeLegalId) ||
+    LEGAL_COMPLIANCE_CLAUSES[0];
+
+  const handleSelectLegalClause = (clauseId) => {
+    onPlaySound?.('switch');
+    setActiveLegalId(clauseId);
+    const el = document.getElementById('footer-legal-section');
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  };
 
   const handleLinkClick = (e, sectionId) => {
     e.preventDefault();
@@ -463,12 +603,303 @@ export default function Footer({ onNavigateHome, onPlaySound }) {
           </div>
         </div>
 
-        {/* Bottom Copyright Bar */}
-        <div className="px-6 py-4 sm:px-10 flex flex-wrap items-center justify-between gap-4 font-mono text-xs text-muted bg-surface/50">
-          <div>
-            &copy; {currentYear} {PROFILE.fullName} ({PROFILE.brand}). All rights reserved.
+        {/* Legal Protocols, Trademarks, Intellectual Property & Statutory Disclaimers */}
+        <div id="footer-legal-section" className="border-b border-line bg-surface/10 scroll-mt-20">
+          {/* Legal Header Bar */}
+          <div className="p-6 sm:px-10 lg:px-12 py-6 border-b border-line flex flex-col lg:flex-row lg:items-end justify-between gap-4">
+            <div>
+              <div className="hud-label text-accent mb-2 flex items-center gap-2">
+                <span className="w-1.5 h-1.5 rounded-full bg-accent animate-ping" />
+                <span>LEGAL PROTOCOLS // STATUTORY DISCLAIMERS &amp; INTELLECTUAL PROPERTY LEDGER</span>
+              </div>
+              <h3 className="font-display text-2xl sm:text-3xl font-bold tracking-tight text-ink">
+                Trademarks, Cultural Standards &amp; Safe Harbor Disclaimers
+              </h3>
+              <p className="mt-2 text-xs sm:text-sm text-muted max-w-3xl leading-relaxed">
+                Formal legal protections covering third-party trademark nominative fair use (15 U.S.C. § 1115(b)(4)),
+                Khmer NiDA national keyboard attribution, The Met Open Access CC0 public domain dedication,
+                statutory "AS IS" software liability exclusion, zero-tracking client privacy sovereignty, and 24-48h DMCA safe harbor notice channels.
+              </p>
+            </div>
+            <div className="flex flex-wrap items-center gap-2 font-mono text-xs shrink-0">
+              <button
+                type="button"
+                onClick={() => {
+                  onPlaySound?.('switch');
+                  setLegalAllExpanded(!legalAllExpanded);
+                }}
+                className="border border-accent/60 bg-accentDim hover:bg-accent hover:text-bg text-accent px-3 py-1.5 font-bold transition-all flex items-center gap-1.5"
+              >
+                <IconShield className="w-3.5 h-3.5" />
+                <span>{legalAllExpanded ? 'TABBED FOCUS VIEW' : 'EXPAND ALL 6 CLAUSES'}</span>
+              </button>
+              <a
+                href="mailto:phleyphana@gmail.com?subject=%5BLEGAL%20%2F%20IP%20INQUIRY%5D%20Notice%20of%20Claimed%20Infringement"
+                onClick={() => onPlaySound?.('switch')}
+                className="border border-line bg-bg hover:border-accent hover:text-accent text-muted px-3 py-1.5 transition-colors flex items-center gap-1.5"
+                title="Send legal / copyright inquiry to phleyphana@gmail.com"
+              >
+                <IconMail className="w-3.5 h-3.5 text-accent" />
+                <span>IP INQUIRIES: phleyphana@gmail.com</span>
+              </a>
+            </div>
           </div>
-          <div>Built with curiosity and code.</div>
+
+          {/* Interactive Clause Selector Tab Bar */}
+          <div className="border-b border-line bg-bg overflow-x-auto">
+            <div className="flex min-w-max p-2 sm:px-10 lg:px-12 gap-1.5">
+              {LEGAL_COMPLIANCE_CLAUSES.map((clause) => {
+                const isActive = activeLegalId === clause.id;
+                const ClauseIcon = clause.icon;
+                return (
+                  <button
+                    key={clause.id}
+                    type="button"
+                    onClick={() => {
+                      onPlaySound?.('switch');
+                      setActiveLegalId(clause.id);
+                    }}
+                    className={`font-mono text-xs px-3 py-2 border transition-all flex items-center gap-2 ${
+                      isActive
+                        ? 'border-accent bg-accent text-bg font-bold shadow-sm'
+                        : 'border-line bg-surface/50 text-muted hover:border-accent/60 hover:text-ink'
+                    }`}
+                  >
+                    <ClauseIcon className={`w-3.5 h-3.5 ${isActive ? 'text-bg' : 'text-accent'}`} />
+                    <span>{clause.num}</span>
+                    <span className="hidden md:inline">// {clause.category}</span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Main Display: Tabbed Active Focus Card vs. Full 6-Clause Grid */}
+          {!legalAllExpanded ? (
+            /* Active Focused Clause Card */
+            <div className="p-6 sm:p-10 lg:p-12 bg-bg/80">
+              <div className="border border-accent/40 bg-surface/40 p-6 sm:p-8 relative overflow-hidden card-laser-lift">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-line/80 pb-4 mb-6">
+                  <div className="flex items-center gap-3">
+                    <span className="p-2 rounded bg-bg border border-accent/40 text-accent">
+                      {React.createElement(activeClause.icon, { className: 'w-5 h-5' })}
+                    </span>
+                    <div>
+                      <div className="font-mono text-xs text-accent font-bold flex items-center gap-2">
+                        <span>{activeClause.num}</span>
+                        <span>//</span>
+                        <span>{activeClause.category}</span>
+                        <span className="text-muted font-normal hidden sm:inline">({activeClause.statute})</span>
+                      </div>
+                      <h4 className="font-display text-xl sm:text-2xl font-bold text-ink mt-0.5">
+                        {activeClause.title}
+                      </h4>
+                    </div>
+                  </div>
+                  <span className="border border-accent/50 bg-accentDim px-2.5 py-1 font-mono text-[11px] text-accent font-bold uppercase tracking-wider self-start sm:self-auto">
+                    {activeClause.badge}
+                  </span>
+                </div>
+
+                {/* Summary Banner */}
+                <div className="border-l-2 border-accent bg-accentDim/30 p-4 mb-6 font-mono text-xs sm:text-[13px] text-ink leading-relaxed">
+                  <div className="text-[10px] uppercase text-accent font-bold tracking-wider mb-1">
+                    STATUTORY SUMMARY // EXECUTIVE DIRECTIVE
+                  </div>
+                  {activeClause.summary}
+                </div>
+
+                {/* Detailed Provisions */}
+                <div className="space-y-3 font-mono text-xs text-muted leading-relaxed">
+                  <div className="text-[10px] uppercase tracking-wider text-muted font-bold">
+                    SPECIFIC LEGAL PROVISIONS &amp; STATUTORY CODES:
+                  </div>
+                  {activeClause.details.map((detail, idx) => (
+                    <div
+                      key={idx}
+                      className="border border-line/60 bg-bg p-3.5 flex items-start gap-3 hover:border-accent/40 transition-colors"
+                    >
+                      <span className="text-accent font-bold mt-0.5 shrink-0 text-[11px]">
+                        [{String(idx + 1).padStart(2, '0')}]
+                      </span>
+                      <p className="text-ink/90 text-xs sm:text-[13px] leading-relaxed">
+                        {detail}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Tags and Action Bar */}
+                <div className="mt-6 pt-5 border-t border-line/80 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                  <div className="flex flex-wrap gap-1.5">
+                    {activeClause.pills.map((pill) => (
+                      <span
+                        key={pill}
+                        className="border border-line bg-surface px-2.5 py-1 font-mono text-[10px] text-ink"
+                      >
+                        {pill}
+                      </span>
+                    ))}
+                  </div>
+
+                  {activeClause.externalLink && (
+                    <a
+                      href={activeClause.externalLink}
+                      target={activeClause.externalLink.startsWith('#') ? '_self' : '_blank'}
+                      rel="noopener noreferrer"
+                      onClick={() => onPlaySound?.('switch')}
+                      className="inline-flex items-center gap-1.5 font-mono text-xs text-accent hover:underline font-bold shrink-0"
+                    >
+                      <span>{activeClause.externalLinkLabel}</span>
+                      <IconArrowUpRight className="w-3.5 h-3.5" />
+                    </a>
+                  )}
+                </div>
+              </div>
+            </div>
+          ) : (
+            /* Full 6-Clause Grid (Expanded View) */
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 divide-y md:divide-y-0 gap-px bg-line">
+              {LEGAL_COMPLIANCE_CLAUSES.map((clause) => {
+                const ClauseIcon = clause.icon;
+                return (
+                  <article
+                    key={clause.id}
+                    className="bg-bg p-6 sm:p-8 flex flex-col justify-between hover:bg-surface/60 transition-colors group relative overflow-hidden"
+                  >
+                    <div>
+                      {/* Header */}
+                      <div className="flex items-center justify-between font-mono text-xs text-muted mb-3">
+                        <div className="flex items-center gap-2">
+                          <span className="text-accent font-bold">{clause.num}</span>
+                          <span>//</span>
+                          <span className="text-[11px] text-muted">{clause.category}</span>
+                        </div>
+                        <span className="border border-accent/40 bg-accentDim px-2 py-0.5 text-[10px] text-accent font-semibold">
+                          {clause.badge}
+                        </span>
+                      </div>
+
+                      {/* Title */}
+                      <div className="flex items-start gap-2.5 mb-2">
+                        <span className="p-1.5 rounded bg-surface border border-line text-accent shrink-0 mt-0.5">
+                          <ClauseIcon className="w-4 h-4" />
+                        </span>
+                        <div>
+                          <h4 className="font-display text-lg font-bold text-ink group-hover:text-accent transition-colors">
+                            {clause.title}
+                          </h4>
+                          <div className="text-[11px] font-mono text-muted mt-0.5">
+                            {clause.statute}
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Summary */}
+                      <p className="mt-3 text-xs text-muted leading-relaxed border-l border-accent/50 pl-2.5 bg-surface/30 py-1.5">
+                        {clause.summary}
+                      </p>
+
+                      {/* Details list */}
+                      <div className="mt-3 space-y-2 font-mono text-[11px] text-muted">
+                        {clause.details.map((detail, idx) => (
+                          <div key={idx} className="flex items-start gap-2">
+                            <span className="text-accent shrink-0 font-bold">&gt;</span>
+                            <span className="text-ink/80">{detail}</span>
+                          </div>
+                        ))}
+                      </div>
+
+                      {/* Pills */}
+                      <div className="mt-4 flex flex-wrap gap-1">
+                        {clause.pills.map((pill) => (
+                          <span
+                            key={pill}
+                            className="border border-line bg-surface px-2 py-0.5 font-mono text-[9px] text-ink"
+                          >
+                            {pill}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Bottom Action */}
+                    <div className="mt-6 pt-3 border-t border-line/60 flex items-center justify-between">
+                      {clause.externalLink && (
+                        <a
+                          href={clause.externalLink}
+                          target={clause.externalLink.startsWith('#') ? '_self' : '_blank'}
+                          rel="noopener noreferrer"
+                          onClick={() => onPlaySound?.('switch')}
+                          className="inline-flex items-center gap-1 font-mono text-[11px] text-accent hover:underline font-bold"
+                        >
+                          <span>{clause.externalLinkLabel}</span>
+                          <IconArrowUpRight className="w-3 h-3" />
+                        </a>
+                      )}
+                      <span className="font-mono text-[9px] text-muted tracking-widest uppercase">
+                        LEGAL SECURE
+                      </span>
+                    </div>
+                  </article>
+                );
+              })}
+            </div>
+          )}
+        </div>
+
+        {/* Bottom Copyright Bar */}
+        <div className="px-6 py-4 sm:px-10 flex flex-col md:flex-row items-center justify-between gap-4 font-mono text-xs text-muted bg-surface/50">
+          <div className="flex items-center gap-2">
+            <span>&copy; {currentYear} {PROFILE.fullName} ({PROFILE.brand}). All rights reserved.</span>
+            <span className="hidden sm:inline text-line">|</span>
+            <span className="hidden sm:inline">Built with curiosity and code.</span>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-[11px]">
+            <button
+              type="button"
+              onClick={() => handleSelectLegalClause('trademarks')}
+              className="text-muted hover:text-accent transition-colors underline-offset-4 hover:underline"
+            >
+              Trademarks &amp; Fair Use
+            </button>
+            <button
+              type="button"
+              onClick={() => handleSelectLegalClause('khmer-nida')}
+              className="text-muted hover:text-accent transition-colors underline-offset-4 hover:underline"
+            >
+              Khmer NiDA Standards
+            </button>
+            <button
+              type="button"
+              onClick={() => handleSelectLegalClause('met-museum-cc0')}
+              className="text-muted hover:text-accent transition-colors underline-offset-4 hover:underline"
+            >
+              Met CC0 1.0 Public Domain
+            </button>
+            <button
+              type="button"
+              onClick={() => handleSelectLegalClause('as-is-warranty')}
+              className="text-muted hover:text-accent transition-colors underline-offset-4 hover:underline"
+            >
+              "AS IS" Warranty Waiver
+            </button>
+            <button
+              type="button"
+              onClick={() => handleSelectLegalClause('privacy-sovereignty')}
+              className="text-muted hover:text-accent transition-colors underline-offset-4 hover:underline"
+            >
+              Privacy (Zero Tracking)
+            </button>
+            <button
+              type="button"
+              onClick={() => handleSelectLegalClause('dmca-contact')}
+              className="text-accent font-semibold hover:underline transition-colors"
+            >
+              DMCA / IP Inquiries
+            </button>
+          </div>
         </div>
       </div>
     </footer>

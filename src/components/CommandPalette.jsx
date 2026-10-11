@@ -196,6 +196,86 @@ export default function CommandPalette({
         onClose();
       },
     },
+    {
+      id: 'legal-all',
+      group: 'LEGAL PROTOCOLS & COMPLIANCE',
+      label: 'Inspect Legal Protocols & Disclaimers Ledger',
+      meta: 'Footer // 6 Audited Clauses & Safe Harbor',
+      run: () => {
+        const el = document.getElementById('footer-legal-section');
+        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        onClose();
+      },
+    },
+    {
+      id: 'legal-trademarks',
+      group: 'LEGAL PROTOCOLS & COMPLIANCE',
+      label: 'Trademarks & Nominative Fair Use (15 U.S.C. § 1115(b)(4))',
+      meta: 'GitHub, Microsoft, Meta, Google attribution',
+      run: () => {
+        const el = document.getElementById('footer-legal-section');
+        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        onClose();
+      },
+    },
+    {
+      id: 'legal-khmer',
+      group: 'LEGAL PROTOCOLS & COMPLIANCE',
+      label: 'Khmer NiDA Keyboard Layout & Cultural Standards',
+      meta: 'Royal Government of Cambodia / NiDA Attribution',
+      run: () => {
+        const el = document.getElementById('footer-legal-section');
+        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        onClose();
+      },
+    },
+    {
+      id: 'legal-met',
+      group: 'LEGAL PROTOCOLS & COMPLIANCE',
+      label: 'The Metropolitan Museum of Art Open Access (CC0 1.0)',
+      meta: 'Epicurus Marble Bust (Acc. 11.90) Public Domain',
+      run: () => {
+        const el = document.getElementById('footer-legal-section');
+        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        onClose();
+      },
+    },
+    {
+      id: 'legal-warranty',
+      group: 'LEGAL PROTOCOLS & COMPLIANCE',
+      label: 'Software "AS IS" Limitation of Liability Disclaimer',
+      meta: 'MIT License Statutory Warranty Waiver',
+      run: () => {
+        const el = document.getElementById('footer-legal-section');
+        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        onClose();
+      },
+    },
+    {
+      id: 'legal-privacy',
+      group: 'LEGAL PROTOCOLS & COMPLIANCE',
+      label: 'Zero Tracking Policy & Client Data Sovereignty',
+      meta: 'Zero Cookies · Zero Beacons · Local Storage Only',
+      run: () => {
+        const el = document.getElementById('footer-legal-section');
+        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        onClose();
+      },
+    },
+    {
+      id: 'legal-dmca',
+      group: 'LEGAL PROTOCOLS & COMPLIANCE',
+      label: `DMCA Safe Harbor & IP Notice (${PROFILE.email})`,
+      meta: 'Expedited 24-48h Notice & Takedown SLA',
+      external: true,
+      run: () => {
+        window.open(
+          `mailto:${PROFILE.email}?subject=%5BLEGAL%20%2F%20IP%20INQUIRY%5D%20Notice%20of%20Claimed%20Infringement`,
+          '_blank'
+        );
+        onClose();
+      },
+    },
   ];
 
   const filtered = actions.filter(

@@ -148,7 +148,35 @@ export default function InteractiveConsole({
         command: 'help',
         lines: [
           'Available topics: whoami, khmer-nida, neon-engine, studio-code, kon-ai, pk-icons, cursor-fx',
-          'Interactive tools: "cursor", "status", "contact", "theme light", "theme dark", "accent cyan", "accent amber", "accent emerald", "accent crimson", "sfx", "clear"',
+          'Interactive tools: "cursor", "status", "contact", "legal", "theme light", "theme dark", "accent cyan", "accent amber", "accent emerald", "accent crimson", "sfx", "clear"',
+        ],
+        projectSlug: null,
+      });
+      return;
+    }
+
+    if (
+      raw === 'legal' ||
+      raw === 'license' ||
+      raw === 'disclaimer' ||
+      raw === 'disclaimers' ||
+      raw === 'trademark' ||
+      raw === 'trademarks' ||
+      raw === 'privacy' ||
+      raw === 'dmca' ||
+      raw === 'copyright'
+    ) {
+      onPlaySound?.('switch');
+      setCustomOutput({
+        command: 'pk legal --compliance-audit',
+        lines: [
+          'LEGAL PROTOCOLS & STATUTORY AUDIT // 100% VERIFIED',
+          '01 TRADEMARKS (15 U.S.C. § 1115(b)(4)): Nominative Fair Use for GitHub, Microsoft, Meta, Google.',
+          '02 KHMER NIDA STANDARD: Formal cultural attribution to NiDA (Royal Government of Cambodia) & KhmerOS.',
+          '03 THE MET CC0 1.0: Classical Epicurus marble bust (Acc. 11.90) dedicated to Public Domain.',
+          '04 "AS IS" WARRANTY EXCLUSION: Full MIT statutory waiver of express/implied liability for code & games.',
+          '05 PRIVACY SOVEREIGNTY: Zero tracking cookies, zero marketing pixels, zero analytics beacons.',
+          `06 DMCA NOTICE & TAKEDOWN: Direct safe harbor channel -> ${PROFILE.email} (24-48h SLA).`,
         ],
         projectSlug: null,
       });
