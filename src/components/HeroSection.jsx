@@ -191,6 +191,21 @@ export default function HeroSection({
       {/* Interactive Cyber-Celestial Constellation Canvas Background */}
       <InteractiveCanvas />
 
+      {/* Monumental Watermark Typography in Background */}
+      <div
+        aria-hidden="true"
+        className="hero-watermark-ambient pointer-events-none select-none absolute inset-0 z-0 flex flex-col items-center justify-center overflow-hidden"
+      >
+        <div className="font-display font-black tracking-[-0.04em] uppercase text-center leading-[0.82] select-none opacity-90">
+          <div className="text-[5rem] sm:text-[8.5rem] lg:text-[12rem] xl:text-[14.5rem] whitespace-nowrap text-stroke-watermark">
+            PHANNA
+          </div>
+          <div className="text-[5rem] sm:text-[8.5rem] lg:text-[12rem] xl:text-[14.5rem] whitespace-nowrap text-stroke-watermark-gold">
+            KUROSAKI
+          </div>
+        </div>
+      </div>
+
       <div className="relative z-10 mx-auto max-w-[1400px] border-x border-line">
         {/* Top architectural status bar */}
         <div className="hero-enter-1 flex flex-wrap items-center justify-between border-b border-line px-5 py-2.5 sm:px-8 text-xs font-mono text-muted gap-3 bg-surface/40 backdrop-blur-xs">

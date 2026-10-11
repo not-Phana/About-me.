@@ -476,6 +476,73 @@ body {
   animation: terminalBlink 1s infinite;
 }
 
+/* Hero Monumental Architectural Watermark Typography */
+@keyframes watermarkFloat {
+  0%, 100% {
+    transform: translateY(0px) scale(1);
+    opacity: 0.88;
+  }
+  50% {
+    transform: translateY(-8px) scale(1.008);
+    opacity: 1;
+  }
+}
+
+.hero-watermark-ambient {
+  animation: watermarkFloat 12s ease-in-out infinite;
+  will-change: transform, opacity;
+}
+
+.text-stroke-watermark {
+  color: transparent;
+  -webkit-text-stroke: 2px rgba(255, 255, 255, 0.11);
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.10) 0%,
+    rgba(212, 165, 40, 0.07) 55%,
+    transparent 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+[data-theme="light"] .text-stroke-watermark {
+  -webkit-text-stroke: 2px rgba(0, 0, 0, 0.09);
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.09) 0%,
+    rgba(212, 165, 40, 0.08) 55%,
+    transparent 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+.text-stroke-watermark-gold {
+  color: transparent;
+  -webkit-text-stroke: 2px rgba(212, 165, 40, 0.18);
+  background: linear-gradient(
+    180deg,
+    rgba(212, 165, 40, 0.16) 0%,
+    rgba(212, 165, 40, 0.06) 60%,
+    transparent 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+[data-theme="light"] .text-stroke-watermark-gold {
+  -webkit-text-stroke: 2px rgba(180, 130, 20, 0.2);
+  background: linear-gradient(
+    180deg,
+    rgba(180, 130, 20, 0.18) 0%,
+    rgba(180, 130, 20, 0.06) 60%,
+    transparent 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
 /* ==========================================================================
    Ancient Greek Exhibition & Philosophical Manuscript (Dark Museum Gallery)
    Consistent with the dark luxury, spacious architectural aesthetic of ArtCraft
