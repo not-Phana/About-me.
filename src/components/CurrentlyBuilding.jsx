@@ -20,7 +20,7 @@ export default function CurrentlyBuilding({ projects, onSelectProject }) {
           <div>
             <div className="hud-label text-accent mb-3 flex items-center gap-2">
               <IconTerminal className="w-4 h-4" />
-              <span>SECTION 03 // CURRENTLY BUILDING</span>
+              <span>SECTION 06 // ACTIVE WORKBENCHES</span>
             </div>
             <h2 className="font-display text-3xl sm:text-5xl font-bold tracking-tight text-ink">
               Active Workbenches

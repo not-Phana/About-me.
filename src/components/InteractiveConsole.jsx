@@ -232,14 +232,14 @@ export default function InteractiveConsole({
         <div className="p-6 sm:p-10 border-b border-line flex flex-col lg:flex-row lg:items-end justify-between gap-4 bg-surface/40">
           <div>
             <div className="hud-label text-accent mb-2">
-              INTERACTIVE ARCHITECTURE CONSOLE // PK HELP
+              SECTION 04 // INTERACTIVE ARCHITECTURE CONSOLE
             </div>
             <h2 className="font-display text-2xl sm:text-4xl font-bold tracking-tight text-ink">
               How My Projects Work Under the Hood
             </h2>
           </div>
           <p className="font-mono text-xs text-muted">
-            Select a system module or type <code className="text-accent">matrix</code>,{' '}
+            Select a system module or type <code className="text-accent">telemetry</code>,{' '}
             <code className="text-accent">status</code>, or{' '}
             <code className="text-accent">help</code> in the terminal prompt below.
           </p>

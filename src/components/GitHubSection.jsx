@@ -126,7 +126,7 @@ export default function GitHubSection() {
         <div className="p-6 sm:p-10 lg:p-12 border-b border-line flex flex-col lg:flex-row lg:items-end justify-between gap-6">
           <div>
             <div className="hud-label text-accent mb-3">
-              SECTION 02 // OPEN SOURCE &amp; PUBLIC REPOSITORIES
+              SECTION 05 // GITHUB WORKSPACE &amp; REPOSITORIES
             </div>
             <h2 className="font-display text-3xl sm:text-5xl font-bold tracking-tight text-ink">
               GitHub Activity &amp; Repositories

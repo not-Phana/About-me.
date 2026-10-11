@@ -10,7 +10,7 @@ export default function JourneySection() {
           {/* Left 8 Columns: Verified Milestones */}
           <div className="lg:col-span-8 p-6 sm:p-10 lg:p-14 border-b lg:border-b-0 lg:border-r border-line">
             <div className="hud-label text-accent mb-3">
-              SECTION 05 // BUILDING IN PUBLIC
+              SECTION 07 // BUILDER MILESTONES
             </div>
             <h2 className="font-display text-3xl sm:text-4xl font-bold tracking-tight text-ink">
               The Journey So Far

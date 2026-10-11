@@ -38,13 +38,14 @@ export default function Footer({ onNavigateHome }) {
               SECTIONS
             </div>
             {[
-              { id: 'home', label: 'Home' },
-              { id: 'projects', label: 'Projects' },
-              { id: 'github', label: 'GitHub' },
-              { id: 'building', label: 'Currently Building' },
-              { id: 'about', label: 'About' },
-              { id: 'journey', label: 'The Journey' },
-              { id: 'contact', label: 'Contact' },
+              { id: 'home', label: '01 Home' },
+              { id: 'about', label: '02 About' },
+              { id: 'projects', label: '03 Projects' },
+              { id: 'console', label: '04 Console' },
+              { id: 'github', label: '05 GitHub' },
+              { id: 'building', label: '06 Currently Building' },
+              { id: 'journey', label: '07 The Journey' },
+              { id: 'contact', label: '08 Contact' },
             ].map((item) => (
               <div key={item.id}>
                 <a

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { PROFILE } from '../data/profile';
 import { IconArrowRight, IconArrowUpRight } from './Icons';
 
@@ -6,6 +6,7 @@ const PHILOSOPHY_PRINCIPLES = [
   {
     numeral: 'I',
     greek: 'Ποίησις',
+    greekMeaning: 'Poiesis · Bringing into existence',
     word: 'Build.',
     statement: 'Turn ideas into working projects.',
     annotation:
@@ -15,6 +16,7 @@ const PHILOSOPHY_PRINCIPLES = [
     numeral: 'II',
     greek: 'Ἐπιστήμη',
     word: 'Understand.',
+    greekMeaning: 'Episteme · Deep comprehension of craft',
     statement: 'Learn how things work instead of relying entirely on tools.',
     annotation:
       'Inspect the event loop, study language internals, and master the craft behind every abstraction.',
@@ -23,6 +25,7 @@ const PHILOSOPHY_PRINCIPLES = [
     numeral: 'III',
     greek: 'Μελέτη',
     word: 'Improve.',
+    greekMeaning: 'Melete · Disciplined iterative refinement',
     statement:
       'Treat mistakes as opportunities to make the next version better.',
     annotation:
@@ -36,7 +39,7 @@ const DELPHIC_MAXIMS = [
     greek: 'ΓΝΩΘΙ ΣΑΥΤΟΝ',
     latin: 'Gnōthi Sauton',
     meaning: 'Know thyself.',
-    origin: 'Oracle of Delphi · Inscription on the Apollo Pronaos',
+    origin: 'Oracle of Delphi · Inscribed on the Temple of Apollo',
     reflection:
       'Understand your capabilities, inspect your own code, and master the craft behind every tool.',
   },
@@ -66,39 +69,46 @@ const SCULPTURE_PLATES = [
     numeral: 'Plate I',
     shortTitle: 'Epikouros (Frontal)',
     title: 'Marble Head of Epikouros (Epicurus, 341–270 BCE)',
-    meta: 'Pentelic marble · Roman copy of 3rd c. BCE Greek original · The Metropolitan Museum of Art (Acc. 11.90, CC0)',
+    meta: 'Pentelic marble · Roman copy of 3rd c. BCE Greek original · The Metropolitan Museum of Art (Acc. 11.90, CC0 Public Domain)',
     url: 'https://www.metmuseum.org/art/collection/search/248475',
     src: './assets/met-epikouros-cutout.png',
     alt: 'Cutout Pentelic marble portrait head of Greek philosopher Epikouros, frontal view. The Metropolitan Museum of Art, Accession No. 11.90 (CC0 Public Domain).',
     inscription: 'ΓΝΩΘΙ ΣΑΥΤΟΝ',
+    epoch: 'Hellenistic · 3rd Century BCE',
   },
   {
     id: 'profile',
     numeral: 'Plate II',
     shortTitle: 'Epikouros (Profile)',
     title: 'Marble Head of Epikouros — Lateral Study',
-    meta: 'Pentelic marble · Three-quarter profile study facing the biography · The Metropolitan Museum of Art (Acc. 11.90, CC0)',
+    meta: 'Pentelic marble · Three-quarter profile study facing the biography · The Metropolitan Museum of Art (Acc. 11.90, CC0 Public Domain)',
     url: 'https://www.metmuseum.org/art/collection/search/248475',
     src: './assets/met-epikouros-profile-cutout.png',
     alt: 'Cutout Pentelic marble portrait head of Greek philosopher Epikouros, profile study. The Metropolitan Museum of Art, Accession No. 11.90 (CC0 Public Domain).',
     inscription: 'ΜΗΔΕΝ ΑΓΑΝ',
+    epoch: 'Hellenistic · Classical Profile',
   },
   {
     id: 'chrysippos',
     numeral: 'Plate III',
     shortTitle: 'Chrysippos (Logician)',
     title: 'Marble Portrait Head of Chrysippos (c. 279–206 BCE)',
-    meta: 'Fine Greek marble · Pioneer of propositional logic · The Metropolitan Museum of Art (Acc. 24.243, CC0)',
+    meta: 'Fine Greek marble · Pioneer of formal propositional logic · The Metropolitan Museum of Art (Acc. 24.243, CC0 Public Domain)',
     url: 'https://www.metmuseum.org/art/collection/search/251787',
     src: './assets/met-chrysippos-cutout.png',
     alt: 'Cutout marble portrait head of Greek philosopher Chrysippos of Soli. The Metropolitan Museum of Art, Accession No. 24.243 (CC0 Public Domain).',
     inscription: 'ΧΑΛΕΠΑ ΤΑ ΚΑΛΑ',
+    epoch: 'Stoic School · Formal Logic',
   },
 ];
 
 export default function AboutSection({ onExploreProjects, onPlaySound }) {
   const [activePlateId, setActivePlateId] = useState('frontal');
   const [activeMaximId, setActiveMaximId] = useState('gnothi');
+  const [showScholiaTranslation, setShowScholiaTranslation] = useState(false);
+  const [spotlightPos, setSpotlightPos] = useState({ x: 50, y: 40 });
+
+  const stageRef = useRef(null);
 
   const currentPlate =
     SCULPTURE_PLATES.find((p) => p.id === activePlateId) || SCULPTURE_PLATES[0];
@@ -130,6 +140,18 @@ export default function AboutSection({ onExploreProjects, onPlaySound }) {
     else if (maximId === 'chalepa') setActivePlateId('chrysippos');
   };
 
+  const handleMouseMove = (e) => {
+    if (!stageRef.current) return;
+    const rect = stageRef.current.getBoundingClientRect();
+    const x = Math.max(0, Math.min(100, ((e.clientX - rect.left) / rect.width) * 100));
+    const y = Math.max(0, Math.min(100, ((e.clientY - rect.top) / rect.height) * 100));
+    setSpotlightPos({ x, y });
+  };
+
+  const handleMouseLeave = () => {
+    setSpotlightPos({ x: 50, y: 40 });
+  };
+
   return (
     <section
       id="about"
@@ -154,7 +176,7 @@ export default function AboutSection({ onExploreProjects, onPlaySound }) {
         <rect width="100%" height="100%" filter="url(#gallery-stone-grain)" />
       </svg>
 
-      {/* Background Monumental Greek Inscriptions */}
+      {/* Background Monumental Greek Inscriptions Chiseled in Stone */}
       <div
         aria-hidden="true"
         className="pointer-events-none select-none absolute inset-0 overflow-hidden"
@@ -179,7 +201,7 @@ export default function AboutSection({ onExploreProjects, onPlaySound }) {
         <div className="border-b border-[var(--ms-rule)] px-5 py-3 sm:px-8 lg:px-12 flex flex-wrap items-center justify-between gap-3 font-mono text-[11px] tracking-[0.16em] uppercase text-[var(--ms-marble)]">
           <div className="flex items-center gap-3">
             <span className="font-bold text-[var(--ms-bronze)]">
-              EXHIBIT FOLIO II // THE BUILDER&apos;S ESSAY
+              FOLIO 02 // EXHIBIT: THE BUILDER&apos;S ESSAY
             </span>
             <span aria-hidden="true" className="text-[var(--ms-rule-strong)]">
               /
@@ -257,10 +279,40 @@ export default function AboutSection({ onExploreProjects, onPlaySound }) {
                   lessons, and unfinished experiments become something better.
                 </p>
               </div>
+
+              {/* Classical Scholia on Technē (Aristotle) */}
+              <div className="mt-7 p-4 border border-[var(--ms-rule)] bg-[var(--ms-surface)]/40 relative">
+                <div className="flex items-center justify-between text-[11px] font-mono text-[var(--ms-marble)] uppercase mb-2">
+                  <span>SCHOLIA // ARISTOTLE ON CRAFT &amp; MAKING</span>
+                  <button
+                    type="button"
+                    onClick={() => setShowScholiaTranslation((prev) => !prev)}
+                    className="text-[var(--ms-bronze)] hover:underline font-bold"
+                  >
+                    {showScholiaTranslation ? 'HIDE TRANSLATION' : 'TRANSLATE'}
+                  </button>
+                </div>
+
+                <div
+                  lang="el"
+                  className="font-classical italic text-sm text-[var(--ms-ivory)] leading-relaxed"
+                >
+                  &laquo;Πᾶσα τέχνη περὶ γένεσίν ἐστι, καὶ τὸ τεχνάζειν καὶ θεωρεῖν ὅπως ἂν γένηταί τι τῶν ἐνδεχομένων καὶ εἶναι καὶ μὴ εἶναι, καὶ ὧν ἡ ἀρχὴ ἐν τῷ ποιοῦντι ἀλλὰ μὴ ἐν τῷ ποιουμένῳ·&raquo;
+                </div>
+
+                {showScholiaTranslation && (
+                  <p className="mt-2 pt-2 border-t border-[var(--ms-rule)] font-classical text-sm text-[var(--ms-limestone)] leading-relaxed italic animate-enter">
+                    &ldquo;Every craft is concerned with bringing something into being—studying how something may be produced whose origin is in the maker, not the made.&rdquo;
+                    <span className="block mt-1 font-mono not-italic text-[10px] text-[var(--ms-marble)]">
+                      — Nicomachean Ethics VI.4 (1140a)
+                    </span>
+                  </p>
+                )}
+              </div>
             </div>
 
-            {/* Three Principles of Building — Clean, Unambiguous Editorial Cards */}
-            <div className="mt-12 pt-8 border-t border-[var(--ms-rule-strong)]">
+            {/* Three Principles of Building */}
+            <div className="mt-10 pt-8 border-t border-[var(--ms-rule-strong)]">
               <div className="flex items-baseline justify-between gap-4 mb-5">
                 <span className="font-mono text-[11px] tracking-[0.2em] uppercase text-[var(--ms-marble)] font-semibold">
                   THREE PRINCIPLES OF BUILDING
@@ -273,13 +325,13 @@ export default function AboutSection({ onExploreProjects, onPlaySound }) {
                 </span>
               </div>
 
-              <div className="space-y-4">
+              <div className="space-y-3.5">
                 {PHILOSOPHY_PRINCIPLES.map((item) => (
                   <div
                     key={item.numeral}
-                    className="p-4 sm:p-5 border border-[var(--ms-rule)] bg-[var(--ms-surface)]/50 hover:border-[var(--ms-bronze)] transition-colors group"
+                    className="p-4 sm:p-5 border border-[var(--ms-rule)] bg-[var(--ms-surface)]/50 hover:border-[var(--ms-bronze)] transition-all group"
                   >
-                    <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[var(--ms-rule)] pb-2.5 mb-3">
+                    <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[var(--ms-rule)] pb-2 mb-2.5">
                       <div className="flex items-baseline gap-2.5">
                         <span className="font-mono text-xs font-bold text-[var(--ms-bronze)]">
                           {item.numeral} //
@@ -289,12 +341,17 @@ export default function AboutSection({ onExploreProjects, onPlaySound }) {
                         </span>
                       </div>
 
-                      <span
-                        lang="el"
-                        className="font-classical italic text-sm text-[var(--ms-bronze)] opacity-85"
-                      >
-                        {item.greek}
-                      </span>
+                      <div className="flex items-center gap-2">
+                        <span
+                          lang="el"
+                          className="font-classical italic text-sm text-[var(--ms-bronze)]"
+                        >
+                          {item.greek}
+                        </span>
+                        <span className="text-[var(--ms-marble)] text-xs hidden sm:inline">
+                          ({item.greekMeaning})
+                        </span>
+                      </div>
                     </div>
 
                     <div className="font-classical text-lg sm:text-xl text-[var(--ms-ivory)] leading-snug">
@@ -327,7 +384,21 @@ export default function AboutSection({ onExploreProjects, onPlaySound }) {
           </div>
 
           {/* RIGHT COLUMN: Classical Marble Sculpture & Museum Plaque */}
-          <div className="lg:col-span-5 relative flex flex-col justify-between p-6 sm:p-8 lg:p-10 overflow-hidden bg-[var(--ms-surface)]/30">
+          <div
+            ref={stageRef}
+            onMouseMove={handleMouseMove}
+            onMouseLeave={handleMouseLeave}
+            className="lg:col-span-5 relative flex flex-col justify-between p-6 sm:p-8 lg:p-10 overflow-hidden bg-[var(--ms-surface)]/30 transition-colors"
+          >
+            {/* Dynamic Interactive Gallery Chiaroscuro Spotlight */}
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-0 transition-opacity duration-300"
+              style={{
+                background: `radial-gradient(circle 320px at ${spotlightPos.x}% ${spotlightPos.y}%, rgba(212, 165, 40, 0.12) 0%, transparent 75%)`,
+              }}
+            />
+
             {/* Background Euclidean Vector & Greek Epigraphy */}
             <div
               aria-hidden="true"
@@ -394,7 +465,7 @@ export default function AboutSection({ onExploreProjects, onPlaySound }) {
 
             {/* Top Plate Reference Bar */}
             <div className="relative z-10 flex items-center justify-between border-b border-[var(--ms-rule)] pb-3 font-mono text-[10px] tracking-[0.16em] uppercase text-[var(--ms-marble)]">
-              <span>CLASSICAL SCULPTURE PLATE</span>
+              <span>{currentPlate.epoch}</span>
               <span
                 lang="el"
                 className="font-classical text-xs tracking-[0.18em] text-[var(--ms-bronze)] font-semibold"
@@ -417,7 +488,7 @@ export default function AboutSection({ onExploreProjects, onPlaySound }) {
 
             {/* Museum Catalogue Plaque & Inscription Decoder */}
             <div className="relative z-10 border border-[var(--ms-rule-strong)] bg-[var(--ms-surface2)]/95 p-4 sm:p-5 backdrop-blur-sm">
-              <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[var(--ms-rule)] pb-3 mb-3">
+              <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[var(--ms-rule)] pb-2.5 mb-2.5">
                 <span className="font-mono text-[10px] tracking-[0.16em] uppercase text-[var(--ms-bronze)] font-bold">
                   {currentPlate.numeral} // ARCHIVAL RECORD
                 </span>
@@ -457,7 +528,7 @@ export default function AboutSection({ onExploreProjects, onPlaySound }) {
               </p>
 
               {/* Delphic Maxims Decoder */}
-              <div className="mt-3.5 pt-3 border-t border-[var(--ms-rule)]">
+              <div className="mt-3 pt-2.5 border-t border-[var(--ms-rule)]">
                 <div className="flex items-center justify-between mb-1.5 font-mono text-[9px] tracking-[0.12em] uppercase text-[var(--ms-marble)]">
                   <span>DELPHIC MAXIMS // CLICK TO DECODE</span>
                   <span className="text-[var(--ms-bronze)] font-semibold">
@@ -498,7 +569,7 @@ export default function AboutSection({ onExploreProjects, onPlaySound }) {
                 </div>
               </div>
 
-              <div className="mt-3.5 flex items-center justify-between font-mono text-[10px] tracking-[0.12em] uppercase text-[var(--ms-bronze)]">
+              <div className="mt-3 flex items-center justify-between font-mono text-[10px] tracking-[0.12em] uppercase text-[var(--ms-bronze)]">
                 <span>AUTHENTIC MET PHOTOGRAPHY</span>
                 <a
                   href={currentPlate.url}

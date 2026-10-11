@@ -50,7 +50,7 @@ export default function ProjectGrid({ projects, onSelectProject }) {
         <div className="p-6 sm:p-10 lg:p-12 border-b border-line flex flex-col lg:flex-row lg:items-end justify-between gap-6">
           <div>
             <div className="hud-label text-accent mb-3">
-              SECTION 01 // SOFTWARE &amp; EXPERIMENTS
+              SECTION 03 // SOFTWARE &amp; EXPERIMENTS
             </div>
             <h2 className="font-display text-3xl sm:text-5xl font-bold tracking-tight text-ink">
               Projects &amp; Real Builds

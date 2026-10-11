@@ -41,7 +41,7 @@ export default function ContactSection() {
         <div className="p-6 sm:p-10 lg:p-16 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
           <div className="lg:col-span-7">
             <div className="hud-label text-accent mb-3">
-              SECTION 06 // CONNECT &amp; VERIFY
+              SECTION 08 // DIRECT TRANSMISSION &amp; CHANNELS
             </div>
             <h2 className="font-display text-3xl sm:text-5xl font-extrabold tracking-tight text-ink">
               Have an idea? Let&apos;s connect.
