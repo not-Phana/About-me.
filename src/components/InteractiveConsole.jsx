@@ -155,12 +155,21 @@ export default function InteractiveConsole({
       return;
     }
 
-    if (raw === 'contact' || raw === 'social' || raw === 'facebook' || raw === 'fb') {
+    if (
+      raw === 'contact' ||
+      raw === 'social' ||
+      raw === 'email' ||
+      raw === 'gmail' ||
+      raw === 'mail' ||
+      raw === 'facebook' ||
+      raw === 'fb'
+    ) {
       onPlaySound?.('switch');
       setCustomOutput({
         command: 'pk connect --channels',
         lines: [
-          `GITHUB: https://github.com/${PROFILE.githubUsername} (@${PROFILE.githubUsername})`,
+          `GMAIL (INBOX): ${PROFILE.email} (Direct transmission)`,
+          `GITHUB (SRC): https://github.com/${PROFILE.githubUsername} (@${PROFILE.githubUsername})`,
           `FACEBOOK (MAIN): ${PROFILE.facebookMainUrl}`,
           `FACEBOOK (DM): ${PROFILE.facebookDmUrl}`,
           'DIRECT PROTOCOL: Open to software collaboration, feedback, and tech discussions.',

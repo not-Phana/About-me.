@@ -152,6 +152,29 @@ export default function CommandPalette({
       },
     },
     {
+      id: 'ext-email',
+      group: 'EXTERNAL PROFILE',
+      label: `Send Email via Gmail (${PROFILE.email})`,
+      meta: 'Direct Inbox // mailto transmission',
+      external: true,
+      run: () => {
+        window.open(PROFILE.emailMailto, '_blank');
+        onClose();
+      },
+    },
+    {
+      id: 'copy-email',
+      group: 'EXTERNAL PROFILE',
+      label: `Copy Gmail Address (${PROFILE.email})`,
+      meta: 'Clipboard // phleyphana@gmail.com',
+      run: () => {
+        try {
+          navigator.clipboard.writeText(PROFILE.email);
+        } catch {}
+        onClose();
+      },
+    },
+    {
       id: 'ext-fb-main',
       group: 'EXTERNAL PROFILE',
       label: 'Open Facebook Profile (Main)',

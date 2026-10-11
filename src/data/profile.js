@@ -22,6 +22,8 @@ export const PROFILE = {
   githubBio: 'Building something good for my society.',
   facebookMainUrl: 'https://web.facebook.com/profile.php?id=61586407973552',
   facebookDmUrl: 'https://web.facebook.com/profile.php?id=61595335949001',
+  email: 'phleyphana@gmail.com',
+  emailMailto: 'mailto:phleyphana@gmail.com',
   aboutHeading: 'A mind that builds. A journey still being written.',
   aboutParagraphs: [
     "I'm Phanna Kurosaki, an independent builder who enjoys turning ideas into working projects.",

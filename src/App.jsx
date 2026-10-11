@@ -292,12 +292,15 @@ export default function App() {
               onSelectProject={handleSelectProject}
             />
             <JourneySection />
-            <ContactSection />
+            <ContactSection onPlaySound={triggerSound} />
           </>
         )}
       </main>
 
-      <Footer onNavigateHome={handleNavigateHome} />
+      <Footer
+        onNavigateHome={handleNavigateHome}
+        onPlaySound={triggerSound}
+      />
     </div>
   );
 }
