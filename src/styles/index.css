@@ -598,6 +598,16 @@ body {
   animation: terminalBlink 1s infinite;
 }
 
+/* Radar Sweep Animation for Incubation Deck */
+@keyframes radarSweep {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
 /* Hero Monumental Architectural Watermark Typography */
 @keyframes watermarkFloat {
   0%, 100% {

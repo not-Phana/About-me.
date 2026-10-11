@@ -2,6 +2,7 @@ import React, { useState, useMemo } from 'react';
 import FeaturedProjects from './FeaturedProjects';
 import ProjectFilters from './ProjectFilters';
 import ProjectCard from './ProjectCard';
+import IncubationSlotCard from './IncubationSlotCard';
 import {
   IconGrid,
   IconLayers,
@@ -11,7 +12,12 @@ import {
   IconClose,
 } from './Icons';
 
-export default function ProjectGrid({ projects, onSelectProject }) {
+export default function ProjectGrid({
+  projects,
+  onSelectProject,
+  onPlaySound,
+  onOpenCommandPalette,
+}) {
   const [selectedCategory, setSelectedCategory] = useState('All Projects');
   const [searchQuery, setSearchQuery] = useState('');
   const [activeTechTag, setActiveTechTag] = useState('');
@@ -171,6 +177,37 @@ export default function ProjectGrid({ projects, onSelectProject }) {
                 activeTechTag={activeTechTag}
               />
             ))}
+            {/* Fill missing slots in the 3-column layout with Incubation Lab cards */}
+            {filteredProjects.length % 3 !== 0 && (
+              <>
+                <IncubationSlotCard
+                  key="incubation-slot-09"
+                  slotNumber={String(filteredProjects.length + 1).padStart(2, '0')}
+                  category="INCUBATION LAB"
+                  status="IN DESIGN PHASE"
+                  title="Classified Build // Next Project"
+                  badge="R&D"
+                  description="Currently architecting my next experimental tool—prototyping an offline-first WebAssembly engine, mechanical audio synthesis, and custom canvas rendering. Got an idea or want to collaborate?"
+                  technologies={['WebAssembly', 'Rust', 'Canvas 60FPS', 'AI Agents']}
+                  onPlaySound={onPlaySound}
+                  onOpenCommandPalette={onOpenCommandPalette}
+                />
+                {filteredProjects.length % 3 === 1 && (
+                  <IncubationSlotCard
+                    key="incubation-slot-10"
+                    slotNumber={String(filteredProjects.length + 2).padStart(2, '0')}
+                    category="OPEN SPEC"
+                    status="REQUEST FOR CONCEPT"
+                    title="Your Vision // Collaborative Build"
+                    badge="OPEN"
+                    description="Have a tool, developer utility, or algorithmic visualizer you'd like to see engineered? Submit a proposal, fork a template, or start a discussion on GitHub."
+                    technologies={['TypeScript', 'WebGL', 'Edge Functions', 'Tailwind']}
+                    onPlaySound={onPlaySound}
+                    onOpenCommandPalette={onOpenCommandPalette}
+                  />
+                )}
+              </>
+            )}
           </div>
         ) : (
           /* High-Density Studio Architectural Spec Ledger */

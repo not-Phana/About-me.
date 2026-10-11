@@ -277,6 +277,8 @@ export default function App() {
             <ProjectGrid
               projects={PROJECTS}
               onSelectProject={handleSelectProject}
+              onPlaySound={triggerSound}
+              onOpenCommandPalette={() => setCommandPaletteOpen(true)}
             />
             <InteractiveConsole
               onSelectProject={handleSelectProject}
