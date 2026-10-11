@@ -13,6 +13,7 @@ import Footer from './components/Footer';
 import CommandPalette from './components/CommandPalette';
 import { PROJECTS } from './data/projects';
 import { playTactileClick } from './utils/sound';
+import { useScrollReveal } from './hooks/useScrollReveal';
 
 function parseHashRoute(hash) {
   const clean = (hash || '').replace(/^#\/?/, '');
@@ -24,6 +25,7 @@ function parseHashRoute(hash) {
 }
 
 export default function App() {
+  useScrollReveal();
   const [route, setRoute] = useState(() => parseHashRoute(window.location.hash));
   const [activeSection, setActiveSection] = useState('home');
   const [commandPaletteOpen, setCommandPaletteOpen] = useState(false);

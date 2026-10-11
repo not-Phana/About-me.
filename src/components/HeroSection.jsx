@@ -189,9 +189,9 @@ export default function HeroSection({
     >
       <div className="mx-auto max-w-[1400px] border-x border-line">
         {/* Top architectural status bar */}
-        <div className="flex flex-wrap items-center justify-between border-b border-line px-5 py-2.5 sm:px-8 text-xs font-mono text-muted gap-3 bg-surface/40">
+        <div className="hero-enter-1 flex flex-wrap items-center justify-between border-b border-line px-5 py-2.5 sm:px-8 text-xs font-mono text-muted gap-3 bg-surface/40">
           <div className="flex items-center gap-2.5">
-            <span className="inline-block h-2 w-2 rounded-full bg-[#4ade80]" />
+            <span className="inline-block h-2 w-2 rounded-full bg-[#4ade80] beacon-pulse" />
             <span className="text-ink font-medium">{PROFILE.tagline}</span>
           </div>
           <div className="flex items-center gap-4">
@@ -210,26 +210,26 @@ export default function HeroSection({
         {/* Main Hero Split Layout */}
         <div className="grid grid-cols-1 lg:grid-cols-12">
           {/* Left Column: Editorial Typography & CTAs */}
-          <div className="lg:col-span-7 flex flex-col justify-between p-6 sm:p-10 lg:p-14 border-b lg:border-b-0 lg:border-r border-line">
+          <div className="hero-enter-2 lg:col-span-7 flex flex-col justify-between p-6 sm:p-10 lg:p-14 border-b lg:border-b-0 lg:border-r border-line">
             <div>
               <div className="hud-label text-accent mb-5">
                 {PROFILE.heroSubheadline}
               </div>
 
-              <h1 className="font-display text-4xl sm:text-6xl xl:text-[4.35rem] font-extrabold tracking-[-0.035em] leading-[1.03] text-ink">
+              <h1 className="hero-enter-3 font-display text-4xl sm:text-6xl xl:text-[4.35rem] font-extrabold tracking-[-0.035em] leading-[1.03] text-ink">
                 {PROFILE.heroHeadlineMain}{' '}
                 <span className="font-serif italic font-normal text-accent block sm:inline">
                   {PROFILE.heroHeadlineAccent}
                 </span>
               </h1>
 
-              <p className="mt-6 max-w-2xl text-base sm:text-lg text-muted leading-relaxed">
+              <p className="hero-enter-4 mt-6 max-w-2xl text-base sm:text-lg text-muted leading-relaxed">
                 {PROFILE.heroSummary}
               </p>
             </div>
 
             {/* Action Buttons & Quick Ledger */}
-            <div className="mt-10 pt-8 border-t border-lineSoft">
+            <div className="hero-enter-4 mt-10 pt-8 border-t border-lineSoft">
               <div className="flex flex-wrap items-center gap-3.5">
                 <a
                   href="#projects"
@@ -288,7 +288,7 @@ export default function HeroSection({
           </div>
 
           {/* Right Column: Live Playable 3-Mode Software Sandbox */}
-          <div className="lg:col-span-5 bg-surface bg-architectural-grid flex flex-col justify-between p-6 sm:p-8 lg:p-10">
+          <div className="hero-enter-3 lg:col-span-5 bg-surface bg-architectural-grid flex flex-col justify-between p-6 sm:p-8 lg:p-10">
             <div>
               <div className="flex items-center justify-between border-b border-line pb-3 mb-4">
                 <span className="hud-label text-ink">

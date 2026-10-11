@@ -111,7 +111,7 @@ export default function FeaturedProjects({ projects, onSelectProject }) {
                   className="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-[1.015]"
                 />
                 <div className="absolute top-3 left-3 flex items-center gap-2 bg-bg/90 backdrop-blur-sm border border-line px-3 py-1 font-mono text-[11px] text-ink">
-                  <span className="h-2 w-2 rounded-full bg-[#4ade80]" />
+                  <span className="h-2 w-2 rounded-full bg-[#4ade80] beacon-pulse" />
                   <span>{flagship.status}</span>
                 </div>
                 <button
@@ -350,7 +350,7 @@ export default function FeaturedProjects({ projects, onSelectProject }) {
             return (
               <div
                 key={project.id}
-                className="spotlight-card group p-6 sm:p-10 flex flex-col justify-between hover:bg-surface/40 transition-colors"
+                className="spotlight-card card-laser-lift group p-6 sm:p-10 flex flex-col justify-between hover:bg-surface/40 transition-colors"
               >
                 <div>
                   <div className="flex items-center justify-between font-mono text-xs text-muted mb-4">
@@ -372,7 +372,7 @@ export default function FeaturedProjects({ projects, onSelectProject }) {
                         </button>
                       )}
                       <span className="inline-flex items-center gap-1.5 border border-line px-2.5 py-0.5 text-[11px] text-ink bg-surface">
-                        <span className="h-1.5 w-1.5 rounded-full bg-[#4ade80]" />
+                        <span className="h-1.5 w-1.5 rounded-full bg-[#4ade80] beacon-pulse" />
                         {project.status}
                       </span>
                     </div>

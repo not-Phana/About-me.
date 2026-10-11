@@ -229,7 +229,7 @@ export default function InteractiveConsole({
     <section id="console" className="border-b border-line bg-bg">
       <div className="mx-auto max-w-[1400px] border-x border-line">
         {/* Section Header */}
-        <div className="p-6 sm:p-10 border-b border-line flex flex-col lg:flex-row lg:items-end justify-between gap-4 bg-surface/40">
+        <div className="p-6 sm:p-10 border-b border-line flex flex-col lg:flex-row lg:items-end justify-between gap-4 bg-surface/40 reveal-on-scroll">
           <div>
             <div className="hud-label text-accent mb-2">
               SECTION 04 // INTERACTIVE ARCHITECTURE CONSOLE
@@ -246,7 +246,7 @@ export default function InteractiveConsole({
         </div>
 
         {/* Console Split Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-12">
+        <div className="grid grid-cols-1 lg:grid-cols-12 reveal-on-scroll reveal-delay-1">
           {/* Left 3 Columns: Topic Selector */}
           <div
             role="tablist"
@@ -300,23 +300,25 @@ export default function InteractiveConsole({
                   <div className="flex items-center gap-1.5" aria-hidden="true">
                     <span className="w-2.5 h-2.5 rounded-full bg-[#ef4444]/80 inline-block" />
                     <span className="w-2.5 h-2.5 rounded-full bg-[#facc15]/80 inline-block" />
-                    <span className="w-2.5 h-2.5 rounded-full bg-[#4ade80]/80 inline-block" />
+                    <span className="w-2.5 h-2.5 rounded-full bg-[#4ade80]/80 inline-block beacon-pulse" />
                   </div>
                   <span className="ml-2 text-[#8c9099]">phana@kon-studio</span>{' '}
                   <span className="text-accent">~ $</span>{' '}
                   <span className="text-white font-semibold">
                     {displayed.command}
                   </span>
+                  <span className="inline-block w-2 h-3.5 bg-accent terminal-cursor-blink ml-1 align-middle" />
                 </div>
-                <span className="text-[10px] text-[#4ade80] font-bold">
-                  KERNEL: OK
+                <span className="text-[10px] text-[#4ade80] font-bold flex items-center gap-1.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#4ade80] beacon-pulse inline-block" />
+                  <span>KERNEL: OK</span>
                 </span>
               </div>
 
               {/* Output Paragraphs */}
               <div className="mt-5 space-y-3.5 text-xs sm:text-sm leading-relaxed text-[#d1d5db]">
                 {displayed.lines.map((line, idx) => (
-                  <p key={idx} className="border-l-2 border-accent/70 pl-3.5">
+                  <p key={idx} className="border-l-2 border-accent/70 pl-3.5 transition-all">
                     <span className="text-accent mr-2">0{idx + 1} //</span>
                     {line}
                   </p>

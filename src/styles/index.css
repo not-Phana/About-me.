@@ -244,6 +244,152 @@ body {
 }
 
 /* ==========================================================================
+   Kinetic Motion, Scroll Reveals & Atmospheric Micro-Animations
+   Designed for compositor thread performance & reduced-motion accessibility
+   ========================================================================== */
+
+/* Universal Scroll-Driven & Observer Reveal */
+.reveal-on-scroll {
+  opacity: 0;
+  transform: translateY(26px);
+  transition: opacity 0.75s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.75s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+
+.reveal-on-scroll.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.reveal-delay-1 { transition-delay: 0.1s; }
+.reveal-delay-2 { transition-delay: 0.2s; }
+.reveal-delay-3 { transition-delay: 0.3s; }
+.reveal-delay-4 { transition-delay: 0.4s; }
+
+/* Progressive Native CSS Scroll-Driven Animation (Chrome 115+, Edge 115+, Safari 18+) */
+@media (prefers-reduced-motion: no-preference) {
+  @supports ((animation-timeline: view()) and (animation-range: entry)) {
+    @keyframes scrollRevealEffect {
+      from {
+        opacity: 0;
+        transform: translateY(28px) scale(0.99);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    .scroll-timeline-reveal {
+      animation: scrollRevealEffect linear both;
+      animation-timeline: view();
+      animation-range: entry 10% cover 35%;
+    }
+  }
+}
+
+/* Classical Sculpture Atmospheric Museum Floating */
+@keyframes sculptureFloat {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-8px) rotate(0.4deg);
+  }
+}
+
+.sculpture-floating {
+  animation: sculptureFloat 7.5s ease-in-out infinite;
+  will-change: transform;
+}
+
+.sculpture-stage:hover .sculpture-floating {
+  animation-play-state: paused;
+}
+
+/* Background Delphic Epigraph Breathing Luminescence */
+@keyframes epigraphPulse {
+  0%, 100% {
+    opacity: 0.08;
+    transform: translateY(0);
+  }
+  50% {
+    opacity: 0.14;
+    transform: translateY(-3px);
+  }
+}
+
+.epigraph-ambient {
+  animation: epigraphPulse 9s ease-in-out infinite;
+}
+
+/* Precision Hardware Telemetry LED Beacon Pulse */
+@keyframes beaconPulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.5);
+  }
+  50% {
+    opacity: 0.65;
+    transform: scale(0.92);
+    box-shadow: 0 0 8px 2px rgba(74, 222, 128, 0.35);
+  }
+}
+
+.beacon-pulse {
+  animation: beaconPulse 2.4s ease-in-out infinite;
+}
+
+/* Hero Section Staggered Cinematic Entrance */
+@keyframes heroGlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.hero-enter-1 {
+  animation: heroGlideUp 0.65s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.hero-enter-2 {
+  animation: heroGlideUp 0.65s cubic-bezier(0.16, 1, 0.3, 1) 0.1s both;
+}
+.hero-enter-3 {
+  animation: heroGlideUp 0.65s cubic-bezier(0.16, 1, 0.3, 1) 0.2s both;
+}
+.hero-enter-4 {
+  animation: heroGlideUp 0.65s cubic-bezier(0.16, 1, 0.3, 1) 0.3s both;
+}
+
+/* Card Interactive Laser Lift & Shadow Glow */
+.card-laser-lift {
+  transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1),
+              border-color 0.25s ease,
+              box-shadow 0.3s ease;
+}
+.card-laser-lift:hover {
+  transform: translateY(-3px);
+  border-color: var(--accent);
+  box-shadow: 0 12px 28px -8px rgba(0, 0, 0, 0.55);
+}
+
+/* Terminal Hardware Cursor Blink */
+@keyframes terminalBlink {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+
+.terminal-cursor-blink {
+  animation: terminalBlink 1s infinite;
+}
+
+/* ==========================================================================
    Ancient Greek Exhibition & Philosophical Manuscript (Dark Museum Gallery)
    Consistent with the dark luxury, spacious architectural aesthetic of ArtCraft
    ========================================================================== */

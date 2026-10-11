@@ -39,7 +39,7 @@ export default function ContactSection() {
     <section id="contact" className="border-b border-line bg-bg">
       <div className="mx-auto max-w-[1400px] border-x border-line">
         <div className="p-6 sm:p-10 lg:p-16 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-          <div className="lg:col-span-7">
+          <div className="lg:col-span-7 reveal-on-scroll reveal-delay-1">
             <div className="hud-label text-accent mb-3">
               SECTION 08 // DIRECT TRANSMISSION &amp; CHANNELS
             </div>
@@ -57,7 +57,7 @@ export default function ContactSection() {
               <button
                 type="button"
                 onClick={() => handleCopy('url', PROFILE.githubUrl)}
-                className="inline-flex items-center gap-2 border border-line bg-surface hover:border-accent px-4 py-2.5 font-mono text-xs text-ink transition-colors"
+                className="inline-flex items-center gap-2 border border-line bg-surface hover:border-accent px-4 py-2.5 font-mono text-xs text-ink transition-colors card-laser-lift"
               >
                 {copiedField === 'url' ? (
                   <>
@@ -82,7 +82,7 @@ export default function ContactSection() {
                     'git clone https://github.com/phanaach4889/About-me..git'
                   )
                 }
-                className="inline-flex items-center gap-2 border border-line bg-surface hover:border-accent px-4 py-2.5 font-mono text-xs text-ink transition-colors"
+                className="inline-flex items-center gap-2 border border-line bg-surface hover:border-accent px-4 py-2.5 font-mono text-xs text-ink transition-colors card-laser-lift"
               >
                 {copiedField === 'clone' ? (
                   <>
@@ -101,8 +101,8 @@ export default function ContactSection() {
             </div>
           </div>
 
-          <div className="lg:col-span-5">
-            <div className="hud-frame border border-line bg-surface p-6 sm:p-8 space-y-5">
+          <div className="lg:col-span-5 reveal-on-scroll reveal-delay-2">
+            <div className="hud-frame border border-line bg-surface p-6 sm:p-8 space-y-5 card-laser-lift">
               <div className="flex items-center justify-between border-b border-line pb-3 font-mono text-xs">
                 <span className="text-muted">DEVELOPER IDENTITY NODE</span>
                 <div className="flex items-center gap-1.5">

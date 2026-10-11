@@ -47,7 +47,7 @@ export default function ProjectGrid({ projects, onSelectProject }) {
     <section id="projects" className="border-b border-line bg-bg">
       <div className="mx-auto max-w-[1400px] border-x border-line">
         {/* Section Header */}
-        <div className="p-6 sm:p-10 lg:p-12 border-b border-line flex flex-col lg:flex-row lg:items-end justify-between gap-6">
+        <div className="p-6 sm:p-10 lg:p-12 border-b border-line flex flex-col lg:flex-row lg:items-end justify-between gap-6 reveal-on-scroll">
           <div>
             <div className="hud-label text-accent mb-3">
               SECTION 03 // SOFTWARE &amp; EXPERIMENTS
@@ -64,10 +64,12 @@ export default function ProjectGrid({ projects, onSelectProject }) {
         </div>
 
         {/* Flagship & Featured Showcase */}
-        <FeaturedProjects
-          projects={projects}
-          onSelectProject={onSelectProject}
-        />
+        <div className="reveal-on-scroll reveal-delay-1">
+          <FeaturedProjects
+            projects={projects}
+            onSelectProject={onSelectProject}
+          />
+        </div>
 
         {/* Complete Project Index Header + Search & View Mode Controls */}
         <div className="px-6 py-5 sm:px-10 bg-surface border-b border-line flex flex-col lg:flex-row lg:items-center justify-between gap-4">

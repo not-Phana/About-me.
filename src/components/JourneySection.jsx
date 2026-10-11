@@ -8,7 +8,7 @@ export default function JourneySection() {
       <div className="mx-auto max-w-[1400px] border-x border-line">
         <div className="grid grid-cols-1 lg:grid-cols-12">
           {/* Left 8 Columns: Verified Milestones */}
-          <div className="lg:col-span-8 p-6 sm:p-10 lg:p-14 border-b lg:border-b-0 lg:border-r border-line">
+          <div className="lg:col-span-8 p-6 sm:p-10 lg:p-14 border-b lg:border-b-0 lg:border-r border-line reveal-on-scroll reveal-delay-1">
             <div className="hud-label text-accent mb-3">
               SECTION 07 // BUILDER MILESTONES
             </div>
@@ -62,7 +62,7 @@ export default function JourneySection() {
           </div>
 
           {/* Right 4 Columns: What I'm Exploring */}
-          <div className="lg:col-span-4 p-6 sm:p-10 lg:p-14 bg-surface/30 flex flex-col justify-between">
+          <div className="lg:col-span-4 p-6 sm:p-10 lg:p-14 bg-surface/30 flex flex-col justify-between reveal-on-scroll reveal-delay-2">
             <div>
               <div className="hud-label text-accent mb-3 flex items-center gap-2">
                 <IconCompass className="w-4 h-4" />
@@ -80,7 +80,7 @@ export default function JourneySection() {
                 {PROFILE.exploringTopics.map((topic, idx) => (
                   <li
                     key={topic}
-                    className="border border-line bg-bg p-3.5 font-mono text-xs text-ink flex items-start gap-3"
+                    className="border border-line bg-bg p-3.5 font-mono text-xs text-ink flex items-start gap-3 card-laser-lift"
                   >
                     <span className="text-accent font-bold">
                       0{idx + 1}

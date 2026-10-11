@@ -16,7 +16,7 @@ export default function CurrentlyBuilding({ projects, onSelectProject }) {
     <section id="building" className="border-b border-line bg-bg">
       <div className="mx-auto max-w-[1400px] border-x border-line">
         {/* Section Header */}
-        <div className="p-6 sm:p-10 lg:p-12 border-b border-line flex flex-col lg:flex-row lg:items-end justify-between gap-6 bg-surface/30">
+        <div className="p-6 sm:p-10 lg:p-12 border-b border-line flex flex-col lg:flex-row lg:items-end justify-between gap-6 bg-surface/30 reveal-on-scroll">
           <div>
             <div className="hud-label text-accent mb-3 flex items-center gap-2">
               <IconTerminal className="w-4 h-4" />
@@ -33,11 +33,11 @@ export default function CurrentlyBuilding({ projects, onSelectProject }) {
         </div>
 
         {/* Active Builds Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 gap-px bg-line">
+        <div className="grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 gap-px bg-line reveal-on-scroll reveal-delay-1">
           {activeBuilds.map((project) => (
             <div
               key={project.id}
-              className="bg-bg p-6 sm:p-10 flex flex-col justify-between"
+              className="bg-bg p-6 sm:p-10 flex flex-col justify-between card-laser-lift"
             >
               <div>
                 <div className="flex flex-wrap items-center justify-between gap-2 font-mono text-xs mb-4">
@@ -48,7 +48,7 @@ export default function CurrentlyBuilding({ projects, onSelectProject }) {
                     <span
                       className={`h-1.5 w-1.5 rounded-full ${
                         project.statusTone === 'live'
-                          ? 'bg-[#4ade80]'
+                          ? 'bg-[#4ade80] beacon-pulse'
                           : 'bg-[#d4a528]'
                       }`}
                     />

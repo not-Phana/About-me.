@@ -123,7 +123,7 @@ export default function GitHubSection() {
     <section id="github" className="border-b border-line bg-bg">
       <div className="mx-auto max-w-[1400px] border-x border-line">
         {/* Section Header */}
-        <div className="p-6 sm:p-10 lg:p-12 border-b border-line flex flex-col lg:flex-row lg:items-end justify-between gap-6">
+        <div className="p-6 sm:p-10 lg:p-12 border-b border-line flex flex-col lg:flex-row lg:items-end justify-between gap-6 reveal-on-scroll">
           <div>
             <div className="hud-label text-accent mb-3">
               SECTION 05 // GITHUB WORKSPACE &amp; REPOSITORIES
@@ -169,7 +169,7 @@ export default function GitHubSection() {
             <span
               className={`h-2 w-2 rounded-full ${
                 status === 'live'
-                  ? 'bg-[#4ade80]'
+                  ? 'bg-[#4ade80] beacon-pulse'
                   : status === 'loading'
                   ? 'bg-[#d4a528]'
                   : 'bg-[#818cf8]'
@@ -190,7 +190,7 @@ export default function GitHubSection() {
         </div>
 
         {/* Profile Overview & Verified Activity Strip */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 border-b border-line">
+        <div className="grid grid-cols-1 lg:grid-cols-12 border-b border-line reveal-on-scroll reveal-delay-1">
           {/* Left: Public GitHub Profile Card + Language Telemetry Bar */}
           <div className="lg:col-span-5 p-6 sm:p-10 border-b lg:border-b-0 lg:border-r border-line flex flex-col justify-between bg-bg">
             <div className="flex items-start gap-4">
@@ -427,13 +427,13 @@ export default function GitHubSection() {
             </button>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 divide-y md:divide-y-0 gap-px bg-line">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 divide-y md:divide-y-0 gap-px bg-line reveal-on-scroll reveal-delay-2">
             {displayedRepos.map((repo) => {
               const isCopied = copiedRepo === repo.name;
               return (
                 <article
                   key={repo.id || repo.name}
-                  className="spotlight-card bg-bg p-6 sm:p-8 flex flex-col justify-between hover:bg-surface/40 transition-colors"
+                  className="spotlight-card card-laser-lift bg-bg p-6 sm:p-8 flex flex-col justify-between hover:bg-surface/40 transition-colors"
                 >
                   <div>
                     <div className="flex items-center justify-between gap-2 font-mono text-xs text-muted mb-3">

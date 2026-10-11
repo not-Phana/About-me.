@@ -156,7 +156,7 @@ export default function AboutSection({ onExploreProjects, onPlaySound }) {
     <section
       id="about"
       aria-labelledby="about-manuscript-heading"
-      className="greek-archive-section relative border-b border-line py-10 sm:py-16 lg:py-20 px-4 sm:px-6 lg:px-10 overflow-hidden"
+      className="greek-archive-section relative border-b border-line py-10 sm:py-16 lg:py-20 px-4 sm:px-6 lg:px-10 overflow-hidden reveal-on-scroll"
     >
       {/* Subtle Museum Stone Grain Texture */}
       <svg
@@ -183,13 +183,13 @@ export default function AboutSection({ onExploreProjects, onPlaySound }) {
       >
         <div
           lang="el"
-          className="absolute -top-12 -right-8 font-classical font-semibold text-[7rem] sm:text-[11rem] lg:text-[14rem] tracking-[0.1em] leading-[0.8] text-[var(--ms-epigraph)] whitespace-nowrap"
+          className="epigraph-ambient absolute -top-12 -right-8 font-classical font-semibold text-[7rem] sm:text-[11rem] lg:text-[14rem] tracking-[0.1em] leading-[0.8] text-[var(--ms-epigraph)] whitespace-nowrap"
         >
           ΓΝΩΘΙ
         </div>
         <div
           lang="el"
-          className="absolute -bottom-10 -left-6 font-classical italic text-[5.5rem] sm:text-[8rem] lg:text-[10.5rem] tracking-[0.06em] leading-none text-[var(--ms-faint)] whitespace-nowrap"
+          className="epigraph-ambient absolute -bottom-10 -left-6 font-classical italic text-[5.5rem] sm:text-[8rem] lg:text-[10.5rem] tracking-[0.06em] leading-none text-[var(--ms-faint)] whitespace-nowrap"
         >
           Τέχνη // Ἐπιστήμη
         </div>
@@ -227,7 +227,7 @@ export default function AboutSection({ onExploreProjects, onPlaySound }) {
         {/* Asymmetrical Editorial Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-12 relative">
           {/* LEFT COLUMN: Personal Biography & Three Principles */}
-          <div className="lg:col-span-7 relative z-10 p-6 sm:p-10 lg:p-14 xl:p-16 lg:border-r border-[var(--ms-rule)] flex flex-col justify-between">
+          <div className="lg:col-span-7 relative z-10 p-6 sm:p-10 lg:p-14 xl:p-16 lg:border-r border-[var(--ms-rule)] flex flex-col justify-between reveal-on-scroll reveal-delay-1">
             <div>
               {/* Editorial Section Rubric */}
               <div className="flex items-center gap-3 mb-5">
@@ -329,7 +329,7 @@ export default function AboutSection({ onExploreProjects, onPlaySound }) {
                 {PHILOSOPHY_PRINCIPLES.map((item) => (
                   <div
                     key={item.numeral}
-                    className="p-4 sm:p-5 border border-[var(--ms-rule)] bg-[var(--ms-surface)]/50 hover:border-[var(--ms-bronze)] transition-all group"
+                    className="p-4 sm:p-5 border border-[var(--ms-rule)] bg-[var(--ms-surface)]/50 card-laser-lift group"
                   >
                     <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[var(--ms-rule)] pb-2 mb-2.5">
                       <div className="flex items-baseline gap-2.5">
@@ -388,7 +388,7 @@ export default function AboutSection({ onExploreProjects, onPlaySound }) {
             ref={stageRef}
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
-            className="lg:col-span-5 relative flex flex-col justify-between p-6 sm:p-8 lg:p-10 overflow-hidden bg-[var(--ms-surface)]/30 transition-colors"
+            className="lg:col-span-5 relative flex flex-col justify-between p-6 sm:p-8 lg:p-10 overflow-hidden bg-[var(--ms-surface)]/30 transition-colors reveal-on-scroll reveal-delay-2"
           >
             {/* Dynamic Interactive Gallery Chiaroscuro Spotlight */}
             <div
@@ -481,7 +481,7 @@ export default function AboutSection({ onExploreProjects, onPlaySound }) {
                   key={currentPlate.src}
                   src={currentPlate.src}
                   alt={currentPlate.alt}
-                  className="sculpture-cutout-shadow w-full h-full object-contain select-none"
+                  className="sculpture-floating sculpture-cutout-shadow w-full h-full object-contain select-none"
                 />
               </div>
             </figure>

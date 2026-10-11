@@ -42,7 +42,7 @@ export default function ProjectCard({
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
       style={tiltStyle}
-      className="spotlight-card group flex flex-col justify-between bg-bg p-6 sm:p-8 transition-colors"
+      className="spotlight-card card-laser-lift group flex flex-col justify-between bg-bg p-6 sm:p-8 transition-colors"
     >
       <div>
         {/* Card Header Metadata */}
@@ -53,7 +53,7 @@ export default function ProjectCard({
             <span>{project.category.toUpperCase()}</span>
           </span>
           <span className="inline-flex items-center gap-1.5 border border-line bg-surface px-2.5 py-0.5 text-[11px] text-ink">
-            <span className={`h-1.5 w-1.5 rounded-full ${statusDotColor}`} />
+            <span className={`h-1.5 w-1.5 rounded-full ${statusDotColor} ${project.statusTone === 'live' ? 'beacon-pulse' : ''}`} />
             <span>{project.status}</span>
           </span>
         </div>
