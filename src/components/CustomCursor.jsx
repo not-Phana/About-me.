@@ -196,22 +196,29 @@ export default function CustomCursor() {
         document.activeElement.blur();
       }
 
+      const clickX = typeof e.clientX === 'number' && e.clientX > 0 ? e.clientX : mouseX;
+      const clickY = typeof e.clientY === 'number' && e.clientY > 0 ? e.clientY : mouseY;
+
+      if (clickX <= 0 || clickY <= 0 || clickX >= window.innerWidth || clickY >= window.innerHeight) {
+        return;
+      }
+
       if (isTextMode) {
         dot.classList.add('is-pressed');
-        spawnSparks(mouseX, mouseY, 5, true);
+        spawnSparks(clickX, clickY, 5, true);
       } else {
         dot.classList.add('dot-flash');
         ring.style.transform = `translate(${ringX}px, ${ringY}px) translate(-50%, -50%) scale(0.8)`;
 
-        spawnSparks(mouseX, mouseY, 10, false);
-        spawnShockRing(mouseX, mouseY);
-        spawnRadialFlash(mouseX, mouseY);
+        spawnSparks(clickX, clickY, 10, false);
+        spawnShockRing(clickX, clickY);
+        spawnRadialFlash(clickX, clickY);
 
-        // Clicked element outline pulse
+        // Clicked element outline pulse (exclude navbar to prevent border bleed)
         const target = e.target;
         if (target && target instanceof Element) {
           const clickable = target.closest('button, a, [role="button"], [role="tab"], .spotlight-card');
-          if (clickable) {
+          if (clickable && !clickable.closest('#site-nav')) {
             clickable.classList.remove('pk-outline-pulse');
             void clickable.offsetWidth;
             clickable.classList.add('pk-outline-pulse');

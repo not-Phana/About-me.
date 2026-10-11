@@ -40,7 +40,6 @@ export default function Navbar({
   onOpenCommandPalette,
 }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [scrollPct, setScrollPct] = useState(0);
   const [clockText, setClockText] = useState(() => {
     try {
       return new Date().toLocaleTimeString('en-GB', { hour12: false });
@@ -58,16 +57,6 @@ export default function Navbar({
       }
     }, 1000);
     return () => clearInterval(timer);
-  }, []);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      const h = document.documentElement;
-      const max = h.scrollHeight - h.clientHeight;
-      setScrollPct(max > 0 ? Math.min(100, (h.scrollTop / max) * 100) : 0);
-    };
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   useEffect(() => {
@@ -91,14 +80,6 @@ export default function Navbar({
       id="site-nav"
       className="sticky top-0 left-0 z-50 w-full bg-bg border-b border-line select-none"
     >
-      {/* Top Architectural Laser Progress Bar */}
-      <div className="relative h-[2px] w-full bg-lineSoft overflow-hidden">
-        <div
-          className="h-full bg-accent transition-[width] duration-75"
-          style={{ width: `${scrollPct}%` }}
-        />
-      </div>
-
       <div className="mx-auto flex h-14 max-w-[1400px] border-x border-line items-stretch justify-between bg-bg">
         {/* ================================================================
             LEFT: STUDIO BRAND IDENTITY MODULE
@@ -110,12 +91,6 @@ export default function Navbar({
             className="group relative flex items-center gap-3 border-r border-line px-4 sm:px-5 text-ink hover:bg-surface transition-colors whitespace-nowrap"
             aria-label="PK — Phana Kurosaki Home"
           >
-            {/* Top-left accent corner tick */}
-            <span
-              className="pointer-events-none absolute top-0 left-0 w-2 h-2 border-t-2 border-l-2 border-accent opacity-80 group-hover:opacity-100"
-              aria-hidden="true"
-            />
-
             <PKMonogram className="w-7 h-7 text-ink shrink-0 transition-transform duration-200 group-hover:scale-105" />
 
             <div className="flex flex-col justify-center leading-none">

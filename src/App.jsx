@@ -202,11 +202,15 @@ export default function App() {
       setActiveSection(sectionId);
 
       requestAnimationFrame(() => {
-        const target = document.getElementById(sectionId);
-        if (target) {
-          target.scrollIntoView({ behavior: 'smooth' });
-        } else {
+        if (sectionId === 'home') {
           window.scrollTo({ top: 0, behavior: 'smooth' });
+        } else {
+          const target = document.getElementById(sectionId);
+          if (target) {
+            target.scrollIntoView({ behavior: 'smooth' });
+          } else {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          }
         }
       });
     },
