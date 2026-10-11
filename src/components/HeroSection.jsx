@@ -144,6 +144,7 @@ export default function HeroSection({
     KHMER_DEMO_KEYS[4], // រ
   ]);
   const [lastPressedKey, setLastPressedKey] = useState(KHMER_DEMO_KEYS[4]);
+  const [burstKey, setBurstKey] = useState(0);
 
   // State for Mode 2: Interactive NEON PROTOCOL Skill & Radar Inspector
   const [selectedSkillIdx, setSelectedSkillIdx] = useState(0);
@@ -160,6 +161,7 @@ export default function HeroSection({
     onPlaySound?.('keycap');
     setLastPressedKey(keyObj);
     setTypedBuffer((prev) => [...prev.slice(-9), keyObj]);
+    setBurstKey((prev) => prev + 1);
   };
 
   const handleSpellKhmerWord = () => {
@@ -172,6 +174,7 @@ export default function HeroSection({
       KHMER_DEMO_KEYS[4],
     ]);
     setLastPressedKey(KHMER_DEMO_KEYS[4]);
+    setBurstKey((prev) => prev + 1);
   };
 
   const handleCopyIconSvg = () => {
@@ -229,13 +232,16 @@ export default function HeroSection({
           <div className="flex items-center gap-2.5">
             <span className="inline-block h-2 w-2 rounded-full bg-[#4ade80] beacon-pulse" />
             <span className="text-ink font-medium">{PROFILE.tagline}</span>
-            {/* Live Audio Frequency Spectrum Telemetry */}
-            <div className="hidden sm:inline-flex items-end gap-[3px] h-3 ml-2 opacity-85" title="Hardware Audio Telemetry Loop">
+            {/* Live Audio Frequency Spectrum Telemetry (8-Bar Animated Analyzer) */}
+            <div className="hidden sm:inline-flex items-end gap-[2.5px] h-3.5 ml-2.5 opacity-90" title="Live Hardware Audio Engine Telemetry">
               <span className="w-1 bg-[#4ade80] rounded-xs animate-eq-1 inline-block" />
               <span className="w-1 bg-[#4ade80] rounded-xs animate-eq-2 inline-block" />
               <span className="w-1 bg-[#4ade80] rounded-xs animate-eq-3 inline-block" />
               <span className="w-1 bg-[#4ade80] rounded-xs animate-eq-4 inline-block" />
               <span className="w-1 bg-[#4ade80] rounded-xs animate-eq-5 inline-block" />
+              <span className="w-1 bg-[#4ade80] rounded-xs animate-eq-6 inline-block" />
+              <span className="w-1 bg-[#4ade80] rounded-xs animate-eq-7 inline-block" />
+              <span className="w-1 bg-[#4ade80] rounded-xs animate-eq-8 inline-block" />
             </div>
           </div>
           <div className="flex items-center gap-4">
@@ -256,8 +262,8 @@ export default function HeroSection({
           {/* Left Column: Editorial Typography & CTAs */}
           <div className="hero-enter-2 lg:col-span-7 flex flex-col justify-between p-6 sm:p-10 lg:p-14 border-b lg:border-b-0 lg:border-r border-line">
             <div>
-              {/* Museum Curator Folio Plaque with Classical Serif Full Name */}
-              <div className="hero-enter-2 mb-6 border-l-2 border-accent/60 pl-3.5 sm:pl-4 py-0.5">
+              {/* Museum Curator Folio Plaque with Classical Serif Full Name & Laser Scanner */}
+              <div className="hero-enter-2 mb-6 border-l-2 border-accent/60 pl-3.5 sm:pl-4 py-0.5 relative laser-scanner-line">
                 <div className="flex items-center gap-2 font-mono text-[10px] tracking-[0.2em] uppercase text-accent font-bold mb-1">
                   <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
                   <span>EXHIBITION FOLIO 01 // INDEPENDENT DEVELOPER</span>
@@ -284,7 +290,7 @@ export default function HeroSection({
 
               <h1 className="hero-enter-3 font-display text-4xl sm:text-6xl xl:text-[4.35rem] font-extrabold tracking-[-0.035em] leading-[1.03] text-ink">
                 {PROFILE.heroHeadlineMain}{' '}
-                <span className="font-serif italic font-normal text-accent block sm:inline">
+                <span className="font-serif italic font-normal text-shimmer-gold block sm:inline">
                   {PROFILE.heroHeadlineAccent}
                 </span>
               </h1>
@@ -323,29 +329,32 @@ export default function HeroSection({
                 </a>
               </div>
 
-              {/* Verified Quick Architecture Summary */}
-              <div className="mt-8 grid grid-cols-3 gap-4 pt-6 border-t border-lineSoft font-mono">
-                <div>
-                  <div className="text-[11px] text-muted uppercase tracking-wider">
-                    LIVE ON GITHUB PAGES
+              {/* Verified Quick Architecture Summary with Interactive Hover Cards */}
+              <div className="mt-8 grid grid-cols-3 gap-3 sm:gap-4 pt-6 border-t border-lineSoft font-mono">
+                <div className="hud-frame p-2.5 sm:p-3 border border-transparent hover:border-line hover:bg-surface/50 transition-all duration-200">
+                  <div className="text-[10px] sm:text-[11px] text-muted uppercase tracking-wider flex items-center gap-1.5">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#4ade80] beacon-pulse" />
+                    <span className="truncate">PAGES</span>
                   </div>
-                  <div className="mt-1 text-lg sm:text-xl font-bold text-ink">
+                  <div className="mt-1 text-base sm:text-xl font-bold text-ink">
                     3 Web Apps
                   </div>
                 </div>
-                <div>
-                  <div className="text-[11px] text-muted uppercase tracking-wider">
-                    DOCUMENTED BUILDS
+                <div className="hud-frame p-2.5 sm:p-3 border border-transparent hover:border-line hover:bg-surface/50 transition-all duration-200">
+                  <div className="text-[10px] sm:text-[11px] text-muted uppercase tracking-wider flex items-center gap-1.5">
+                    <span className="w-1.5 h-1.5 rounded-full bg-accent" />
+                    <span className="truncate">BUILDS</span>
                   </div>
-                  <div className="mt-1 text-lg sm:text-xl font-bold text-ink">
+                  <div className="mt-1 text-base sm:text-xl font-bold text-ink">
                     {PROJECTS.length} Projects
                   </div>
                 </div>
-                <div>
-                  <div className="text-[11px] text-muted uppercase tracking-wider">
-                    ARCHITECTURE
+                <div className="hud-frame p-2.5 sm:p-3 border border-transparent hover:border-line hover:bg-surface/50 transition-all duration-200">
+                  <div className="text-[10px] sm:text-[11px] text-muted uppercase tracking-wider flex items-center gap-1.5">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#818cf8]" />
+                    <span className="truncate">STACK</span>
                   </div>
-                  <div className="mt-1 text-lg sm:text-xl font-bold text-accent">
+                  <div className="mt-1 text-base sm:text-xl font-bold text-accent">
                     Zero Templates
                   </div>
                 </div>
@@ -454,30 +463,37 @@ export default function HeroSection({
                     </div>
                   </div>
 
-                  {/* Live Khmer Output Display */}
-                  <div className="border border-line bg-surface p-3.5 flex items-center justify-between min-h-[60px]">
-                    <div className="text-2xl sm:text-3xl font-bold text-ink tracking-wide">
+                  {/* Live Khmer Output Display with Key Burst Bounce Pop */}
+                  <div className="border border-line bg-surface p-3.5 flex items-center justify-between min-h-[60px] overflow-hidden">
+                    <div
+                      key={burstKey}
+                      className="animate-key-burst text-2xl sm:text-3xl font-bold text-ink tracking-wide"
+                    >
                       {typedBuffer.length > 0 ? (
-                        typedBuffer.map((k) => k.kh).join('')
+                        typedBuffer.map((k, idx) => (
+                          <span key={idx} className="inline-block transition-transform hover:scale-110">
+                            {k.kh}
+                          </span>
+                        ))
                       ) : (
                         <span className="text-sm font-mono text-muted">
                           Click mechanical keycaps below...
                         </span>
                       )}
                     </div>
-                    <span className="font-mono text-[11px] text-accent border border-line bg-bg px-2 py-1">
+                    <span className="font-mono text-[11px] text-accent border border-line bg-bg px-2 py-1 shadow-xs">
                       {lastPressedKey.code} ({lastPressedKey.key})
                     </span>
                   </div>
 
-                  {/* Interactive Mechanical Keycaps */}
+                  {/* Interactive Mechanical Keycaps with tactile active pop */}
                   <div className="grid grid-cols-4 gap-2">
                     {KHMER_DEMO_KEYS.map((k) => (
                       <button
                         key={k.key}
                         type="button"
                         onClick={() => handlePressKhmerKey(k)}
-                        className="pk-keycap bg-surface hover:border-accent p-2.5 flex flex-col items-center justify-center"
+                        className="pk-keycap bg-surface hover:border-accent active:scale-90 transition-all duration-100 p-2.5 flex flex-col items-center justify-center hover:bg-surface2"
                       >
                         <span className="font-mono text-[10px] text-muted">
                           Key [{k.key}]
@@ -513,7 +529,7 @@ export default function HeroSection({
                     </span>
                   </div>
 
-                  {/* Interactive Tactical Grid Box */}
+                  {/* Interactive Tactical Animated Radar Scope */}
                   <div
                     onMouseMove={(e) => {
                       const rect = e.currentTarget.getBoundingClientRect();
@@ -526,16 +542,74 @@ export default function HeroSection({
                       setRadarCoords({ x: nx, y: ny });
                     }}
                     onClick={() => onPlaySound?.('pulse')}
-                    className="cursor-crosshair border border-line bg-surface p-3.5 font-mono text-xs"
+                    className="relative cursor-crosshair border border-line bg-[#08090c] p-2.5 overflow-hidden group select-none"
                   >
-                    <div className="flex items-center justify-between text-[11px] text-accent mb-1">
-                      <span>
-                        ACTIVE SLOT: {NEON_SKILLS[selectedSkillIdx].slot} //{' '}
-                        {NEON_SKILLS[selectedSkillIdx].name}
-                      </span>
-                      <span>{NEON_SKILLS[selectedSkillIdx].threat}</span>
+                    {/* Radar SVG Visual Scope */}
+                    <div className="relative w-full h-[135px] flex items-center justify-center overflow-hidden">
+                      <svg
+                        className="absolute inset-0 w-full h-full"
+                        viewBox="0 0 380 135"
+                        preserveAspectRatio="xMidYMid meet"
+                      >
+                        {/* Center horizontal & vertical range axis */}
+                        <line x1="0" y1="67.5" x2="380" y2="67.5" stroke="#4ade80" strokeWidth="0.5" strokeOpacity="0.25" strokeDasharray="4 4" />
+                        <line x1="190" y1="0" x2="190" y2="135" stroke="#4ade80" strokeWidth="0.5" strokeOpacity="0.25" strokeDasharray="4 4" />
+
+                        {/* Concentric distance rings */}
+                        <circle cx="190" cy="67.5" r="28" stroke="#4ade80" strokeWidth="0.75" strokeOpacity="0.32" fill="none" />
+                        <circle cx="190" cy="67.5" r="54" stroke="#4ade80" strokeWidth="0.75" strokeOpacity="0.22" fill="none" strokeDasharray="3 3" />
+                        <circle cx="190" cy="67.5" r="82" stroke="#4ade80" strokeWidth="0.75" strokeOpacity="0.14" fill="none" />
+
+                        {/* Target Blip 1: Valkyrie Mk-IV (Center) */}
+                        <circle cx="190" cy="67.5" r="3.5" fill="#4ade80" />
+                        <circle cx="190" cy="67.5" r="8" stroke="#4ade80" strokeWidth="0.8" fill="none" className="radar-blip-ping" />
+
+                        {/* Target Blip 2: Orbital Bit Alpha */}
+                        <circle cx="155" cy="42" r="2.5" fill="#38bdf8" />
+                        <text x="160" y="40" fill="#38bdf8" fontSize="8" fontFamily="monospace" opacity="0.85">BIT-01</text>
+
+                        {/* Target Blip 3: Orbital Bit Beta */}
+                        <circle cx="225" cy="92" r="2.5" fill="#38bdf8" />
+                        <text x="230" y="96" fill="#38bdf8" fontSize="8" fontFamily="monospace" opacity="0.85">BIT-02</text>
+
+                        {/* Target Blip 4: Hostile Target */}
+                        <circle cx="255" cy="38" r="3" fill="#f87171" />
+                        <circle cx="255" cy="38" r="9" stroke="#f87171" strokeWidth="0.8" fill="none" className="radar-blip-ping" />
+                        <text x="263" y="36" fill="#f87171" fontSize="8" fontFamily="monospace" opacity="0.9">HOSTILE // 3,420M</text>
+
+                        {/* Rotating 360-degree radar beam sweep */}
+                        <g transform="translate(190, 67.5)">
+                          <g className="animate-radar-sweep">
+                            <line x1="0" y1="0" x2="115" y2="0" stroke="#4ade80" strokeWidth="1.5" strokeOpacity="0.85" />
+                            <polygon points="0,0 115,-40 115,0" fill="url(#radarSweepGrad)" />
+                          </g>
+                        </g>
+
+                        <defs>
+                          <linearGradient id="radarSweepGrad" x1="0%" y1="100%" x2="100%" y2="0%">
+                            <stop offset="0%" stopColor="#4ade80" stopOpacity="0" />
+                            <stop offset="100%" stopColor="#4ade80" stopOpacity="0.25" />
+                          </linearGradient>
+                        </defs>
+                      </svg>
+
+                      {/* HUD Corner telemetry overlay */}
+                      <div className="absolute top-1 left-2 font-mono text-[9px] text-[#4ade80]/80">
+                        RANGE: 4,200M // 60 FPS
+                      </div>
+                      <div className="absolute top-1 right-2 font-mono text-[9px] text-accent">
+                        TRACK: {radarCoords.x}:{radarCoords.y}
+                      </div>
                     </div>
-                    <p className="text-ink text-xs leading-relaxed">
+
+                    {/* Active Tactical Skill Spec Readout */}
+                    <div className="mt-2.5 pt-2 border-t border-lineSoft flex items-center justify-between text-[11px] text-accent">
+                      <span>
+                        ACTIVE: {NEON_SKILLS[selectedSkillIdx].slot} // {NEON_SKILLS[selectedSkillIdx].name}
+                      </span>
+                      <span className="font-mono text-[10px] text-muted">{NEON_SKILLS[selectedSkillIdx].threat}</span>
+                    </div>
+                    <p className="mt-1 text-ink text-xs leading-relaxed font-mono">
                       {NEON_SKILLS[selectedSkillIdx].spec}
                     </p>
                   </div>
@@ -550,8 +624,7 @@ export default function HeroSection({
                           onPlaySound?.('keycap');
                           setSelectedSkillIdx(idx);
                         }}
-                        className={`pk-keycap p-2 text-left ${
-                          selectedIconIdx !== undefined &&
+                        className={`pk-keycap p-2 text-left active:scale-95 transition-all duration-100 ${
                           selectedSkillIdx === idx
                             ? 'bg-invertBg text-invertFg font-bold'
                             : 'bg-surface text-muted hover:text-ink'
