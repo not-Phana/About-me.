@@ -8,6 +8,7 @@
 export const PROFILE = {
   fullName: 'Phana Kurosaki',
   displayName: 'Phana',
+  preferredName: 'Phana',
   nickname: 'KON',
   brand: 'PK',
   tagline: 'Independent builder · Always learning.',
@@ -19,11 +20,12 @@ export const PROFILE = {
   githubUsername: 'phanaach4889',
   githubUrl: 'https://github.com/phanaach4889',
   githubBio: 'Building something good for my society.',
-  aboutHeading: 'Learning by building. Improving with every project.',
+  aboutHeading: 'A mind that builds. A journey still being written.',
   aboutParagraphs: [
-    "I'm Phana Kurosaki (also known online as KON), an independent builder interested in software, web development, developer tools, and games.",
-    'I enjoy turning ideas into working projects, testing what is possible, and improving things when they break. AI is part of my workflow, but my goal is to understand the technology and become more capable through the process.',
-    "This website is where I share what I'm building, what I've learned, and what I want to create next.",
+    "I'm Phana Kurosaki, an independent builder who enjoys turning ideas into working projects.",
+    'From web development and developer tools to experiments with AI and interactive software, I like exploring what I can create, learning how things work, and improving my projects along the way.',
+    'I use modern tools to expand what I can build, but I also want to understand the work behind the result.',
+    'This is where my ideas become projects, mistakes become lessons, and unfinished experiments become something better.',
   ],
   philosophy: [
     {

@@ -9,7 +9,8 @@ export default {
     extend: {
       fontFamily: {
         display: ['"Bricolage Grotesque"', '"Archivo"', 'system-ui', 'sans-serif'],
-        serif: ['"Instrument Serif"', 'Georgia', 'serif'],
+        classical: ['"Cormorant Garamond"', '"Instrument Serif"', 'Georgia', 'serif'],
+        serif: ['"Instrument Serif"', '"Cormorant Garamond"', 'Georgia', 'serif'],
         sans: ['"Instrument Sans"', '"Inter"', 'system-ui', 'sans-serif'],
         mono: ['"JetBrains Mono"', 'monospace'],
       },

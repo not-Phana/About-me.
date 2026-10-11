@@ -287,7 +287,9 @@ export default function App() {
               projects={PROJECTS}
               onSelectProject={handleSelectProject}
             />
-            <AboutSection />
+            <AboutSection
+              onExploreProjects={() => handleNavigateHome('projects')}
+            />
             <JourneySection />
             <ContactSection />
           </>

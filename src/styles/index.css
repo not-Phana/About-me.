@@ -245,6 +245,78 @@ body {
   animation: fadeSlideUp 0.35s cubic-bezier(0.2, 0.8, 0.2, 1) both;
 }
 
+/* ==========================================================================
+   Ancient Greek Exhibition & Philosophical Manuscript Palette (About Section)
+   ========================================================================== */
+.greek-archive-section {
+  --ms-bg: #0e0d0b;
+  --ms-surface: #141310;
+  --ms-parchment: #1a1814;
+  --ms-ivory: #ede6d6;
+  --ms-limestone: #c7bda8;
+  --ms-marble: #8f8778;
+  --ms-faint: rgba(237, 230, 214, 0.055);
+  --ms-epigraph: rgba(237, 230, 214, 0.075);
+  --ms-rule: #2a2721;
+  --ms-rule-strong: #423c32;
+  --ms-bronze: #c8a464;
+  background-color: var(--ms-bg);
+  color: var(--ms-ivory);
+}
+
+[data-theme="light"] .greek-archive-section {
+  --ms-bg: #f3eee3;
+  --ms-surface: #ebe4d5;
+  --ms-parchment: #e3dac8;
+  --ms-ivory: #171512;
+  --ms-limestone: #3b362e;
+  --ms-marble: #6b6356;
+  --ms-faint: rgba(23, 21, 18, 0.05);
+  --ms-epigraph: rgba(23, 21, 18, 0.075);
+  --ms-rule: #d3cab8;
+  --ms-rule-strong: #b0a48e;
+  --ms-bronze: #7a5b28;
+}
+
+/* Subtle engraved double-frame for manuscript folio */
+.manuscript-double-frame {
+  border: 1px solid var(--ms-rule-strong);
+  box-shadow: inset 0 0 0 4px var(--ms-bg), inset 0 0 0 5px var(--ms-rule);
+}
+
+/* Restrained editorial link underline animation */
+.editorial-link {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+.editorial-link::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -3px;
+  width: 100%;
+  height: 1px;
+  background-color: var(--ms-bronze);
+  transform: scaleX(0.35);
+  transform-origin: left;
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.editorial-link:hover::after,
+.editorial-link:focus-visible::after {
+  transform: scaleX(1);
+}
+
+/* Gentle sculpture image transition */
+.sculpture-plate-img {
+  transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.45s ease;
+}
+.sculpture-stage:hover .sculpture-plate-img {
+  transform: scale(1.018) translateY(-2px);
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
