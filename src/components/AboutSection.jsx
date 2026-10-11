@@ -232,7 +232,7 @@ export default function AboutSection({ onExploreProjects, onPlaySound }) {
               /
             </span>
             <span>
-              PHANA KUROSAKI ({PROFILE.brand})
+              {PROFILE.fullName.toUpperCase()} ({PROFILE.brand})
             </span>
           </div>
 
@@ -281,7 +281,7 @@ export default function AboutSection({ onExploreProjects, onPlaySound }) {
               {/* Personal Biography Paragraphs */}
               <div className="mt-8 space-y-4 max-w-[58ch] text-[15px] sm:text-[17px] text-[var(--ms-limestone)] leading-[1.8]">
                 <p className="manuscript-dropcap font-classical text-xl sm:text-[1.28rem] text-[var(--ms-ivory)] leading-[1.6]">
-                  I&apos;m Phana Kurosaki, also known as Phana or KON—an
+                  I&apos;m {PROFILE.fullName}, also known as {PROFILE.displayName} or {PROFILE.nickname}—an
                   independent builder who enjoys turning ideas into working
                   projects.
                 </p>

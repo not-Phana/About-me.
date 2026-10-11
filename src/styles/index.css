@@ -494,26 +494,27 @@ body {
 }
 
 .text-stroke-watermark {
-  font-family: 'Cinzel', 'Cormorant Garamond', Georgia, serif;
+  font-family: 'Cormorant Garamond', 'Instrument Serif', Georgia, serif;
+  font-weight: 600;
   color: transparent;
-  -webkit-text-stroke: 1.8px rgba(255, 255, 255, 0.13);
+  -webkit-text-stroke: 1px rgba(244, 243, 239, 0.18);
   background: linear-gradient(
     180deg,
-    rgba(255, 255, 255, 0.15) 0%,
-    rgba(212, 165, 40, 0.08) 55%,
+    rgba(255, 255, 255, 0.20) 0%,
+    rgba(212, 165, 40, 0.08) 60%,
     transparent 100%
   );
   -webkit-background-clip: text;
   background-clip: text;
-  filter: drop-shadow(0 0 30px rgba(212, 165, 40, 0.08));
+  filter: drop-shadow(0 4px 25px rgba(212, 165, 40, 0.08));
 }
 
 [data-theme="light"] .text-stroke-watermark {
-  -webkit-text-stroke: 1.8px rgba(0, 0, 0, 0.11);
+  -webkit-text-stroke: 1px rgba(20, 22, 26, 0.16);
   background: linear-gradient(
     180deg,
-    rgba(0, 0, 0, 0.12) 0%,
-    rgba(212, 165, 40, 0.09) 55%,
+    rgba(20, 22, 26, 0.18) 0%,
+    rgba(180, 130, 20, 0.08) 60%,
     transparent 100%
   );
   -webkit-background-clip: text;
@@ -521,26 +522,27 @@ body {
 }
 
 .text-stroke-watermark-gold {
-  font-family: 'Cinzel', 'Cormorant Garamond', Georgia, serif;
+  font-family: 'Cormorant Garamond', 'Instrument Serif', Georgia, serif;
+  font-weight: 600;
   color: transparent;
-  -webkit-text-stroke: 1.8px rgba(212, 165, 40, 0.24);
+  -webkit-text-stroke: 1px rgba(212, 165, 40, 0.26);
   background: linear-gradient(
     180deg,
-    rgba(212, 165, 40, 0.22) 0%,
-    rgba(212, 165, 40, 0.08) 60%,
+    rgba(212, 165, 40, 0.25) 0%,
+    rgba(212, 165, 40, 0.08) 65%,
     transparent 100%
   );
   -webkit-background-clip: text;
   background-clip: text;
-  filter: drop-shadow(0 0 35px rgba(212, 165, 40, 0.18));
+  filter: drop-shadow(0 4px 30px rgba(212, 165, 40, 0.18));
 }
 
 [data-theme="light"] .text-stroke-watermark-gold {
-  -webkit-text-stroke: 1.8px rgba(180, 130, 20, 0.25);
+  -webkit-text-stroke: 1px rgba(180, 130, 20, 0.26);
   background: linear-gradient(
     180deg,
     rgba(180, 130, 20, 0.24) 0%,
-    rgba(180, 130, 20, 0.08) 60%,
+    rgba(180, 130, 20, 0.08) 65%,
     transparent 100%
   );
   -webkit-background-clip: text;

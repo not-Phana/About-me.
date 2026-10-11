@@ -191,32 +191,35 @@ export default function HeroSection({
       {/* Interactive Cyber-Celestial Constellation Canvas Background */}
       <InteractiveCanvas />
 
-      {/* Monumental Ancient Greek Inscription Watermark in Background */}
+      {/* Monumental Classical Greek Typography Watermark in Background (Unobstructed in Editorial Column) */}
       <div
         aria-hidden="true"
-        className="hero-watermark-ambient pointer-events-none select-none absolute inset-0 z-0 flex flex-col items-center justify-center overflow-hidden"
+        className="hero-watermark-ambient pointer-events-none select-none absolute inset-y-0 left-0 w-full lg:w-[58%] z-0 flex flex-col items-center lg:items-start justify-center px-6 sm:px-12 lg:px-16 overflow-hidden opacity-45"
       >
         <div
           lang="el"
-          className="font-classical italic text-[11px] sm:text-xs tracking-[0.28em] uppercase text-accent/40 mb-1 select-none"
+          className="font-classical italic text-[11px] sm:text-xs tracking-[0.24em] text-accent/60 mb-1 select-none flex items-center gap-2"
         >
-          // ΕΠΙΓΡΑΦΗ · ΦΑΝΝΑ //
+          <span className="w-3 h-[1px] bg-accent/40 inline-block" />
+          <span>// ΕΠΙΓΡΑΦΗ · PHANNA KUROSAKI //</span>
+          <span className="w-3 h-[1px] bg-accent/40 inline-block" />
         </div>
 
-        <div className="font-epigraphic font-black tracking-[0.12em] sm:tracking-[0.18em] uppercase text-center leading-[0.88] select-none opacity-95">
-          <div className="text-[4.2rem] sm:text-[7.5rem] lg:text-[11rem] xl:text-[13.5rem] whitespace-nowrap text-stroke-watermark">
-            PHANNA
+        <div className="font-classical font-semibold tracking-[-0.015em] text-center lg:text-left leading-[0.88] select-none">
+          <div className="text-[3.8rem] sm:text-[6rem] lg:text-[7.5rem] xl:text-[8.5rem] whitespace-nowrap text-stroke-watermark">
+            Phanna
           </div>
-          <div className="text-[4.2rem] sm:text-[7.5rem] lg:text-[11rem] xl:text-[13.5rem] whitespace-nowrap text-stroke-watermark-gold">
-            KUROSAKI
+          <div className="text-[3.8rem] sm:text-[6rem] lg:text-[7.5rem] xl:text-[8.5rem] whitespace-nowrap text-stroke-watermark-gold">
+            Kurosaki
           </div>
         </div>
 
         <div
           lang="el"
-          className="font-classical tracking-[0.32em] text-[10px] sm:text-xs text-accent/35 mt-2 select-none"
+          className="font-classical italic tracking-[0.22em] text-[11px] sm:text-xs text-accent/50 mt-2.5 select-none flex items-center gap-2"
         >
-          Φ Α Ν Ν Α · Κ Υ Ρ Ο Σ Α Κ Ι
+          <span>Φάννα Κυροσάκι</span>
+          <span className="text-[9px] font-mono opacity-60">· [BUILDER &amp; ARCHITECT]</span>
         </div>
       </div>
 
@@ -253,6 +256,28 @@ export default function HeroSection({
           {/* Left Column: Editorial Typography & CTAs */}
           <div className="hero-enter-2 lg:col-span-7 flex flex-col justify-between p-6 sm:p-10 lg:p-14 border-b lg:border-b-0 lg:border-r border-line">
             <div>
+              {/* Museum Curator Folio Plaque with Classical Serif Full Name */}
+              <div className="hero-enter-2 mb-6 border-l-2 border-accent/60 pl-3.5 sm:pl-4 py-0.5">
+                <div className="flex items-center gap-2 font-mono text-[10px] tracking-[0.2em] uppercase text-accent font-bold mb-1">
+                  <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
+                  <span>EXHIBITION FOLIO 01 // INDEPENDENT DEVELOPER</span>
+                </div>
+                <div className="flex flex-wrap items-baseline gap-2.5">
+                  <span className="font-classical text-3xl sm:text-4xl lg:text-[2.65rem] font-semibold text-[var(--ms-ivory)] leading-none tracking-normal">
+                    {PROFILE.fullName}
+                  </span>
+                  <span
+                    lang="el"
+                    className="font-classical italic text-sm sm:text-base tracking-[0.16em] text-[var(--ms-limestone)]"
+                  >
+                    Φάννα Κυροσάκι
+                  </span>
+                  <span className="border border-[var(--ms-rule-strong)] bg-[var(--ms-surface)] px-2 py-0.5 font-mono text-[9px] text-[var(--ms-limestone)] tracking-widest uppercase">
+                    PK // KON
+                  </span>
+                </div>
+              </div>
+
               <div className="hud-label text-accent mb-5">
                 {PROFILE.heroSubheadline}
               </div>

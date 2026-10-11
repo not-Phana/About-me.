@@ -6,15 +6,15 @@
  */
 
 export const PROFILE = {
-  fullName: 'Phana Kurosaki',
-  displayName: 'Phana',
-  preferredName: 'Phana',
+  fullName: 'Phanna Kurosaki',
+  displayName: 'Phanna',
+  preferredName: 'Phanna',
   nickname: 'KON',
   brand: 'PK',
   tagline: 'Independent builder · Always learning.',
   heroHeadlineMain: 'I build ideas into',
   heroHeadlineAccent: 'things you can use.',
-  heroSubheadline: 'Software, experiments, and projects by Phana Kurosaki.',
+  heroSubheadline: 'Software, experiments, and projects by Phanna Kurosaki.',
   heroSummary:
     "I'm an independent builder who enjoys creating software, websites, developer tools, and interactive projects. I use AI to help me build, learn, and solve problems while continuing to understand the work behind what I create.",
   githubUsername: 'phanaach4889',
@@ -22,7 +22,7 @@ export const PROFILE = {
   githubBio: 'Building something good for my society.',
   aboutHeading: 'A mind that builds. A journey still being written.',
   aboutParagraphs: [
-    "I'm Phana Kurosaki, an independent builder who enjoys turning ideas into working projects.",
+    "I'm Phanna Kurosaki, an independent builder who enjoys turning ideas into working projects.",
     'From web development and developer tools to experiments with AI and interactive software, I like exploring what I can create, learning how things work, and improving my projects along the way.',
     'I use modern tools to expand what I can build, but I also want to understand the work behind the result.',
     'This is where my ideas become projects, mistakes become lessons, and unfinished experiments become something better.',
