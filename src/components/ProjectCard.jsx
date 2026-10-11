@@ -10,8 +10,23 @@ export default function ProjectCard({ project, onSelectProject }) {
       ? 'bg-[#d4a528]'
       : 'bg-[#818cf8]';
 
+  const handleMouseMove = (e) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    e.currentTarget.style.setProperty('--px', `${e.clientX - rect.left}px`);
+    e.currentTarget.style.setProperty('--py', `${e.clientY - rect.top}px`);
+  };
+
+  const handleMouseLeave = (e) => {
+    e.currentTarget.style.setProperty('--px', '-500px');
+    e.currentTarget.style.setProperty('--py', '-500px');
+  };
+
   return (
-    <article className="group flex flex-col justify-between bg-bg p-6 sm:p-8 hover:bg-surface/40 transition-colors">
+    <article
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      className="spotlight-card group flex flex-col justify-between bg-bg p-6 sm:p-8 transition-colors"
+    >
       <div>
         {/* Card Header Metadata */}
         <div className="flex items-center justify-between gap-2 font-mono text-xs text-muted mb-4">
@@ -36,7 +51,7 @@ export default function ProjectCard({ project, onSelectProject }) {
           role="button"
           tabIndex={0}
           aria-label={`Inspect details for ${project.name}`}
-          className="cursor-pointer border border-line aspect-[16/10] mb-5 overflow-hidden focus-visible:outline-accent"
+          className="cursor-pointer border border-line group-hover:border-accent/60 aspect-[16/10] mb-5 overflow-hidden transition-colors focus-visible:outline-accent"
         >
           <ProjectPreviewVisual project={project} />
         </div>

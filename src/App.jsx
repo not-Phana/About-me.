@@ -3,13 +3,16 @@ import Navbar from './components/Navbar';
 import HeroSection from './components/HeroSection';
 import ProjectGrid from './components/ProjectGrid';
 import ProjectDetail from './components/ProjectDetail';
+import InteractiveConsole from './components/InteractiveConsole';
 import GitHubSection from './components/GitHubSection';
 import CurrentlyBuilding from './components/CurrentlyBuilding';
 import AboutSection from './components/AboutSection';
 import JourneySection from './components/JourneySection';
 import ContactSection from './components/ContactSection';
 import Footer from './components/Footer';
+import CommandPalette from './components/CommandPalette';
 import { PROJECTS } from './data/projects';
+import { playTactileClick } from './utils/sound';
 
 function parseHashRoute(hash) {
   const clean = (hash || '').replace(/^#\/?/, '');
@@ -23,6 +26,8 @@ function parseHashRoute(hash) {
 export default function App() {
   const [route, setRoute] = useState(() => parseHashRoute(window.location.hash));
   const [activeSection, setActiveSection] = useState('home');
+  const [commandPaletteOpen, setCommandPaletteOpen] = useState(false);
+
   const [theme, setTheme] = useState(() => {
     try {
       return document.documentElement.getAttribute('data-theme') || 'dark';
@@ -31,8 +36,35 @@ export default function App() {
     }
   });
 
+  const [accentPreset, setAccentPreset] = useState(() => {
+    try {
+      const saved = localStorage.getItem('pk-accent') || 'amber';
+      document.documentElement.setAttribute('data-accent', saved);
+      return saved;
+    } catch {
+      return 'amber';
+    }
+  });
+
+  const [soundEnabled, setSoundEnabled] = useState(() => {
+    try {
+      const saved = localStorage.getItem('pk-sound');
+      return saved === null ? true : saved === 'true';
+    } catch {
+      return true;
+    }
+  });
+
+  const triggerSound = useCallback(
+    (type = 'switch') => {
+      playTactileClick(type, soundEnabled);
+    },
+    [soundEnabled]
+  );
+
   // Sync theme to document root & localStorage
   const toggleTheme = useCallback(() => {
+    playTactileClick('switch', soundEnabled);
     setTheme((prev) => {
       const next = prev === 'dark' ? 'light' : 'dark';
       try {
@@ -43,9 +75,49 @@ export default function App() {
       }
       return next;
     });
+  }, [soundEnabled]);
+
+  const handleChangeAccent = useCallback(
+    (nextAccent) => {
+      playTactileClick('switch', soundEnabled);
+      setAccentPreset(nextAccent);
+      try {
+        document.documentElement.setAttribute('data-accent', nextAccent);
+        localStorage.setItem('pk-accent', nextAccent);
+      } catch {
+        // Ignore storage errors
+      }
+    },
+    [soundEnabled]
+  );
+
+  const handleToggleSound = useCallback(() => {
+    setSoundEnabled((prev) => {
+      const next = !prev;
+      if (next) playTactileClick('pulse', true);
+      try {
+        localStorage.setItem('pk-sound', String(next));
+      } catch {
+        // Ignore storage errors
+      }
+      return next;
+    });
   }, []);
 
-  // Listen to browser hash changes (supports back/forward and direct links like #project/pk-khmer-type)
+  // Global Ctrl+K / Cmd+K shortcut for Command Palette
+  useEffect(() => {
+    const handleGlobalKeyDown = (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        playTactileClick('switch', soundEnabled);
+        setCommandPaletteOpen((prev) => !prev);
+      }
+    };
+    window.addEventListener('keydown', handleGlobalKeyDown);
+    return () => window.removeEventListener('keydown', handleGlobalKeyDown);
+  }, [soundEnabled]);
+
+  // Listen to browser hash changes
   useEffect(() => {
     const handleHashChange = () => {
       const parsed = parseHashRoute(window.location.hash);
@@ -62,11 +134,20 @@ export default function App() {
     return () => window.removeEventListener('hashchange', handleHashChange);
   }, []);
 
-  // IntersectionObserver to highlight current section in Navbar while on Home view
+  // IntersectionObserver to highlight current section in Navbar
   useEffect(() => {
     if (route.view !== 'home') return undefined;
 
-    const sectionIds = ['home', 'projects', 'github', 'building', 'about', 'journey', 'contact'];
+    const sectionIds = [
+      'home',
+      'projects',
+      'console',
+      'github',
+      'building',
+      'about',
+      'journey',
+      'contact',
+    ];
     const elements = sectionIds
       .map((id) => document.getElementById(id))
       .filter(Boolean);
@@ -91,29 +172,37 @@ export default function App() {
     return () => observer.disconnect();
   }, [route.view]);
 
-  const handleSelectProject = useCallback((projectId) => {
-    window.location.hash = `project/${projectId}`;
-    setRoute({ view: 'detail', slug: projectId });
-  }, []);
+  const handleSelectProject = useCallback(
+    (projectId) => {
+      playTactileClick('switch', soundEnabled);
+      window.location.hash = `project/${projectId}`;
+      setRoute({ view: 'detail', slug: projectId });
+    },
+    [soundEnabled]
+  );
 
-  const handleNavigateHome = useCallback((sectionId = 'home') => {
-    if (window.location.hash.startsWith('#project/')) {
-      window.history.pushState(null, '', `#${sectionId}`);
-    } else {
-      window.location.hash = sectionId;
-    }
-    setRoute({ view: 'home', section: sectionId });
-    setActiveSection(sectionId);
-
-    requestAnimationFrame(() => {
-      const target = document.getElementById(sectionId);
-      if (target) {
-        target.scrollIntoView({ behavior: 'smooth' });
+  const handleNavigateHome = useCallback(
+    (sectionId = 'home') => {
+      playTactileClick('switch', soundEnabled);
+      if (window.location.hash.startsWith('#project/')) {
+        window.history.pushState(null, '', `#${sectionId}`);
       } else {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        window.location.hash = sectionId;
       }
-    });
-  }, []);
+      setRoute({ view: 'home', section: sectionId });
+      setActiveSection(sectionId);
+
+      requestAnimationFrame(() => {
+        const target = document.getElementById(sectionId);
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth' });
+        } else {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+      });
+    },
+    [soundEnabled]
+  );
 
   const selectedProject =
     route.view === 'detail'
@@ -135,6 +224,28 @@ export default function App() {
         isDetailView={route.view === 'detail'}
         theme={theme}
         onToggleTheme={toggleTheme}
+        accentPreset={accentPreset}
+        onChangeAccent={handleChangeAccent}
+        soundEnabled={soundEnabled}
+        onToggleSound={handleToggleSound}
+        onOpenCommandPalette={() => {
+          triggerSound('switch');
+          setCommandPaletteOpen(true);
+        }}
+      />
+
+      <CommandPalette
+        isOpen={commandPaletteOpen}
+        onClose={() => setCommandPaletteOpen(false)}
+        projects={PROJECTS}
+        onSelectProject={handleSelectProject}
+        onNavigateHome={handleNavigateHome}
+        theme={theme}
+        onToggleTheme={toggleTheme}
+        accentPreset={accentPreset}
+        onChangeAccent={handleChangeAccent}
+        soundEnabled={soundEnabled}
+        onToggleSound={handleToggleSound}
       />
 
       <main id="main-content" className="flex-1">
@@ -151,10 +262,18 @@ export default function App() {
             <HeroSection
               onExploreProjects={() => handleNavigateHome('projects')}
               onSelectProject={handleSelectProject}
+              onPlaySound={triggerSound}
+              onOpenCommandPalette={() => setCommandPaletteOpen(true)}
             />
             <ProjectGrid
               projects={PROJECTS}
               onSelectProject={handleSelectProject}
+            />
+            <InteractiveConsole
+              onSelectProject={handleSelectProject}
+              onChangeAccent={handleChangeAccent}
+              onToggleTheme={toggleTheme}
+              onPlaySound={triggerSound}
             />
             <GitHubSection />
             <CurrentlyBuilding

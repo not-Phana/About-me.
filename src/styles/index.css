@@ -12,7 +12,7 @@
   --line: #23252c;
   --line-soft: #181a20;
   --accent: #d4a528;
-  --accent-dim: rgba(212, 165, 40, 0.12);
+  --accent-dim: rgba(212, 165, 40, 0.14);
   --invert-bg: #eceae4;
   --invert-fg: #0b0b0c;
   color-scheme: dark;
@@ -27,10 +27,47 @@
   --line: #d0cdc6;
   --line-soft: #dfdcd5;
   --accent: #9e7408;
-  --accent-dim: rgba(158, 116, 8, 0.1);
+  --accent-dim: rgba(158, 116, 8, 0.12);
   --invert-bg: #121316;
   --invert-fg: #f2f1ee;
   color-scheme: light;
+}
+
+/* Signature PK Studio Accent Presets */
+[data-accent="amber"] {
+  --accent: #d4a528;
+  --accent-dim: rgba(212, 165, 40, 0.14);
+}
+[data-theme="light"][data-accent="amber"] {
+  --accent: #9e7408;
+  --accent-dim: rgba(158, 116, 8, 0.12);
+}
+
+[data-accent="cyan"] {
+  --accent: #38bdf8;
+  --accent-dim: rgba(56, 189, 248, 0.14);
+}
+[data-theme="light"][data-accent="cyan"] {
+  --accent: #0284c7;
+  --accent-dim: rgba(2, 132, 199, 0.12);
+}
+
+[data-accent="emerald"] {
+  --accent: #34d399;
+  --accent-dim: rgba(52, 211, 153, 0.14);
+}
+[data-theme="light"][data-accent="emerald"] {
+  --accent: #059669;
+  --accent-dim: rgba(5, 150, 105, 0.12);
+}
+
+[data-accent="crimson"] {
+  --accent: #fb7185;
+  --accent-dim: rgba(251, 113, 133, 0.14);
+}
+[data-theme="light"][data-accent="crimson"] {
+  --accent: #e11d48;
+  --accent-dim: rgba(225, 29, 72, 0.12);
 }
 
 * {
@@ -66,6 +103,30 @@ body {
 .bg-architectural-grid {
   background-image: radial-gradient(circle, var(--line) 1px, transparent 1px);
   background-size: 24px 24px;
+}
+
+/* Interactive cursor-tracked radial spotlight for project cards */
+.spotlight-card {
+  position: relative;
+  background-image: radial-gradient(
+    360px circle at var(--px, -500px) var(--py, -500px),
+    var(--accent-dim),
+    transparent 70%
+  );
+}
+
+/* Mechanical keycap button styling */
+.pk-keycap {
+  border: 1px solid var(--line);
+  border-bottom-width: 3px;
+  transition: transform 0.08s ease, border-color 0.15s ease, background-color 0.15s ease;
+}
+.pk-keycap:active,
+.pk-keycap.pressed {
+  transform: translateY(2px);
+  border-bottom-width: 1px;
+  border-color: var(--accent);
+  background-color: var(--accent-dim);
 }
 
 /* Accessible keyboard focus ring */
