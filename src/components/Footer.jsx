@@ -1,6 +1,6 @@
 import React from 'react';
 import { PROFILE } from '../data/profile';
-import { PKMonogram, IconGitHub, IconArrowUpRight } from './Icons';
+import { PKMonogram, IconGitHub, IconFacebook, IconArrowUpRight } from './Icons';
 
 export default function Footer({ onNavigateHome }) {
   const currentYear = new Date().getFullYear();
@@ -15,7 +15,7 @@ export default function Footer({ onNavigateHome }) {
       <div className="mx-auto max-w-[1400px] border-x border-line">
         <div className="p-6 sm:p-10 lg:p-12 grid grid-cols-1 md:grid-cols-12 gap-8 border-b border-line">
           {/* Brand Identity */}
-          <div className="md:col-span-6 flex flex-col justify-between">
+          <div className="md:col-span-5 flex flex-col justify-between">
             <div className="flex items-center gap-3">
               <PKMonogram className="w-7 h-7 text-ink" />
               <div>
@@ -59,8 +59,8 @@ export default function Footer({ onNavigateHome }) {
             ))}
           </div>
 
-          {/* External Links */}
-          <div className="md:col-span-3 font-mono text-xs space-y-2.5">
+          {/* External Links & Platforms */}
+          <div className="md:col-span-4 font-mono text-xs space-y-2.5">
             <div className="text-muted uppercase tracking-wider mb-3">
               LIVE PLATFORMS
             </div>
@@ -71,12 +71,36 @@ export default function Footer({ onNavigateHome }) {
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-1.5 text-ink hover:text-accent transition-colors"
               >
-                <IconGitHub className="w-3.5 h-3.5" />
+                <IconGitHub className="w-3.5 h-3.5 text-accent" />
                 <span>@{PROFILE.githubUsername}</span>
                 <IconArrowUpRight className="w-3 h-3" />
               </a>
             </div>
             <div>
+              <a
+                href={PROFILE.facebookMainUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 text-ink hover:text-accent transition-colors"
+              >
+                <IconFacebook className="w-3.5 h-3.5 text-accent" />
+                <span>Facebook (Main)</span>
+                <IconArrowUpRight className="w-3 h-3" />
+              </a>
+            </div>
+            <div>
+              <a
+                href={PROFILE.facebookDmUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 text-ink hover:text-accent transition-colors"
+              >
+                <IconFacebook className="w-3.5 h-3.5 text-accent" />
+                <span>Facebook (DM)</span>
+                <IconArrowUpRight className="w-3 h-3" />
+              </a>
+            </div>
+            <div className="pt-2 border-t border-line/60">
               <a
                 href="https://phanaach4889.github.io/PK-Khmer-Type/"
                 target="_blank"

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { PROFILE } from '../data/profile';
 import {
   IconGitHub,
+  IconFacebook,
   IconArrowUpRight,
   IconCheck,
   IconTerminal,
@@ -27,6 +28,8 @@ export default function ContactSection() {
       name: PROFILE.fullName,
       alias: [PROFILE.preferredName, PROFILE.nickname, PROFILE.brand],
       github: PROFILE.githubUrl,
+      facebook_main: PROFILE.facebookMainUrl,
+      facebook_dm: PROFILE.facebookDmUrl,
       flagship: 'https://phanaach4889.github.io/PK-Khmer-Type/',
       focus: ['Software', 'Websites', 'Developer Tools', 'Games'],
       status: 'Independent Builder · Always Learning',
@@ -171,11 +174,39 @@ export default function ContactSection() {
                 className="w-full inline-flex items-center justify-between bg-invertBg text-invertFg px-6 py-4 hud-label hover:opacity-90 transition-opacity"
               >
                 <span className="flex items-center gap-2.5">
-                  <IconGitHub className="w-4 h-4" />
+                  <IconGitHub className="w-4 h-4 text-accent" />
                   <span>Connect on GitHub (@{PROFILE.githubUsername})</span>
                 </span>
                 <IconArrowUpRight className="w-4 h-4" />
               </a>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-1">
+                <a
+                  href={PROFILE.facebookMainUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center justify-between border border-line bg-bg hover:border-accent px-4 py-3 font-mono text-xs text-ink hover:text-accent transition-colors card-laser-lift"
+                >
+                  <span className="flex items-center gap-2">
+                    <IconFacebook className="w-4 h-4 text-accent" />
+                    <span>Facebook (Main)</span>
+                  </span>
+                  <IconArrowUpRight className="w-3.5 h-3.5 text-muted" />
+                </a>
+
+                <a
+                  href={PROFILE.facebookDmUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center justify-between border border-line bg-bg hover:border-accent px-4 py-3 font-mono text-xs text-ink hover:text-accent transition-colors card-laser-lift"
+                >
+                  <span className="flex items-center gap-2">
+                    <IconFacebook className="w-4 h-4 text-accent" />
+                    <span>Facebook (DM)</span>
+                  </span>
+                  <IconArrowUpRight className="w-3.5 h-3.5 text-muted" />
+                </a>
+              </div>
             </div>
           </div>
         </div>

@@ -271,3 +271,20 @@ export function IconMousePointer({ className }) {
   );
 }
 
+export function IconFacebook({ className }) {
+  return (
+    <svg {...baseProps(className)}>
+      <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
+    </svg>
+  );
+}
+
+export function IconMessageSquare({ className }) {
+  return (
+    <svg {...baseProps(className)}>
+      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+    </svg>
+  );
+}
+
+

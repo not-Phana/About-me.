@@ -148,7 +148,22 @@ export default function InteractiveConsole({
         command: 'help',
         lines: [
           'Available topics: whoami, khmer-nida, neon-engine, studio-code, kon-ai, pk-icons, cursor-fx',
-          'Interactive tools: "cursor", "status", "theme light", "theme dark", "accent cyan", "accent amber", "accent emerald", "accent crimson", "sfx", "clear"',
+          'Interactive tools: "cursor", "status", "contact", "theme light", "theme dark", "accent cyan", "accent amber", "accent emerald", "accent crimson", "sfx", "clear"',
+        ],
+        projectSlug: null,
+      });
+      return;
+    }
+
+    if (raw === 'contact' || raw === 'social' || raw === 'facebook' || raw === 'fb') {
+      onPlaySound?.('switch');
+      setCustomOutput({
+        command: 'pk connect --channels',
+        lines: [
+          `GITHUB: https://github.com/${PROFILE.githubUsername} (@${PROFILE.githubUsername})`,
+          `FACEBOOK (MAIN): ${PROFILE.facebookMainUrl}`,
+          `FACEBOOK (DM): ${PROFILE.facebookDmUrl}`,
+          'DIRECT PROTOCOL: Open to software collaboration, feedback, and tech discussions.',
         ],
         projectSlug: null,
       });

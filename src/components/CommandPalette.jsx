@@ -151,6 +151,28 @@ export default function CommandPalette({
         onClose();
       },
     },
+    {
+      id: 'ext-fb-main',
+      group: 'EXTERNAL PROFILE',
+      label: 'Open Facebook Profile (Main)',
+      meta: 'web.facebook.com (Main Account)',
+      external: true,
+      run: () => {
+        window.open(PROFILE.facebookMainUrl, '_blank', 'noopener,noreferrer');
+        onClose();
+      },
+    },
+    {
+      id: 'ext-fb-dm',
+      group: 'EXTERNAL PROFILE',
+      label: 'Open Facebook (DM / Direct Message)',
+      meta: 'web.facebook.com (DM Account)',
+      external: true,
+      run: () => {
+        window.open(PROFILE.facebookDmUrl, '_blank', 'noopener,noreferrer');
+        onClose();
+      },
+    },
   ];
 
   const filtered = actions.filter(
