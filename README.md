@@ -49,3 +49,4 @@ This project is pre-configured with `base: './'` in `vite.config.js` so it works
 2. In your GitHub repository, open **Settings -> Pages**.
 3. Under **Build and deployment -> Source**, select **GitHub Actions**.
 4. The workflow in `.github/workflows/deploy.yml` will automatically build `./dist` and deploy to GitHub Pages on every push to `main`.
+# About-me.
