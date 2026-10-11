@@ -11,6 +11,7 @@ import JourneySection from './components/JourneySection';
 import ContactSection from './components/ContactSection';
 import Footer from './components/Footer';
 import CommandPalette from './components/CommandPalette';
+import CustomCursor from './components/CustomCursor';
 import { PROJECTS } from './data/projects';
 import { playTactileClick } from './utils/sound';
 import { useScrollReveal } from './hooks/useScrollReveal';
@@ -213,6 +214,7 @@ export default function App() {
 
   return (
     <div className="min-h-screen flex flex-col bg-bg text-ink">
+      <CustomCursor />
       <a
         href="#main-content"
         className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[100] focus:bg-invertBg focus:text-invertFg focus:px-4 focus:py-2 hud-label"

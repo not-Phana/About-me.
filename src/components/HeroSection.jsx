@@ -331,7 +331,7 @@ export default function HeroSection({
 
               {/* Verified Quick Architecture Summary with Interactive Hover Cards */}
               <div className="mt-8 grid grid-cols-3 gap-3 sm:gap-4 pt-6 border-t border-lineSoft font-mono">
-                <div className="hud-frame p-2.5 sm:p-3 border border-transparent hover:border-line hover:bg-surface/50 transition-all duration-200">
+                <div className="hud-frame p-2.5 sm:p-3 border border-line/60 bg-surface/30 hover-anim-pulse transition-all duration-200 cursor-pointer">
                   <div className="text-[10px] sm:text-[11px] text-muted uppercase tracking-wider flex items-center gap-1.5">
                     <span className="w-1.5 h-1.5 rounded-full bg-[#4ade80] beacon-pulse" />
                     <span className="truncate">PAGES</span>
@@ -340,7 +340,7 @@ export default function HeroSection({
                     3 Web Apps
                   </div>
                 </div>
-                <div className="hud-frame p-2.5 sm:p-3 border border-transparent hover:border-line hover:bg-surface/50 transition-all duration-200">
+                <div className="hud-frame p-2.5 sm:p-3 border border-line/60 bg-surface/30 hover-anim-tilt transition-all duration-200 cursor-pointer">
                   <div className="text-[10px] sm:text-[11px] text-muted uppercase tracking-wider flex items-center gap-1.5">
                     <span className="w-1.5 h-1.5 rounded-full bg-accent" />
                     <span className="truncate">BUILDS</span>
@@ -349,7 +349,7 @@ export default function HeroSection({
                     {PROJECTS.length} Projects
                   </div>
                 </div>
-                <div className="hud-frame p-2.5 sm:p-3 border border-transparent hover:border-line hover:bg-surface/50 transition-all duration-200">
+                <div className="hud-frame p-2.5 sm:p-3 border border-line/60 bg-surface/30 hover-anim-sweep transition-all duration-200 cursor-pointer">
                   <div className="text-[10px] sm:text-[11px] text-muted uppercase tracking-wider flex items-center gap-1.5">
                     <span className="w-1.5 h-1.5 rounded-full bg-[#818cf8]" />
                     <span className="truncate">STACK</span>

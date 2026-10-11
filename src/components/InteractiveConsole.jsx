@@ -8,6 +8,7 @@ import {
   IconGrid,
   IconArrowRight,
   IconCheck,
+  IconMousePointer,
 } from './Icons';
 
 const CONSOLE_TOPICS = [
@@ -82,6 +83,19 @@ const CONSOLE_TOPICS = [
     ],
     projectSlug: 'pk-icons-studio',
   },
+  {
+    key: 'cursor-lab',
+    label: 'cursor-fx',
+    icon: IconMousePointer,
+    command: 'pk test --cursor-and-hover-fx',
+    lines: [
+      'Step 1: Dual-Layer Architectural Cursor — Zero-latency center tracking dot + fluid lerp follower ring. Contextually transforms into an I-beam over inputs and expands over interactive links and buttons.',
+      'Step 2: Isolated Hover Effects — Experience 3 distinct, non-conflicting hover animations: Heartbeat Pulse (Ver 1), 3D Perspective Tilt (Ver 2), and Radiant Light Sweep (Ver 3).',
+      'Try hovering over the interactive test targets below or typing in the terminal input to observe the morphing states live.',
+    ],
+    projectSlug: null,
+    isCursorLab: true,
+  },
 ];
 
 export default function InteractiveConsole({
@@ -133,16 +147,22 @@ export default function InteractiveConsole({
       setCustomOutput({
         command: 'help',
         lines: [
-          'Available topics: whoami, khmer-nida, neon-engine, studio-code, kon-ai, pk-icons',
-          'Interactive tools: "telemetry", "status", "theme light", "theme dark", "accent cyan", "accent amber", "accent emerald", "accent crimson", "sfx", "clear"',
+          'Available topics: whoami, khmer-nida, neon-engine, studio-code, kon-ai, pk-icons, cursor-fx',
+          'Interactive tools: "cursor", "status", "theme light", "theme dark", "accent cyan", "accent amber", "accent emerald", "accent crimson", "sfx", "clear"',
         ],
         projectSlug: null,
       });
       return;
     }
 
+    if (raw === 'cursor' || raw === 'fx' || raw === 'animations') {
+      onPlaySound?.('switch');
+      setActiveKey('cursor-lab');
+      setCustomOutput(null);
+      return;
+    }
+
     if (raw === 'status' || raw === 'sys') {
-      setMatrixActive(false);
       const w = window.innerWidth;
       const h = window.innerHeight;
       const dpr = window.devicePixelRatio || 1;
@@ -339,6 +359,64 @@ export default function InteractiveConsole({
                     <span>Open Full Project Specification</span>
                     <IconArrowRight className="w-3.5 h-3.5" />
                   </button>
+                </div>
+              )}
+
+              {displayed.isCursorLab && (
+                <div className="mt-6 pt-5 border-t border-[#20232b]">
+                  <div className="text-[11px] font-mono uppercase tracking-wider text-accent font-bold mb-3 flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-accent animate-ping" />
+                    <span>HOVER ANIMATION SANDBOX // STEP 2 ISOLATED EFFECTS</span>
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
+                    {/* Version 1: Pulse Only */}
+                    <div className="hover-anim-pulse border border-accent/40 bg-[#12141a] p-3.5 rounded text-left select-none cursor-pointer">
+                      <div className="text-[10px] text-accent font-mono font-bold tracking-widest">
+                        VER 01 // PULSE
+                      </div>
+                      <div className="text-sm font-bold text-white mt-1">
+                        Heartbeat Scale
+                      </div>
+                      <div className="text-[11px] text-[#8c9099] mt-1 leading-normal">
+                        Rhythmic scale pulse and expanding radiant shadow ring.
+                      </div>
+                    </div>
+
+                    {/* Version 2: 3D Tilt Only */}
+                    <div className="hover-anim-tilt border border-[#2d323f] bg-[#12141a] p-3.5 rounded text-left select-none cursor-pointer">
+                      <div className="text-[10px] text-[#38bdf8] font-mono font-bold tracking-widest">
+                        VER 02 // 3D TILT
+                      </div>
+                      <div className="text-sm font-bold text-white mt-1">
+                        Perspective Tilt
+                      </div>
+                      <div className="text-[11px] text-[#8c9099] mt-1 leading-normal">
+                        Kinematic 3D plane tilt with elevated shadow depth.
+                      </div>
+                    </div>
+
+                    {/* Version 3: Glow Sweep Only */}
+                    <div className="hover-anim-sweep border border-[#2d323f] bg-[#12141a] p-3.5 rounded text-left select-none cursor-pointer">
+                      <div className="text-[10px] text-[#34d399] font-mono font-bold tracking-widest">
+                        VER 03 // GLOW SWEEP
+                      </div>
+                      <div className="text-sm font-bold text-white mt-1">
+                        Dynamic Light Beam
+                      </div>
+                      <div className="text-[11px] text-[#8c9099] mt-1 leading-normal">
+                        High-velocity angled laser sweep traversing surface.
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="mt-4 p-3 bg-[#0d0e12] border border-[#20232b] flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs">
+                    <span className="text-[#8c9099]">
+                      <span className="text-white font-semibold">Step 1 Morphing Test:</span> Move pointer over text input below or test buttons above to watch dual-layer morphing.
+                    </span>
+                    <span className="text-accent font-mono text-[10px] uppercase tracking-widest">
+                      ACTIVE: DUAL-LAYER CURSOR
+                    </span>
+                  </div>
                 </div>
               )}
             </div>

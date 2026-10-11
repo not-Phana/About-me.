@@ -775,3 +775,219 @@ body {
     transition-duration: 0.01ms !important;
   }
 }
+
+/* ==========================================================================
+   Architectural Custom Cursor (Step 1)
+   ========================================================================== */
+@media (hover: hover) and (pointer: fine) {
+  body.has-custom-cursor,
+  body.has-custom-cursor a,
+  body.has-custom-cursor button,
+  body.has-custom-cursor input,
+  body.has-custom-cursor textarea,
+  body.has-custom-cursor select,
+  body.has-custom-cursor [role="button"],
+  body.has-custom-cursor [role="tab"],
+  body.has-custom-cursor [tabindex] {
+    cursor: none !important;
+  }
+
+  .cursor-dot {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 6px;
+    height: 6px;
+    background-color: var(--accent, #d4a528);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 99999;
+    will-change: transform;
+    box-shadow: 0 0 10px var(--accent, #d4a528), 0 0 4px #ffffff;
+    transition: opacity 0.2s ease, width 0.22s cubic-bezier(0.2, 0.8, 0.2, 1), height 0.22s cubic-bezier(0.2, 0.8, 0.2, 1), border-radius 0.22s ease;
+  }
+
+  .cursor-ring {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 34px;
+    height: 34px;
+    border: 1.5px solid var(--accent, #d4a528);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 99998;
+    will-change: transform;
+    background-color: rgba(212, 165, 40, 0.04);
+    box-shadow: 0 0 18px rgba(212, 165, 40, 0.15);
+    transition: width 0.28s cubic-bezier(0.16, 1, 0.3, 1),
+                height 0.28s cubic-bezier(0.16, 1, 0.3, 1),
+                border-color 0.2s ease,
+                background-color 0.2s ease,
+                border-radius 0.28s ease,
+                opacity 0.2s ease;
+  }
+
+  /* When cursor leaves window */
+  body.cursor-hidden .cursor-dot,
+  body.cursor-hidden .cursor-ring {
+    opacity: 0;
+  }
+
+  /* Hover State (Links, Buttons, Clickables) */
+  body.cursor-hover .cursor-dot {
+    width: 8px;
+    height: 8px;
+    background-color: #ffffff;
+    box-shadow: 0 0 14px var(--accent, #d4a528), 0 0 6px #ffffff;
+  }
+
+  body.cursor-hover .cursor-ring {
+    width: 52px;
+    height: 52px;
+    border-color: var(--accent, #d4a528);
+    background-color: var(--accent-dim, rgba(212, 165, 40, 0.16));
+    box-shadow: 0 0 24px var(--accent-dim, rgba(212, 165, 40, 0.35));
+  }
+
+  /* Text State (Inputs, Textareas) - Morphs into Vertical I-Beam */
+  body.cursor-text .cursor-dot {
+    width: 2px;
+    height: 18px;
+    border-radius: 1px;
+    background-color: var(--accent, #d4a528);
+    box-shadow: 0 0 8px var(--accent, #d4a528);
+  }
+
+  body.cursor-text .cursor-ring {
+    width: 14px;
+    height: 26px;
+    border-radius: 4px;
+    border-width: 1px;
+    border-color: rgba(212, 165, 40, 0.6);
+    background-color: transparent;
+  }
+
+  /* Active State (Mousedown) */
+  body.cursor-active .cursor-dot {
+    transform: scale(0.6);
+  }
+
+  body.cursor-active .cursor-ring {
+    width: 26px;
+    height: 26px;
+    border-width: 2px;
+    background-color: var(--accent-dim, rgba(212, 165, 40, 0.3));
+  }
+}
+
+@media (hover: none) or (pointer: coarse) {
+  .cursor-dot,
+  .cursor-ring {
+    display: none !important;
+  }
+}
+
+/* ==========================================================================
+   Hover Animation Version 1: Heartbeat Pulse (.hover-anim-pulse)
+   ========================================================================== */
+@keyframes hoverPulseKeyframes {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 var(--accent-dim, rgba(212, 165, 40, 0.5));
+  }
+  50% {
+    transform: scale(1.035);
+    box-shadow: 0 0 0 8px rgba(212, 165, 40, 0);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(212, 165, 40, 0);
+  }
+}
+
+.hover-anim-pulse {
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.hover-anim-pulse:hover {
+  animation: hoverPulseKeyframes 1.3s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  border-color: var(--accent, #d4a528) !important;
+}
+
+/* ==========================================================================
+   Hover Animation Version 2: 3D Spring Tilt (.hover-anim-tilt)
+   ========================================================================== */
+.hover-anim-tilt {
+  transform: perspective(600px) rotateX(0deg) rotateY(0deg) translateZ(0);
+  transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.35s ease, border-color 0.2s ease;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+.hover-anim-tilt:hover {
+  transform: perspective(600px) rotateX(4deg) rotateY(-4deg) translateY(-3px) translateZ(8px);
+  box-shadow: 0 12px 28px -6px rgba(0, 0, 0, 0.5), 0 0 16px var(--accent-dim, rgba(212, 165, 40, 0.25));
+  border-color: var(--accent, #d4a528) !important;
+}
+
+/* ==========================================================================
+   Hover Animation Version 3: Dynamic Glow Sweep (.hover-anim-sweep)
+   ========================================================================== */
+.hover-anim-sweep {
+  position: relative;
+  overflow: hidden;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.25s ease;
+}
+
+.hover-anim-sweep::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -120%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    115deg,
+    transparent 0%,
+    transparent 35%,
+    rgba(255, 255, 255, 0.08) 45%,
+    var(--accent-dim, rgba(212, 165, 40, 0.35)) 50%,
+    rgba(255, 255, 255, 0.12) 55%,
+    transparent 65%,
+    transparent 100%
+  );
+  transform: skewX(-20deg);
+  pointer-events: none;
+  transition: none;
+  opacity: 0;
+  z-index: 1;
+}
+
+@keyframes glowSweepAnim {
+  0% {
+    left: -120%;
+    opacity: 0;
+  }
+  15% {
+    opacity: 1;
+  }
+  85% {
+    opacity: 1;
+  }
+  100% {
+    left: 150%;
+    opacity: 0;
+  }
+}
+
+.hover-anim-sweep:hover {
+  border-color: var(--accent, #d4a528) !important;
+  box-shadow: 0 0 20px var(--accent-dim, rgba(212, 165, 40, 0.22));
+  transform: translateY(-2px);
+}
+
+.hover-anim-sweep:hover::before {
+  animation: glowSweepAnim 1.1s cubic-bezier(0.2, 0.8, 0.2, 1) infinite;
+}
+
