@@ -232,17 +232,33 @@ const LEGAL_COMPLIANCE_CLAUSES = [
 export default function Footer({ onNavigateHome, onPlaySound }) {
   const currentYear = new Date().getFullYear();
   const [copiedEmail, setCopiedEmail] = useState(false);
-  const [activeLegalId, setActiveLegalId] = useState('trademarks');
-  const [legalAllExpanded, setLegalAllExpanded] = useState(false);
+  const [hubTab, setHubTab] = useState('both');
+  const [expandedLegalIds, setExpandedLegalIds] = useState(new Set());
 
-  const activeClause =
-    LEGAL_COMPLIANCE_CLAUSES.find((c) => c.id === activeLegalId) ||
-    LEGAL_COMPLIANCE_CLAUSES[0];
+  const toggleLegalDetails = (id) => {
+    onPlaySound?.('switch');
+    setExpandedLegalIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  };
 
   const handleSelectLegalClause = (clauseId) => {
     onPlaySound?.('switch');
-    setActiveLegalId(clauseId);
-    const el = document.getElementById('footer-legal-section');
+    setHubTab('legal');
+    setExpandedLegalIds((prev) => new Set(prev).add(clauseId));
+    const el = document.getElementById('footer-dossier-hub');
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  };
+
+  const handleSelectTechSpecs = () => {
+    onPlaySound?.('switch');
+    setHubTab('tech');
+    const el = document.getElementById('footer-dossier-hub');
     if (el) {
       el.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
@@ -495,358 +511,305 @@ export default function Footer({ onNavigateHome, onPlaySound }) {
           </div>
         </div>
 
-        {/* Studio Architectural Dossier & Technology Glossary */}
-        <div className="border-b border-line bg-surface/20">
-          {/* Header Bar */}
-          <div className="p-6 sm:px-10 lg:px-12 py-6 border-b border-line flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+        {/* Unified Studio Dossier & Statutory Legal Shield Hub */}
+        <div id="footer-dossier-hub" className="border-b border-line bg-surface/20 scroll-mt-20">
+          <div id="footer-legal-section" className="scroll-mt-20" />
+          
+          {/* Unified Header Bar */}
+          <div className="p-5 sm:px-10 lg:px-12 py-5 border-b border-line flex flex-col lg:flex-row lg:items-end justify-between gap-4">
             <div>
-              <div className="hud-label text-accent mb-2 flex items-center gap-2">
+              <div className="hud-label text-accent mb-1.5 flex items-center gap-2">
                 <span className="w-1.5 h-1.5 rounded-full bg-accent animate-ping" />
-                <span>FOOTER DOSSIER // CORE DISCIPLINES, LINGUISTICS &amp; REAL BUILDS</span>
+                <span>STUDIO INTELLIGENCE // ARCHITECTURE &amp; STATUTORY LEGAL SHIELD</span>
               </div>
-              <h3 className="font-display text-2xl sm:text-3xl font-bold tracking-tight text-ink">
-                How It Works: Technology &amp; Engineering Specs
+              <h3 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-ink">
+                How It Works &amp; Statutory Legal Ledger
               </h3>
-            </div>
-            <div className="font-mono text-xs text-muted">
-              <span className="border border-line bg-bg px-3 py-1.5 text-accent font-bold inline-flex items-center gap-1.5">
-                <span>6 ARCHITECTURAL DOSSIERS</span>
-              </span>
-            </div>
-          </div>
-
-          {/* 6-Card High-Density Architectural Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 divide-y md:divide-y-0 gap-px bg-line">
-            {FOOTER_TECH_DOSSIERS.map((spec) => {
-              const SpecIcon = spec.icon;
-              return (
-                <article
-                  key={spec.id}
-                  className="bg-bg p-6 sm:p-8 flex flex-col justify-between hover:bg-surface/60 transition-colors group card-laser-lift relative overflow-hidden"
-                >
-                  <div>
-                    {/* Header: Index & Status */}
-                    <div className="flex items-center justify-between font-mono text-xs text-muted mb-3">
-                      <div className="flex items-center gap-2">
-                        <span className="text-accent font-bold">{spec.index}</span>
-                        <span>//</span>
-                        <span className="text-[11px] text-muted">{spec.category}</span>
-                      </div>
-                      <span className="border border-accent/40 bg-accentDim px-2 py-0.5 text-[10px] text-accent font-semibold">
-                        {spec.status}
-                      </span>
-                    </div>
-
-                    {/* Title with Icon */}
-                    <div className="flex items-start gap-3 mb-2">
-                      <span className="p-1.5 rounded bg-surface border border-line text-accent shrink-0 mt-0.5 group-hover:scale-110 group-hover:border-accent transition-all">
-                        <SpecIcon className="w-4 h-4" />
-                      </span>
-                      <div>
-                        <h4 className="font-display text-lg sm:text-xl font-bold text-ink group-hover:text-accent transition-colors">
-                          {spec.name}
-                        </h4>
-                        <div className="text-xs font-mono text-accent/90 mt-0.5">
-                          {spec.subtitle}
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Explanatory Body */}
-                    <p className="mt-3 text-xs sm:text-[13px] text-muted leading-relaxed">
-                      {spec.description}
-                    </p>
-
-                    {/* Tech Tags */}
-                    <div className="mt-4 flex flex-wrap gap-1.5">
-                      {spec.pills.map((pill) => (
-                        <span
-                          key={pill}
-                          className="border border-line bg-surface px-2.5 py-0.5 font-mono text-[10px] text-ink"
-                        >
-                          {pill}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Direct Link Action */}
-                  <div className="mt-6 pt-4 border-t border-line/60 flex items-center justify-between">
-                    {spec.link.startsWith('#') ? (
-                      <a
-                        href={spec.link}
-                        onClick={(e) => handleLinkClick(e, spec.link.replace('#', ''))}
-                        className="inline-flex items-center gap-1.5 font-mono text-xs text-accent hover:underline font-semibold"
-                      >
-                        <span>{spec.linkLabel}</span>
-                        <IconArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
-                      </a>
-                    ) : (
-                      <a
-                        href={spec.link}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        onClick={() => onPlaySound?.('switch')}
-                        className="inline-flex items-center gap-1.5 font-mono text-xs text-accent hover:underline font-semibold"
-                      >
-                        <span>{spec.linkLabel}</span>
-                        <IconArrowUpRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
-                      </a>
-                    )}
-                    <span className="font-mono text-[10px] text-muted tracking-widest uppercase">
-                      PK ARCHITECTURE
-                    </span>
-                  </div>
-                </article>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* Legal Protocols, Trademarks, Intellectual Property & Statutory Disclaimers */}
-        <div id="footer-legal-section" className="border-b border-line bg-surface/10 scroll-mt-20">
-          {/* Legal Header Bar */}
-          <div className="p-6 sm:px-10 lg:px-12 py-6 border-b border-line flex flex-col lg:flex-row lg:items-end justify-between gap-4">
-            <div>
-              <div className="hud-label text-accent mb-2 flex items-center gap-2">
-                <span className="w-1.5 h-1.5 rounded-full bg-accent animate-ping" />
-                <span>LEGAL PROTOCOLS // STATUTORY DISCLAIMERS &amp; INTELLECTUAL PROPERTY LEDGER</span>
-              </div>
-              <h3 className="font-display text-2xl sm:text-3xl font-bold tracking-tight text-ink">
-                Trademarks, Cultural Standards &amp; Safe Harbor Disclaimers
-              </h3>
-              <p className="mt-2 text-xs sm:text-sm text-muted max-w-3xl leading-relaxed">
-                Formal legal protections covering third-party trademark nominative fair use (15 U.S.C. § 1115(b)(4)),
-                Khmer NiDA national keyboard attribution, The Met Open Access CC0 public domain dedication,
-                statutory "AS IS" software liability exclusion, zero-tracking client privacy sovereignty, and 24-48h DMCA safe harbor notice channels.
+              <p className="mt-1 text-xs text-muted max-w-3xl leading-relaxed">
+                Technical explanations of core architectures alongside audited legal disclosures covering third-party trademark fair use (15 U.S.C. § 1115(b)(4)),
+                Khmer NiDA standards, The Met CC0 public domain art, and MIT "AS IS" liability waivers.
               </p>
             </div>
-            <div className="flex flex-wrap items-center gap-2 font-mono text-xs shrink-0">
+
+            {/* Mode Switcher Segmented Controller */}
+            <div className="flex flex-wrap items-center gap-1.5 font-mono text-xs shrink-0">
               <button
                 type="button"
                 onClick={() => {
                   onPlaySound?.('switch');
-                  setLegalAllExpanded(!legalAllExpanded);
+                  setHubTab('tech');
                 }}
-                className="border border-accent/60 bg-accentDim hover:bg-accent hover:text-bg text-accent px-3 py-1.5 font-bold transition-all flex items-center gap-1.5"
+                className={`px-3 py-1.5 border transition-all flex items-center gap-1.5 font-bold ${
+                  hubTab === 'tech'
+                    ? 'border-accent bg-accent text-bg shadow-sm'
+                    : 'border-line bg-bg text-muted hover:text-ink hover:border-accent/60'
+                }`}
+              >
+                <IconCode className="w-3.5 h-3.5" />
+                <span>TECH SPECS (6)</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => {
+                  onPlaySound?.('switch');
+                  setHubTab('legal');
+                }}
+                className={`px-3 py-1.5 border transition-all flex items-center gap-1.5 font-bold ${
+                  hubTab === 'legal'
+                    ? 'border-accent bg-accent text-bg shadow-sm'
+                    : 'border-line bg-bg text-muted hover:text-ink hover:border-accent/60'
+                }`}
               >
                 <IconShield className="w-3.5 h-3.5" />
-                <span>{legalAllExpanded ? 'TABBED FOCUS VIEW' : 'EXPAND ALL 6 CLAUSES'}</span>
+                <span>LEGAL SHIELD (6)</span>
               </button>
+
+              <button
+                type="button"
+                onClick={() => {
+                  onPlaySound?.('switch');
+                  setHubTab('both');
+                }}
+                className={`px-3 py-1.5 border transition-all flex items-center gap-1.5 font-bold ${
+                  hubTab === 'both'
+                    ? 'border-accent bg-accent text-bg shadow-sm'
+                    : 'border-line bg-bg text-muted hover:text-ink hover:border-accent/60'
+                }`}
+              >
+                <IconGrid className="w-3.5 h-3.5" />
+                <span>ALL COMPACT (12)</span>
+              </button>
+
               <a
                 href="mailto:phleyphana@gmail.com?subject=%5BLEGAL%20%2F%20IP%20INQUIRY%5D%20Notice%20of%20Claimed%20Infringement"
                 onClick={() => onPlaySound?.('switch')}
-                className="border border-line bg-bg hover:border-accent hover:text-accent text-muted px-3 py-1.5 transition-colors flex items-center gap-1.5"
+                className="border border-line bg-surface/50 hover:border-accent hover:text-accent text-muted px-2.5 py-1.5 transition-colors flex items-center gap-1.5 ml-1 hidden sm:flex text-[11px]"
                 title="Send legal / copyright inquiry to phleyphana@gmail.com"
               >
-                <IconMail className="w-3.5 h-3.5 text-accent" />
-                <span>IP INQUIRIES: phleyphana@gmail.com</span>
+                <IconMail className="w-3 h-3 text-accent" />
+                <span>IP INQUIRIES</span>
               </a>
             </div>
           </div>
 
-          {/* Interactive Clause Selector Tab Bar */}
-          <div className="border-b border-line bg-bg overflow-x-auto">
-            <div className="flex min-w-max p-2 sm:px-10 lg:px-12 gap-1.5">
-              {LEGAL_COMPLIANCE_CLAUSES.map((clause) => {
-                const isActive = activeLegalId === clause.id;
-                const ClauseIcon = clause.icon;
-                return (
-                  <button
-                    key={clause.id}
-                    type="button"
-                    onClick={() => {
-                      onPlaySound?.('switch');
-                      setActiveLegalId(clause.id);
-                    }}
-                    className={`font-mono text-xs px-3 py-2 border transition-all flex items-center gap-2 ${
-                      isActive
-                        ? 'border-accent bg-accent text-bg font-bold shadow-sm'
-                        : 'border-line bg-surface/50 text-muted hover:border-accent/60 hover:text-ink'
-                    }`}
-                  >
-                    <ClauseIcon className={`w-3.5 h-3.5 ${isActive ? 'text-bg' : 'text-accent'}`} />
-                    <span>{clause.num}</span>
-                    <span className="hidden md:inline">// {clause.category}</span>
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* Main Display: Tabbed Active Focus Card vs. Full 6-Clause Grid */}
-          {!legalAllExpanded ? (
-            /* Active Focused Clause Card */
-            <div className="p-6 sm:p-10 lg:p-12 bg-bg/80">
-              <div className="border border-accent/40 bg-surface/40 p-6 sm:p-8 relative overflow-hidden card-laser-lift">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-line/80 pb-4 mb-6">
-                  <div className="flex items-center gap-3">
-                    <span className="p-2 rounded bg-bg border border-accent/40 text-accent">
-                      {React.createElement(activeClause.icon, { className: 'w-5 h-5' })}
-                    </span>
-                    <div>
-                      <div className="font-mono text-xs text-accent font-bold flex items-center gap-2">
-                        <span>{activeClause.num}</span>
-                        <span>//</span>
-                        <span>{activeClause.category}</span>
-                        <span className="text-muted font-normal hidden sm:inline">({activeClause.statute})</span>
-                      </div>
-                      <h4 className="font-display text-xl sm:text-2xl font-bold text-ink mt-0.5">
-                        {activeClause.title}
-                      </h4>
-                    </div>
-                  </div>
-                  <span className="border border-accent/50 bg-accentDim px-2.5 py-1 font-mono text-[11px] text-accent font-bold uppercase tracking-wider self-start sm:self-auto">
-                    {activeClause.badge}
+          {/* Section 1: Technology & Engineering Specs */}
+          {(hubTab === 'tech' || hubTab === 'both') && (
+            <div>
+              {hubTab === 'both' && (
+                <div className="px-5 sm:px-10 lg:px-12 py-2.5 bg-surface/40 border-b border-line flex items-center justify-between font-mono text-[11px]">
+                  <span className="text-accent font-bold tracking-wider uppercase flex items-center gap-2">
+                    <span className="w-1.5 h-1.5 rounded-full bg-accent" />
+                    <span>PART 01 // HOW IT WORKS: 6 ENGINEERING SPECS</span>
                   </span>
+                  <span className="text-muted">OPEN-SOURCE &amp; ARCHITECTURAL BLUEPRINTS</span>
                 </div>
+              )}
 
-                {/* Summary Banner */}
-                <div className="border-l-2 border-accent bg-accentDim/30 p-4 mb-6 font-mono text-xs sm:text-[13px] text-ink leading-relaxed">
-                  <div className="text-[10px] uppercase text-accent font-bold tracking-wider mb-1">
-                    STATUTORY SUMMARY // EXECUTIVE DIRECTIVE
-                  </div>
-                  {activeClause.summary}
-                </div>
-
-                {/* Detailed Provisions */}
-                <div className="space-y-3 font-mono text-xs text-muted leading-relaxed">
-                  <div className="text-[10px] uppercase tracking-wider text-muted font-bold">
-                    SPECIFIC LEGAL PROVISIONS &amp; STATUTORY CODES:
-                  </div>
-                  {activeClause.details.map((detail, idx) => (
-                    <div
-                      key={idx}
-                      className="border border-line/60 bg-bg p-3.5 flex items-start gap-3 hover:border-accent/40 transition-colors"
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 divide-y md:divide-y-0 gap-px bg-line">
+                {FOOTER_TECH_DOSSIERS.map((spec) => {
+                  const SpecIcon = spec.icon;
+                  return (
+                    <article
+                      key={spec.id}
+                      className="bg-bg p-4 sm:p-5 flex flex-col justify-between hover:bg-surface/50 transition-colors group card-laser-lift relative"
                     >
-                      <span className="text-accent font-bold mt-0.5 shrink-0 text-[11px]">
-                        [{String(idx + 1).padStart(2, '0')}]
-                      </span>
-                      <p className="text-ink/90 text-xs sm:text-[13px] leading-relaxed">
-                        {detail}
-                      </p>
-                    </div>
-                  ))}
-                </div>
+                      <div>
+                        {/* Header: Index & Status */}
+                        <div className="flex items-center justify-between font-mono text-[11px] text-muted mb-2">
+                          <div className="flex items-center gap-1.5">
+                            <span className="text-accent font-bold">{spec.index}</span>
+                            <span>//</span>
+                            <span className="text-muted text-[10px] tracking-wider">{spec.category}</span>
+                          </div>
+                          <span className="border border-accent/40 bg-accentDim px-1.5 py-0.5 text-[9px] text-accent font-semibold">
+                            {spec.status}
+                          </span>
+                        </div>
 
-                {/* Tags and Action Bar */}
-                <div className="mt-6 pt-5 border-t border-line/80 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                  <div className="flex flex-wrap gap-1.5">
-                    {activeClause.pills.map((pill) => (
-                      <span
-                        key={pill}
-                        className="border border-line bg-surface px-2.5 py-1 font-mono text-[10px] text-ink"
-                      >
-                        {pill}
-                      </span>
-                    ))}
-                  </div>
+                        {/* Title with Icon */}
+                        <div className="flex items-start gap-2.5 mb-1.5">
+                          <span className="p-1 rounded bg-surface border border-line text-accent shrink-0 mt-0.5 group-hover:scale-105 group-hover:border-accent transition-all">
+                            <SpecIcon className="w-3.5 h-3.5" />
+                          </span>
+                          <div>
+                            <h4 className="font-display text-base font-bold text-ink group-hover:text-accent transition-colors leading-snug">
+                              {spec.name}
+                            </h4>
+                            <div className="text-[11px] font-mono text-accent/90 mt-0.5">
+                              {spec.subtitle}
+                            </div>
+                          </div>
+                        </div>
 
-                  {activeClause.externalLink && (
-                    <a
-                      href={activeClause.externalLink}
-                      target={activeClause.externalLink.startsWith('#') ? '_self' : '_blank'}
-                      rel="noopener noreferrer"
-                      onClick={() => onPlaySound?.('switch')}
-                      className="inline-flex items-center gap-1.5 font-mono text-xs text-accent hover:underline font-bold shrink-0"
-                    >
-                      <span>{activeClause.externalLinkLabel}</span>
-                      <IconArrowUpRight className="w-3.5 h-3.5" />
-                    </a>
-                  )}
-                </div>
+                        {/* Description */}
+                        <p className="mt-2 text-xs text-muted leading-relaxed">
+                          {spec.description}
+                        </p>
+
+                        {/* Tech Pills */}
+                        <div className="mt-3 flex flex-wrap gap-1">
+                          {spec.pills.map((pill) => (
+                            <span
+                              key={pill}
+                              className="border border-line bg-surface px-2 py-0.5 font-mono text-[9px] text-ink"
+                            >
+                              {pill}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Direct Link Action */}
+                      <div className="mt-4 pt-3 border-t border-line/60 flex items-center justify-between">
+                        {spec.link.startsWith('#') ? (
+                          <a
+                            href={spec.link}
+                            onClick={(e) => handleLinkClick(e, spec.link.replace('#', ''))}
+                            className="inline-flex items-center gap-1 font-mono text-[11px] text-accent hover:underline font-bold"
+                          >
+                            <span>{spec.linkLabel}</span>
+                            <IconArrowRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
+                          </a>
+                        ) : (
+                          <a
+                            href={spec.link}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            onClick={() => onPlaySound?.('switch')}
+                            className="inline-flex items-center gap-1 font-mono text-[11px] text-accent hover:underline font-bold"
+                          >
+                            <span>{spec.linkLabel}</span>
+                            <IconArrowUpRight className="w-3 h-3 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                          </a>
+                        )}
+                        <span className="font-mono text-[9px] text-muted tracking-widest uppercase">
+                          PK SPEC
+                        </span>
+                      </div>
+                    </article>
+                  );
+                })}
               </div>
             </div>
-          ) : (
-            /* Full 6-Clause Grid (Expanded View) */
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 divide-y md:divide-y-0 gap-px bg-line">
-              {LEGAL_COMPLIANCE_CLAUSES.map((clause) => {
-                const ClauseIcon = clause.icon;
-                return (
-                  <article
-                    key={clause.id}
-                    className="bg-bg p-6 sm:p-8 flex flex-col justify-between hover:bg-surface/60 transition-colors group relative overflow-hidden"
-                  >
-                    <div>
-                      {/* Header */}
-                      <div className="flex items-center justify-between font-mono text-xs text-muted mb-3">
-                        <div className="flex items-center gap-2">
-                          <span className="text-accent font-bold">{clause.num}</span>
-                          <span>//</span>
-                          <span className="text-[11px] text-muted">{clause.category}</span>
-                        </div>
-                        <span className="border border-accent/40 bg-accentDim px-2 py-0.5 text-[10px] text-accent font-semibold">
-                          {clause.badge}
-                        </span>
-                      </div>
+          )}
 
-                      {/* Title */}
-                      <div className="flex items-start gap-2.5 mb-2">
-                        <span className="p-1.5 rounded bg-surface border border-line text-accent shrink-0 mt-0.5">
-                          <ClauseIcon className="w-4 h-4" />
-                        </span>
-                        <div>
-                          <h4 className="font-display text-lg font-bold text-ink group-hover:text-accent transition-colors">
-                            {clause.title}
-                          </h4>
-                          <div className="text-[11px] font-mono text-muted mt-0.5">
-                            {clause.statute}
+          {/* Section 2: Trademarks, Cultural Standards & Safe Harbor Disclaimers */}
+          {(hubTab === 'legal' || hubTab === 'both') && (
+            <div className={hubTab === 'both' ? 'border-t border-line' : ''}>
+              {hubTab === 'both' && (
+                <div className="px-5 sm:px-10 lg:px-12 py-2.5 bg-surface/40 border-b border-line flex items-center justify-between font-mono text-[11px]">
+                  <span className="text-accent font-bold tracking-wider uppercase flex items-center gap-2">
+                    <span className="w-1.5 h-1.5 rounded-full bg-accent" />
+                    <span>PART 02 // TRADEMARKS, CULTURAL STANDARDS &amp; SAFE HARBOR DISCLAIMERS</span>
+                  </span>
+                  <span className="text-muted">STATUTORY AUDIT // 100% COMPLIANCE &amp; DISCLOSURE</span>
+                </div>
+              )}
+
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 divide-y md:divide-y-0 gap-px bg-line">
+                {LEGAL_COMPLIANCE_CLAUSES.map((clause) => {
+                  const ClauseIcon = clause.icon;
+                  const isExpanded = expandedLegalIds.has(clause.id);
+                  return (
+                    <article
+                      key={clause.id}
+                      className="bg-bg p-4 sm:p-5 flex flex-col justify-between hover:bg-surface/50 transition-colors group card-laser-lift relative"
+                    >
+                      <div>
+                        {/* Header: Num, Statute, Badge */}
+                        <div className="flex items-center justify-between font-mono text-[11px] text-muted mb-2">
+                          <div className="flex items-center gap-1.5">
+                            <span className="text-accent font-bold">{clause.num}</span>
+                            <span>//</span>
+                            <span className="text-muted text-[10px] tracking-wider">{clause.category}</span>
                           </div>
-                        </div>
-                      </div>
-
-                      {/* Summary */}
-                      <p className="mt-3 text-xs text-muted leading-relaxed border-l border-accent/50 pl-2.5 bg-surface/30 py-1.5">
-                        {clause.summary}
-                      </p>
-
-                      {/* Details list */}
-                      <div className="mt-3 space-y-2 font-mono text-[11px] text-muted">
-                        {clause.details.map((detail, idx) => (
-                          <div key={idx} className="flex items-start gap-2">
-                            <span className="text-accent shrink-0 font-bold">&gt;</span>
-                            <span className="text-ink/80">{detail}</span>
-                          </div>
-                        ))}
-                      </div>
-
-                      {/* Pills */}
-                      <div className="mt-4 flex flex-wrap gap-1">
-                        {clause.pills.map((pill) => (
-                          <span
-                            key={pill}
-                            className="border border-line bg-surface px-2 py-0.5 font-mono text-[9px] text-ink"
-                          >
-                            {pill}
+                          <span className="border border-accent/40 bg-accentDim px-1.5 py-0.5 text-[9px] text-accent font-semibold">
+                            {clause.badge}
                           </span>
-                        ))}
-                      </div>
-                    </div>
+                        </div>
 
-                    {/* Bottom Action */}
-                    <div className="mt-6 pt-3 border-t border-line/60 flex items-center justify-between">
-                      {clause.externalLink && (
-                        <a
-                          href={clause.externalLink}
-                          target={clause.externalLink.startsWith('#') ? '_self' : '_blank'}
-                          rel="noopener noreferrer"
-                          onClick={() => onPlaySound?.('switch')}
-                          className="inline-flex items-center gap-1 font-mono text-[11px] text-accent hover:underline font-bold"
-                        >
-                          <span>{clause.externalLinkLabel}</span>
-                          <IconArrowUpRight className="w-3 h-3" />
-                        </a>
-                      )}
-                      <span className="font-mono text-[9px] text-muted tracking-widest uppercase">
-                        LEGAL SECURE
-                      </span>
-                    </div>
-                  </article>
-                );
-              })}
+                        {/* Title with Icon */}
+                        <div className="flex items-start gap-2.5 mb-1.5">
+                          <span className="p-1 rounded bg-surface border border-line text-accent shrink-0 mt-0.5 group-hover:scale-105 group-hover:border-accent transition-all">
+                            <ClauseIcon className="w-3.5 h-3.5" />
+                          </span>
+                          <div>
+                            <h4 className="font-display text-base font-bold text-ink group-hover:text-accent transition-colors leading-snug">
+                              {clause.title}
+                            </h4>
+                            <div className="text-[10px] font-mono text-muted mt-0.5">
+                              {clause.statute}
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Core Statutory Summary (Direct legal protection) */}
+                        <div className="mt-2 border-l-2 border-accent/70 bg-surface/30 p-2 text-xs text-ink/90 leading-relaxed font-mono">
+                          {clause.summary}
+                        </div>
+
+                        {/* Expandable Provisions Drawer */}
+                        <div className="mt-2">
+                          <button
+                            type="button"
+                            onClick={() => toggleLegalDetails(clause.id)}
+                            className="font-mono text-[10px] text-accent hover:underline font-bold flex items-center gap-1"
+                          >
+                            <span>{isExpanded ? '- Hide Full Provisions' : `+ View Full Provisions (${clause.details.length})`}</span>
+                          </button>
+
+                          {isExpanded && (
+                            <div className="mt-2 space-y-1.5 p-2 bg-bg border border-line/60 font-mono text-[11px] text-muted">
+                              {clause.details.map((detail, idx) => (
+                                <div key={idx} className="flex items-start gap-1.5">
+                                  <span className="text-accent font-bold shrink-0">[{String(idx + 1).padStart(2, '0')}]</span>
+                                  <span className="text-ink/80 leading-relaxed">{detail}</span>
+                                </div>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+
+                        {/* Legal Pills */}
+                        <div className="mt-3 flex flex-wrap gap-1">
+                          {clause.pills.map((pill) => (
+                            <span
+                              key={pill}
+                              className="border border-line bg-surface px-2 py-0.5 font-mono text-[9px] text-ink"
+                            >
+                              {pill}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Direct Legal Action Link */}
+                      <div className="mt-4 pt-3 border-t border-line/60 flex items-center justify-between">
+                        {clause.externalLink && (
+                          <a
+                            href={clause.externalLink}
+                            target={clause.externalLink.startsWith('#') ? '_self' : '_blank'}
+                            rel="noopener noreferrer"
+                            onClick={() => onPlaySound?.('switch')}
+                            className="inline-flex items-center gap-1 font-mono text-[11px] text-accent hover:underline font-bold"
+                          >
+                            <span>{clause.externalLinkLabel}</span>
+                            <IconArrowUpRight className="w-3 h-3 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                          </a>
+                        )}
+                        <span className="font-mono text-[9px] text-muted tracking-widest uppercase">
+                          LEGAL SHIELD
+                        </span>
+                      </div>
+                    </article>
+                  );
+                })}
+              </div>
             </div>
           )}
         </div>
+
 
         {/* Bottom Copyright Bar */}
         <div className="px-6 py-4 sm:px-10 flex flex-col md:flex-row items-center justify-between gap-4 font-mono text-xs text-muted bg-surface/50">
@@ -857,6 +820,13 @@ export default function Footer({ onNavigateHome, onPlaySound }) {
           </div>
 
           <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-[11px]">
+            <button
+              type="button"
+              onClick={handleSelectTechSpecs}
+              className="text-muted hover:text-accent transition-colors underline-offset-4 hover:underline"
+            >
+              Tech Specs (6)
+            </button>
             <button
               type="button"
               onClick={() => handleSelectLegalClause('trademarks')}
