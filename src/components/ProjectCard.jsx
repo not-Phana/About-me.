@@ -1,8 +1,15 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { IconArrowUpRight, IconArrowRight, IconGitHub } from './Icons';
 import ProjectPreviewVisual from './ProjectPreviewVisual';
 
-export default function ProjectCard({ project, onSelectProject }) {
+export default function ProjectCard({
+  project,
+  onSelectProject,
+  onSelectTechTag,
+  activeTechTag,
+}) {
+  const [tiltStyle, setTiltStyle] = useState({});
+
   const statusDotColor =
     project.statusTone === 'live'
       ? 'bg-[#4ade80]'
@@ -12,26 +19,38 @@ export default function ProjectCard({ project, onSelectProject }) {
 
   const handleMouseMove = (e) => {
     const rect = e.currentTarget.getBoundingClientRect();
-    e.currentTarget.style.setProperty('--px', `${e.clientX - rect.left}px`);
-    e.currentTarget.style.setProperty('--py', `${e.clientY - rect.top}px`);
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    e.currentTarget.style.setProperty('--px', `${x}px`);
+    e.currentTarget.style.setProperty('--py', `${y}px`);
+
+    const rx = ((y / rect.height - 0.5) * -3.2).toFixed(2);
+    const ry = ((x / rect.width - 0.5) * 3.2).toFixed(2);
+    setTiltStyle({
+      transform: `perspective(900px) rotateX(${rx}deg) rotateY(${ry}deg)`,
+    });
   };
 
   const handleMouseLeave = (e) => {
     e.currentTarget.style.setProperty('--px', '-500px');
     e.currentTarget.style.setProperty('--py', '-500px');
+    setTiltStyle({});
   };
 
   return (
     <article
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
+      style={tiltStyle}
       className="spotlight-card group flex flex-col justify-between bg-bg p-6 sm:p-8 transition-colors"
     >
       <div>
         {/* Card Header Metadata */}
         <div className="flex items-center justify-between gap-2 font-mono text-xs text-muted mb-4">
-          <span>
-            {project.index} // {project.category.toUpperCase()}
+          <span className="flex items-center gap-1.5">
+            <span className="text-accent font-bold">{project.index}</span>
+            <span>//</span>
+            <span>{project.category.toUpperCase()}</span>
           </span>
           <span className="inline-flex items-center gap-1.5 border border-line bg-surface px-2.5 py-0.5 text-[11px] text-ink">
             <span className={`h-1.5 w-1.5 rounded-full ${statusDotColor}`} />
@@ -51,7 +70,7 @@ export default function ProjectCard({ project, onSelectProject }) {
           role="button"
           tabIndex={0}
           aria-label={`Inspect details for ${project.name}`}
-          className="cursor-pointer border border-line group-hover:border-accent/60 aspect-[16/10] mb-5 overflow-hidden transition-colors focus-visible:outline-accent"
+          className="hud-frame cursor-pointer border border-line group-hover:border-accent/70 aspect-[16/10] mb-5 overflow-hidden transition-colors focus-visible:outline-accent"
         >
           <ProjectPreviewVisual project={project} />
         </div>
@@ -71,16 +90,29 @@ export default function ProjectCard({ project, onSelectProject }) {
           {project.shortDescription}
         </p>
 
-        {/* Verified Tech Tags */}
+        {/* Verified Tech Tags (Clickable to filter) */}
         <div className="mt-4 flex flex-wrap gap-1.5">
-          {project.technologies.slice(0, 4).map((tech) => (
-            <span
-              key={tech}
-              className="border border-line bg-surface px-2 py-0.5 font-mono text-[11px] text-muted"
-            >
-              {tech}
-            </span>
-          ))}
+          {project.technologies.slice(0, 4).map((tech) => {
+            const isSelected = activeTechTag === tech;
+            return (
+              <button
+                key={tech}
+                type="button"
+                onClick={() =>
+                  onSelectTechTag &&
+                  onSelectTechTag(isSelected ? '' : tech)
+                }
+                title={`Filter projects using ${tech}`}
+                className={`border px-2 py-0.5 font-mono text-[11px] transition-colors ${
+                  isSelected
+                    ? 'border-accent bg-accent text-[#0b0b0c] font-bold'
+                    : 'border-line bg-surface text-muted hover:text-ink hover:border-accent/60'
+                }`}
+              >
+                {tech}
+              </button>
+            );
+          })}
         </div>
       </div>
 

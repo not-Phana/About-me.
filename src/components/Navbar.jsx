@@ -41,6 +41,24 @@ export default function Navbar({
 }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrollPct, setScrollPct] = useState(0);
+  const [clockText, setClockText] = useState(() => {
+    try {
+      return new Date().toLocaleTimeString('en-GB', { hour12: false });
+    } catch {
+      return '00:00:00';
+    }
+  });
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      try {
+        setClockText(new Date().toLocaleTimeString('en-GB', { hour12: false }));
+      } catch {
+        // Ignore locale time error
+      }
+    }, 1000);
+    return () => clearInterval(timer);
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -141,6 +159,16 @@ export default function Navbar({
 
         {/* Right Utility Cells */}
         <div className="flex shrink-0 items-stretch">
+          {/* Live Studio Clock & Telemetry Pill */}
+          <div
+            className="hidden 2xl:flex items-center gap-2 border-l border-line px-3.5 font-mono text-[11px] text-muted select-none"
+            title="Local system clock & live studio telemetry"
+          >
+            <span className="h-1.5 w-1.5 rounded-full bg-[#4ade80] animate-pulse" />
+            <span className="text-ink font-semibold">{clockText}</span>
+            <span className="text-[10px] text-muted">SYS:OK</span>
+          </div>
+
           {/* Command Palette Trigger */}
           <button
             type="button"

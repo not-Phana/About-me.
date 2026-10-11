@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useGitHubData } from '../hooks/useGitHubData';
 import { PROFILE } from '../data/profile';
 import {
@@ -8,6 +8,9 @@ import {
   IconGitFork,
   IconRefresh,
   IconClock,
+  IconCheck,
+  IconTerminal,
+  IconClose,
 } from './Icons';
 
 function formatDate(isoString) {
@@ -24,15 +27,45 @@ function formatDate(isoString) {
   }
 }
 
+const LANG_COLORS = {
+  JavaScript: '#facc15',
+  HTML: '#fb7185',
+  CSS: '#38bdf8',
+  TypeScript: '#60a5fa',
+  Python: '#34d399',
+  Other: '#a1a1aa',
+};
+
 export default function GitHubSection() {
   const { profile, repos, status, errorMessage, refresh } = useGitHubData();
   const [repoFilter, setRepoFilter] = useState('original'); // 'original' | 'all'
+  const [selectedLang, setSelectedLang] = useState('');
+  const [selectedMonth, setSelectedMonth] = useState('');
+  const [copiedRepo, setCopiedRepo] = useState('');
 
-  const originalRepos = repos.filter((r) => !r.fork);
-  const displayedRepos = repoFilter === 'original' ? originalRepos : repos;
+  const originalRepos = useMemo(() => repos.filter((r) => !r.fork), [repos]);
+  const baseRepos = repoFilter === 'original' ? originalRepos : repos;
 
-  // Build a simple, reliable monthly repository activity breakdown directly
-  // from official GitHub repository creation and push timestamps (no third-party service).
+  // Compute real language distribution across baseRepos
+  const languageBreakdown = useMemo(() => {
+    const counts = {};
+    let total = 0;
+    baseRepos.forEach((r) => {
+      const lang = r.language || 'HTML';
+      counts[lang] = (counts[lang] || 0) + 1;
+      total += 1;
+    });
+    if (total === 0) return [];
+    return Object.entries(counts)
+      .map(([lang, count]) => ({
+        lang,
+        count,
+        pct: Math.round((count / total) * 100),
+        color: LANG_COLORS[lang] || LANG_COLORS.Other,
+      }))
+      .sort((a, b) => b.count - a.count);
+  }, [baseRepos]);
+
   const months2026 = [
     { key: '2026-01', label: 'Jan' },
     { key: '2026-02', label: 'Feb' },
@@ -59,6 +92,32 @@ export default function GitHubSection() {
       repoNames: activeInMonth.map((r) => r.name),
     };
   });
+
+  const displayedRepos = useMemo(() => {
+    return baseRepos.filter((r) => {
+      const matchesLang =
+        !selectedLang || (r.language || 'HTML') === selectedLang;
+      const matchesMonth =
+        !selectedMonth ||
+        (r.created_at && r.created_at.startsWith(selectedMonth)) ||
+        (r.pushed_at && r.pushed_at.startsWith(selectedMonth)) ||
+        (r.updated_at && r.updated_at.startsWith(selectedMonth));
+      return matchesLang && matchesMonth;
+    });
+  }, [baseRepos, selectedLang, selectedMonth]);
+
+  const handleCopyClone = (repoName, cloneUrl) => {
+    const cmd = `git clone ${
+      cloneUrl || `https://github.com/${PROFILE.githubUsername}/${repoName}.git`
+    }`;
+    try {
+      navigator.clipboard.writeText(cmd);
+      setCopiedRepo(repoName);
+      setTimeout(() => setCopiedRepo(''), 2000);
+    } catch {
+      // Fallback ignore
+    }
+  };
 
   return (
     <section id="github" className="border-b border-line bg-bg">
@@ -121,32 +180,36 @@ export default function GitHubSection() {
                 'Connected to live GitHub REST API (api.github.com/users/phanaach4889)'}
               {status === 'loading' &&
                 'Fetching public repository data from GitHub REST API...'}
-              {status === 'fallback' && (errorMessage || 'Using verified local repository snapshot.')}
+              {status === 'fallback' &&
+                (errorMessage || 'Using verified local repository snapshot.')}
             </span>
           </div>
           <span className="text-muted">
-            Public GitHub repositories only · Local prototypes are listed in the project directory above
+            Click any language or 2026 month cell below to filter repositories
           </span>
         </div>
 
         {/* Profile Overview & Verified Activity Strip */}
         <div className="grid grid-cols-1 lg:grid-cols-12 border-b border-line">
-          {/* Left: Public GitHub Profile Card */}
+          {/* Left: Public GitHub Profile Card + Language Telemetry Bar */}
           <div className="lg:col-span-5 p-6 sm:p-10 border-b lg:border-b-0 lg:border-r border-line flex flex-col justify-between bg-bg">
             <div className="flex items-start gap-4">
               {profile?.avatar_url && (
-                <img
-                  src={profile.avatar_url}
-                  alt={`${profile.login} GitHub avatar`}
-                  className="w-16 h-16 border border-line object-cover shrink-0 bg-surface"
-                />
+                <div className="hud-frame shrink-0">
+                  <img
+                    src={profile.avatar_url}
+                    alt={`${profile.login} GitHub avatar`}
+                    className="w-16 h-16 border border-line object-cover bg-surface"
+                  />
+                </div>
               )}
               <div>
                 <div className="font-mono text-xs text-accent">
                   GITHUB PROFILE // PUBLIC DATA
                 </div>
                 <h3 className="font-display text-2xl font-bold text-ink mt-0.5">
-                  {profile?.name || 'Kon'} (@{profile?.login || PROFILE.githubUsername})
+                  {profile?.name || 'Kon'} (
+                  @{profile?.login || PROFILE.githubUsername})
                 </h3>
                 <p className="mt-1.5 text-sm text-muted">
                   &ldquo;{profile?.bio || PROFILE.githubBio}&rdquo;
@@ -154,7 +217,56 @@ export default function GitHubSection() {
               </div>
             </div>
 
-            <dl className="mt-8 grid grid-cols-3 border border-line bg-surface divide-x divide-line font-mono text-center">
+            {/* Primary Language Distribution Bar */}
+            {languageBreakdown.length > 0 && (
+              <div className="mt-6 pt-5 border-t border-lineSoft">
+                <div className="flex items-center justify-between font-mono text-[11px] text-muted mb-2">
+                  <span>REPOSITORY LANGUAGE TELEMETRY</span>
+                  <span>{baseRepos.length} REPOS ANALYZED</span>
+                </div>
+                <div className="h-2.5 w-full bg-surface border border-line flex overflow-hidden">
+                  {languageBreakdown.map((item) => (
+                    <div
+                      key={item.lang}
+                      style={{
+                        width: `${item.pct}%`,
+                        backgroundColor: item.color,
+                      }}
+                      title={`${item.lang}: ${item.pct}% (${item.count} repos)`}
+                      className="h-full transition-all duration-300"
+                    />
+                  ))}
+                </div>
+                <div className="mt-2.5 flex flex-wrap gap-2">
+                  {languageBreakdown.map((item) => {
+                    const isSelected = selectedLang === item.lang;
+                    return (
+                      <button
+                        key={item.lang}
+                        type="button"
+                        onClick={() =>
+                          setSelectedLang(isSelected ? '' : item.lang)
+                        }
+                        className={`inline-flex items-center gap-1.5 border px-2 py-0.5 font-mono text-[11px] transition-colors ${
+                          isSelected
+                            ? 'border-accent bg-accentDim text-ink font-bold'
+                            : 'border-line bg-surface text-muted hover:text-ink'
+                        }`}
+                      >
+                        <span
+                          className="h-2 w-2 rounded-full"
+                          style={{ backgroundColor: item.color }}
+                        />
+                        <span>{item.lang}</span>
+                        <span className="text-muted">{item.pct}%</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+
+            <dl className="mt-6 grid grid-cols-3 border border-line bg-surface divide-x divide-line font-mono text-center">
               <div className="p-3.5">
                 <dt className="text-[10px] text-muted uppercase">
                   PUBLIC REPOS
@@ -190,7 +302,7 @@ export default function GitHubSection() {
                   PUBLIC REPOSITORY PUSH &amp; CREATION CADENCE (2026)
                 </div>
                 <p className="text-xs text-muted mt-1">
-                  Computed directly from public GitHub API repository timestamps without external tracking services.
+                  Computed directly from public GitHub API repository timestamps. Click any active month to inspect repositories touched in that period.
                 </p>
               </div>
               <span className="font-mono text-xs text-accent">
@@ -201,15 +313,27 @@ export default function GitHubSection() {
             <div className="grid grid-cols-5 sm:grid-cols-10 gap-2 pt-2">
               {monthlyActivity.map((item) => {
                 const active = item.count > 0;
+                const isSelected = selectedMonth === item.key;
                 return (
-                  <div
+                  <button
                     key={item.key}
+                    type="button"
+                    onClick={() =>
+                      active &&
+                      setSelectedMonth(isSelected ? '' : item.key)
+                    }
                     title={
                       active
-                        ? `${item.label} 2026: ${item.repoNames.join(', ')}`
+                        ? `${item.label} 2026: ${item.repoNames.join(', ')} (Click to filter)`
                         : `${item.label} 2026: No public repo push timestamp`
                     }
-                    className="border border-line bg-bg p-2.5 flex flex-col items-center justify-between min-h-[82px]"
+                    className={`border p-2.5 flex flex-col items-center justify-between min-h-[86px] transition-colors ${
+                      isSelected
+                        ? 'border-accent bg-accentDim ring-1 ring-accent'
+                        : active
+                        ? 'border-line bg-bg hover:border-accent/60 cursor-pointer'
+                        : 'border-line bg-bg opacity-60 cursor-default'
+                    }`}
                   >
                     <span className="font-mono text-[10px] text-muted">
                       {item.label}
@@ -225,7 +349,7 @@ export default function GitHubSection() {
                     >
                       {item.count}
                     </div>
-                  </div>
+                  </button>
                 );
               })}
             </div>
@@ -234,9 +358,32 @@ export default function GitHubSection() {
 
         {/* Repository Filter Bar */}
         <div className="border-b border-line bg-surface px-6 py-4 sm:px-10 flex flex-wrap items-center justify-between gap-4">
-          <div className="font-mono text-xs text-muted">
-            RECENTLY UPDATED PUBLIC REPOSITORIES ({displayedRepos.length})
+          <div className="flex flex-wrap items-center gap-2 font-mono text-xs">
+            <span className="text-muted">
+              DISPLAYING PUBLIC REPOSITORIES ({displayedRepos.length})
+            </span>
+            {selectedLang && (
+              <button
+                type="button"
+                onClick={() => setSelectedLang('')}
+                className="inline-flex items-center gap-1 border border-accent bg-accentDim px-2 py-0.5 text-accent"
+              >
+                <span>LANG: {selectedLang}</span>
+                <IconClose className="w-3 h-3" />
+              </button>
+            )}
+            {selectedMonth && (
+              <button
+                type="button"
+                onClick={() => setSelectedMonth('')}
+                className="inline-flex items-center gap-1 border border-accent bg-accentDim px-2 py-0.5 text-accent"
+              >
+                <span>MONTH: {selectedMonth}</span>
+                <IconClose className="w-3 h-3" />
+              </button>
+            )}
           </div>
+
           <div className="flex items-center gap-2">
             <button
               type="button"
@@ -266,92 +413,146 @@ export default function GitHubSection() {
         {/* Repository Grid */}
         {displayedRepos.length === 0 ? (
           <div className="p-12 text-center font-mono text-sm text-muted">
-            No public repositories found for this filter.
+            <p>No public repositories match this filter combination.</p>
+            <button
+              type="button"
+              onClick={() => {
+                setSelectedLang('');
+                setSelectedMonth('');
+                setRepoFilter('all');
+              }}
+              className="mt-3 border border-accent bg-accentDim px-4 py-1.5 text-xs text-accent"
+            >
+              Reset Repository Filters
+            </button>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 divide-y md:divide-y-0 gap-px bg-line">
-            {displayedRepos.map((repo) => (
-              <article
-                key={repo.id || repo.name}
-                className="bg-bg p-6 sm:p-8 flex flex-col justify-between hover:bg-surface/40 transition-colors"
-              >
-                <div>
-                  <div className="flex items-center justify-between gap-2 font-mono text-xs text-muted mb-3">
-                    <span className="inline-flex items-center gap-1.5">
-                      <IconClock className="w-3.5 h-3.5 text-accent" />
-                      <span>Updated {formatDate(repo.pushed_at || repo.updated_at)}</span>
-                    </span>
-                    <span className="border border-line bg-surface px-2 py-0.5 text-[10px] uppercase">
-                      {repo.fork ? 'Forked Repo' : 'Source Repo'}
-                    </span>
-                  </div>
-
-                  <h3 className="font-mono text-lg font-bold text-ink break-words">
-                    <a
-                      href={repo.html_url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="hover:text-accent transition-colors"
-                    >
-                      {repo.name}
-                    </a>
-                  </h3>
-
-                  <p className="mt-2 text-sm text-muted leading-relaxed">
-                    {repo.description ||
-                      'Public GitHub repository maintained by phanaach4889.'}
-                  </p>
-                </div>
-
-                <div className="mt-6 pt-4 border-t border-lineSoft flex flex-wrap items-center justify-between gap-3 font-mono text-xs">
-                  <div className="flex items-center gap-3 text-muted">
-                    {repo.language && (
-                      <span className="inline-flex items-center gap-1.5 text-ink">
-                        <span className="h-2 w-2 rounded-full bg-accent" />
-                        <span>{repo.language}</span>
+            {displayedRepos.map((repo) => {
+              const isCopied = copiedRepo === repo.name;
+              return (
+                <article
+                  key={repo.id || repo.name}
+                  className="spotlight-card bg-bg p-6 sm:p-8 flex flex-col justify-between hover:bg-surface/40 transition-colors"
+                >
+                  <div>
+                    <div className="flex items-center justify-between gap-2 font-mono text-xs text-muted mb-3">
+                      <span className="inline-flex items-center gap-1.5">
+                        <IconClock className="w-3.5 h-3.5 text-accent" />
+                        <span>
+                          Updated {formatDate(repo.pushed_at || repo.updated_at)}
+                        </span>
                       </span>
-                    )}
-                    <span
-                      className="inline-flex items-center gap-1"
-                      title="GitHub Stars"
-                    >
-                      <IconStar className="w-3.5 h-3.5" />
-                      <span>{repo.stargazers_count ?? 0}</span>
-                    </span>
-                    <span
-                      className="inline-flex items-center gap-1"
-                      title="GitHub Forks"
-                    >
-                      <IconGitFork className="w-3.5 h-3.5" />
-                      <span>{repo.forks_count ?? 0}</span>
-                    </span>
-                  </div>
+                      <span className="border border-line bg-surface px-2 py-0.5 text-[10px] uppercase">
+                        {repo.fork ? 'Forked Repo' : 'Source Repo'}
+                      </span>
+                    </div>
 
-                  <div className="flex items-center gap-2">
-                    {repo.homepage && (
+                    <h3 className="font-mono text-lg font-bold text-ink break-words">
                       <a
-                        href={repo.homepage}
+                        href={repo.html_url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1 text-accent hover:underline"
+                        className="hover:text-accent transition-colors"
                       >
-                        <span>Live</span>
-                        <IconArrowUpRight className="w-3 h-3" />
+                        {repo.name}
                       </a>
-                    )}
-                    <a
-                      href={repo.html_url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1 text-ink hover:text-accent transition-colors"
-                    >
-                      <span>Repo</span>
-                      <IconArrowUpRight className="w-3 h-3" />
-                    </a>
+                    </h3>
+
+                    <p className="mt-2 text-sm text-muted leading-relaxed">
+                      {repo.description ||
+                        'Public GitHub repository maintained by phanaach4889.'}
+                    </p>
                   </div>
-                </div>
-              </article>
-            ))}
+
+                  <div className="mt-6 pt-4 border-t border-lineSoft space-y-3 font-mono text-xs">
+                    <div className="flex flex-wrap items-center justify-between gap-3">
+                      <div className="flex items-center gap-3 text-muted">
+                        {repo.language && (
+                          <span className="inline-flex items-center gap-1.5 text-ink">
+                            <span
+                              className="h-2 w-2 rounded-full"
+                              style={{
+                                backgroundColor:
+                                  LANG_COLORS[repo.language] ||
+                                  LANG_COLORS.Other,
+                              }}
+                            />
+                            <span>{repo.language}</span>
+                          </span>
+                        )}
+                        <span
+                          className="inline-flex items-center gap-1"
+                          title="GitHub Stars"
+                        >
+                          <IconStar className="w-3.5 h-3.5" />
+                          <span>{repo.stargazers_count ?? 0}</span>
+                        </span>
+                        <span
+                          className="inline-flex items-center gap-1"
+                          title="GitHub Forks"
+                        >
+                          <IconGitFork className="w-3.5 h-3.5" />
+                          <span>{repo.forks_count ?? 0}</span>
+                        </span>
+                      </div>
+
+                      <div className="flex items-center gap-2">
+                        {repo.homepage && (
+                          <a
+                            href={repo.homepage}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-1 text-accent hover:underline"
+                          >
+                            <span>Live</span>
+                            <IconArrowUpRight className="w-3 h-3" />
+                          </a>
+                        )}
+                        <a
+                          href={repo.html_url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-1 text-ink hover:text-accent transition-colors"
+                        >
+                          <span>Repo</span>
+                          <IconArrowUpRight className="w-3 h-3" />
+                        </a>
+                      </div>
+                    </div>
+
+                    {/* One-Click Copy git clone Command */}
+                    <button
+                      type="button"
+                      onClick={() => handleCopyClone(repo.name, repo.clone_url)}
+                      className={`w-full flex items-center justify-between border px-3 py-1.5 text-[11px] transition-colors ${
+                        isCopied
+                          ? 'border-[#4ade80] bg-[#4ade80]/10 text-[#4ade80]'
+                          : 'border-line bg-surface text-muted hover:text-ink hover:border-ink'
+                      }`}
+                      title={`Copy git clone command for ${repo.name}`}
+                    >
+                      <span className="flex items-center gap-1.5 truncate">
+                        <IconTerminal className="w-3 h-3 text-accent shrink-0" />
+                        <span className="truncate">
+                          git clone .../{repo.name}.git
+                        </span>
+                      </span>
+                      <span className="shrink-0 ml-2 font-bold uppercase flex items-center gap-1">
+                        {isCopied ? (
+                          <>
+                            <IconCheck className="w-3 h-3" />
+                            <span>Copied</span>
+                          </>
+                        ) : (
+                          <span>Copy</span>
+                        )}
+                      </span>
+                    </button>
+                  </div>
+                </article>
+              );
+            })}
           </div>
         )}
       </div>
