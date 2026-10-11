@@ -8,6 +8,7 @@ export default {
   theme: {
     extend: {
       fontFamily: {
+        epigraphic: ['"Cinzel"', '"Cinzel Decorative"', '"Cormorant Garamond"', 'Georgia', 'serif'],
         display: ['"Bricolage Grotesque"', '"Archivo"', 'system-ui', 'sans-serif'],
         classical: ['"Cormorant Garamond"', '"Instrument Serif"', 'Georgia', 'serif'],
         serif: ['"Instrument Serif"', '"Cormorant Garamond"', 'Georgia', 'serif'],

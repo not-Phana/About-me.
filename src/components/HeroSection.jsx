@@ -191,18 +191,32 @@ export default function HeroSection({
       {/* Interactive Cyber-Celestial Constellation Canvas Background */}
       <InteractiveCanvas />
 
-      {/* Monumental Watermark Typography in Background */}
+      {/* Monumental Ancient Greek Inscription Watermark in Background */}
       <div
         aria-hidden="true"
         className="hero-watermark-ambient pointer-events-none select-none absolute inset-0 z-0 flex flex-col items-center justify-center overflow-hidden"
       >
-        <div className="font-display font-black tracking-[-0.04em] uppercase text-center leading-[0.82] select-none opacity-90">
-          <div className="text-[5rem] sm:text-[8.5rem] lg:text-[12rem] xl:text-[14.5rem] whitespace-nowrap text-stroke-watermark">
+        <div
+          lang="el"
+          className="font-classical italic text-[11px] sm:text-xs tracking-[0.28em] uppercase text-accent/40 mb-1 select-none"
+        >
+          // ΕΠΙΓΡΑΦΗ · ΦΑΝΝΑ //
+        </div>
+
+        <div className="font-epigraphic font-black tracking-[0.12em] sm:tracking-[0.18em] uppercase text-center leading-[0.88] select-none opacity-95">
+          <div className="text-[4.2rem] sm:text-[7.5rem] lg:text-[11rem] xl:text-[13.5rem] whitespace-nowrap text-stroke-watermark">
             PHANNA
           </div>
-          <div className="text-[5rem] sm:text-[8.5rem] lg:text-[12rem] xl:text-[14.5rem] whitespace-nowrap text-stroke-watermark-gold">
+          <div className="text-[4.2rem] sm:text-[7.5rem] lg:text-[11rem] xl:text-[13.5rem] whitespace-nowrap text-stroke-watermark-gold">
             KUROSAKI
           </div>
+        </div>
+
+        <div
+          lang="el"
+          className="font-classical tracking-[0.32em] text-[10px] sm:text-xs text-accent/35 mt-2 select-none"
+        >
+          Φ Α Ν Ν Α · Κ Υ Ρ Ο Σ Α Κ Ι
         </div>
       </div>
 
