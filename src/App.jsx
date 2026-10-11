@@ -141,11 +141,11 @@ export default function App() {
 
     const sectionIds = [
       'home',
+      'about',
       'projects',
       'console',
       'github',
       'building',
-      'about',
       'journey',
       'contact',
     ];
@@ -272,6 +272,11 @@ export default function App() {
               onPlaySound={triggerSound}
               onOpenCommandPalette={() => setCommandPaletteOpen(true)}
             />
+            <AboutSection
+              onExploreProjects={() => handleNavigateHome('projects')}
+              onSelectProject={handleSelectProject}
+              onPlaySound={triggerSound}
+            />
             <ProjectGrid
               projects={PROJECTS}
               onSelectProject={handleSelectProject}
@@ -286,11 +291,6 @@ export default function App() {
             <CurrentlyBuilding
               projects={PROJECTS}
               onSelectProject={handleSelectProject}
-            />
-            <AboutSection
-              onExploreProjects={() => handleNavigateHome('projects')}
-              onSelectProject={handleSelectProject}
-              onPlaySound={triggerSound}
             />
             <JourneySection />
             <ContactSection />

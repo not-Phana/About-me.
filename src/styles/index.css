@@ -247,41 +247,46 @@ body {
 
 /* ==========================================================================
    Ancient Greek Exhibition & Philosophical Manuscript Palette (About Section)
+   Default: Warm Parchment, Aged Ivory, Pale Limestone, Muted Charcoal & Dark Brown
    ========================================================================== */
 .greek-archive-section,
-.greek-archive-section[data-folio="stone"] {
-  --ms-bg: #0d0c0a;
-  --ms-surface: #14120f;
-  --ms-parchment: #1a1713;
-  --ms-ivory: #efe8d8;
-  --ms-limestone: #c9bfa9;
-  --ms-marble: #8f8777;
-  --ms-faint: rgba(239, 232, 216, 0.055);
-  --ms-epigraph: rgba(239, 232, 216, 0.085);
-  --ms-rule: #2a2620;
-  --ms-rule-strong: #463f34;
-  --ms-bronze: #cda869;
-  --ms-rubric: #b86b52;
+.greek-archive-section[data-folio="vellum"] {
+  --ms-bg: #ebe3d3;
+  --ms-surface: #e2d8c5;
+  --ms-parchment: #d8ccb6;
+  --ms-ivory: #1a1714;
+  --ms-limestone: #363028;
+  --ms-marble: #6b6153;
+  --ms-faint: rgba(26, 23, 20, 0.055);
+  --ms-epigraph: rgba(42, 34, 24, 0.11);
+  --ms-rule: #c8bca6;
+  --ms-rule-strong: #9c8e75;
+  --ms-bronze: #63441e;
+  --ms-rubric: #7c3626;
   background-color: var(--ms-bg);
+  background-image:
+    radial-gradient(ellipse at 72% 45%, rgba(255, 251, 242, 0.55) 0%, transparent 65%),
+    radial-gradient(ellipse at 15% 85%, rgba(168, 148, 116, 0.18) 0%, transparent 60%);
   color: var(--ms-ivory);
   transition: background-color 0.35s ease, color 0.35s ease;
 }
 
-[data-theme="light"] .greek-archive-section:not([data-folio="stone"]),
-.greek-archive-section[data-folio="vellum"] {
-  --ms-bg: #f2ece0;
-  --ms-surface: #e9e1d0;
-  --ms-parchment: #dfd5c0;
-  --ms-ivory: #171411;
-  --ms-limestone: #363129;
-  --ms-marble: #696052;
-  --ms-faint: rgba(23, 20, 17, 0.05);
-  --ms-epigraph: rgba(23, 20, 17, 0.08);
-  --ms-rule: #cfc5b1;
-  --ms-rule-strong: #a89b82;
-  --ms-bronze: #7d5b24;
-  --ms-rubric: #8c3b2b;
+.greek-archive-section[data-folio="stone"] {
+  --ms-bg: #12110e;
+  --ms-surface: #181612;
+  --ms-parchment: #201d18;
+  --ms-ivory: #efe8d8;
+  --ms-limestone: #c9bfa9;
+  --ms-marble: #8f8777;
+  --ms-faint: rgba(239, 232, 216, 0.055);
+  --ms-epigraph: rgba(239, 232, 216, 0.095);
+  --ms-rule: #2c2821;
+  --ms-rule-strong: #4a4236;
+  --ms-bronze: #cda869;
+  --ms-rubric: #b86b52;
   background-color: var(--ms-bg);
+  background-image:
+    radial-gradient(ellipse at 72% 45%, rgba(205, 168, 105, 0.09) 0%, transparent 65%);
   color: var(--ms-ivory);
 }
 
@@ -289,13 +294,29 @@ body {
 .manuscript-dropcap::first-letter {
   float: left;
   font-family: 'Cormorant Garamond', Georgia, serif;
-  font-size: 3.9rem;
-  line-height: 0.82;
-  padding-top: 0.12rem;
-  padding-right: 0.75rem;
-  padding-bottom: 0.1rem;
+  font-size: 4.3rem;
+  line-height: 0.8;
+  padding-top: 0.14rem;
+  padding-right: 0.8rem;
+  padding-bottom: 0.08rem;
   color: var(--ms-bronze);
   font-weight: 600;
+}
+
+/* Realistic museum shadow cast by cutout marble bust onto the parchment folio */
+.sculpture-cutout-shadow {
+  filter:
+    drop-shadow(-18px 26px 28px rgba(24, 19, 13, 0.36))
+    drop-shadow(-4px 6px 10px rgba(24, 19, 13, 0.22));
+  transition: transform 0.65s cubic-bezier(0.22, 1, 0.36, 1),
+    filter 0.65s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.sculpture-stage:hover .sculpture-cutout-shadow {
+  transform: translateY(-4px) scale(1.015);
+  filter:
+    drop-shadow(-24px 32px 34px rgba(24, 19, 13, 0.42))
+    drop-shadow(-6px 8px 12px rgba(24, 19, 13, 0.25));
 }
 
 /* Subtle engraved double-frame for manuscript folio */
@@ -326,15 +347,6 @@ body {
 .editorial-link:hover::after,
 .editorial-link:focus-visible::after {
   transform: scaleX(1);
-}
-
-/* Gentle sculpture image transition */
-.sculpture-plate-img {
-  transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1),
-    opacity 0.45s ease, filter 0.45s ease;
-}
-.sculpture-stage:hover .sculpture-plate-img {
-  transform: scale(1.018) translateY(-2px);
 }
 
 @media (prefers-reduced-motion: reduce) {

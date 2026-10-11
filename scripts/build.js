@@ -94,11 +94,22 @@ async function runBuild() {
     );
   }
 
-  // Copy index.html and .nojekyll into ./dist
-  fs.copyFileSync(
-    path.resolve(process.cwd(), 'index.html'),
-    path.join(distDir, 'index.html')
-  );
+  // Stamp index.html with cache-busting build version so browsers and GitHub Pages CDN never serve stale bundles
+  const versionTag = Date.now().toString(36);
+  const indexHtmlPath = path.resolve(process.cwd(), 'index.html');
+  let indexHtml = fs.readFileSync(indexHtmlPath, 'utf8');
+  indexHtml = indexHtml
+    .replace(
+      /href="\.\/assets\/app\.bundle\.css(\?v=[^"]*)?"/,
+      `href="./assets/app.bundle.css?v=${versionTag}"`
+    )
+    .replace(
+      /src="\.\/assets\/app\.bundle\.js(\?v=[^"]*)?"/,
+      `src="./assets/app.bundle.js?v=${versionTag}"`
+    );
+  fs.writeFileSync(indexHtmlPath, indexHtml, 'utf8');
+  fs.writeFileSync(path.join(distDir, 'index.html'), indexHtml, 'utf8');
+
   fs.writeFileSync(path.resolve(process.cwd(), '.nojekyll'), '');
   fs.writeFileSync(path.join(distDir, '.nojekyll'), '');
 
@@ -108,7 +119,7 @@ async function runBuild() {
     force: true,
   });
 
-  console.log('Successfully built ./assets/app.bundle.{js,css} and ./dist/ for direct index.html & GitHub Pages.');
+  console.log(`Successfully built ./assets/app.bundle.{js,css}?v=${versionTag} and ./dist/ for direct index.html & GitHub Pages.`);
 }
 
 runBuild().catch((err) => {

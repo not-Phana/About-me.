@@ -13,10 +13,10 @@ import { PROFILE } from '../data/profile';
 
 const NAV_ITEMS = [
   { id: 'home', label: 'Home', href: '#home' },
+  { id: 'about', label: 'About', href: '#about' },
   { id: 'projects', label: 'Projects', href: '#projects' },
   { id: 'console', label: 'Console', href: '#console' },
   { id: 'github', label: 'GitHub', href: '#github' },
-  { id: 'about', label: 'About', href: '#about' },
   { id: 'contact', label: 'Contact', href: '#contact' },
 ];
 

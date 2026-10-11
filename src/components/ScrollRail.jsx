@@ -2,11 +2,11 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 
 const SECTIONS = [
   { id: 'home', code: '01', label: 'HOME' },
-  { id: 'projects', code: '02', label: 'WORK' },
-  { id: 'console', code: '03', label: 'TERM' },
-  { id: 'github', code: '04', label: 'GIT' },
-  { id: 'building', code: '05', label: 'LAB' },
-  { id: 'about', code: '06', label: 'BIO' },
+  { id: 'about', code: '02', label: 'BIO' },
+  { id: 'projects', code: '03', label: 'WORK' },
+  { id: 'console', code: '04', label: 'TERM' },
+  { id: 'github', code: '05', label: 'GIT' },
+  { id: 'building', code: '06', label: 'LAB' },
   { id: 'journey', code: '07', label: 'LOG' },
   { id: 'contact', code: '08', label: 'MSG' },
 ];
