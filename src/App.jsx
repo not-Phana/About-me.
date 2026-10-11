@@ -289,6 +289,8 @@ export default function App() {
             />
             <AboutSection
               onExploreProjects={() => handleNavigateHome('projects')}
+              onSelectProject={handleSelectProject}
+              onPlaySound={triggerSound}
             />
             <JourneySection />
             <ContactSection />
