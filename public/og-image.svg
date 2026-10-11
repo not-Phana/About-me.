@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" fill="none">
+  <rect width="1200" height="630" fill="#0B0B0C" />
+  <!-- Architectural grid lines -->
+  <line x1="0" y1="84" x2="1200" y2="84" stroke="#1E2026" stroke-width="1.5" />
+  <line x1="0" y1="546" x2="1200" y2="546" stroke="#1E2026" stroke-width="1.5" />
+  <line x1="96" y1="0" x2="96" y2="630" stroke="#1E2026" stroke-width="1.5" />
+  <line x1="1104" y1="0" x2="1104" y2="630" stroke="#1E2026" stroke-width="1.5" />
+
+  <!-- Top HUD bar -->
+  <text x="132" y="52" fill="#ECEAE4" font-family="monospace" font-size="18" font-weight="700" letter-spacing="4">PK // PHANA KUROSAKI</text>
+  <text x="900" y="52" fill="#D4A528" font-family="monospace" font-size="16" font-weight="600" letter-spacing="2">GITHUB.COM/PHANAACH4889</text>
+
+  <!-- Main Headline -->
+  <text x="132" y="230" fill="#8C9099" font-family="monospace" font-size="18" letter-spacing="3">INDEPENDENT BUILDER · ALWAYS LEARNING</text>
+  <text x="132" y="320" fill="#ECEAE4" font-family="sans-serif" font-size="68" font-weight="800" letter-spacing="-2">I build ideas into</text>
+  <text x="132" y="405" fill="#D4A528" font-family="Georgia, serif" font-style="italic" font-size="74" font-weight="400">things you can use.</text>
+  <text x="132" y="475" fill="#9CA0AA" font-family="sans-serif" font-size="24">Software, web applications, developer tools, and interactive experiments by Phana (KON).</text>
+
+  <!-- Bottom HUD bar -->
+  <text x="132" y="594" fill="#8C9099" font-family="monospace" font-size="16" letter-spacing="2">PK KHMER TYPE · PK ICONS STUDIO · NEON PROTOCOL · PK STUDIO CODE · KON</text>
+</svg>

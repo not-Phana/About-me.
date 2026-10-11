@@ -1,0 +1,104 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root,
+[data-theme="dark"] {
+  --bg: #0b0b0c;
+  --surface: #111215;
+  --surface-2: #17191e;
+  --ink: #eceae4;
+  --muted: #8c9099;
+  --line: #23252c;
+  --line-soft: #181a20;
+  --accent: #d4a528;
+  --accent-dim: rgba(212, 165, 40, 0.12);
+  --invert-bg: #eceae4;
+  --invert-fg: #0b0b0c;
+  color-scheme: dark;
+}
+
+[data-theme="light"] {
+  --bg: #f2f1ee;
+  --surface: #e8e6e1;
+  --surface-2: #dedbd4;
+  --ink: #121316;
+  --muted: #5a5e66;
+  --line: #d0cdc6;
+  --line-soft: #dfdcd5;
+  --accent: #9e7408;
+  --accent-dim: rgba(158, 116, 8, 0.1);
+  --invert-bg: #121316;
+  --invert-fg: #f2f1ee;
+  color-scheme: light;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 3.5rem;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background-color: var(--bg);
+  color: var(--ink);
+  font-family: 'Instrument Sans', system-ui, -apple-system, sans-serif;
+  overflow-x: clip;
+  line-height: 1.6;
+}
+
+/* Crisp HUD / Architectural label inspired by studio software interfaces */
+.hud-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+}
+
+/* Subtle structural dot matrix for technical areas */
+.bg-architectural-grid {
+  background-image: radial-gradient(circle, var(--line) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+/* Accessible keyboard focus ring */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* Gentle entrance animation respecting reduced-motion preferences */
+@keyframes fadeSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-enter {
+  animation: fadeSlideUp 0.35s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
