@@ -2,6 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
+@property --ang {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
+}
+
 :root,
 [data-theme="dark"] {
   --bg: #0b0b0c;
@@ -777,113 +783,463 @@ body {
 }
 
 /* ==========================================================================
-   Architectural Custom Cursor (Step 1)
+   PK Corporation Precision Custom Cursor Engine
    ========================================================================== */
 @media (hover: hover) and (pointer: fine) {
   body.has-custom-cursor,
   body.has-custom-cursor a,
   body.has-custom-cursor button,
-  body.has-custom-cursor input,
-  body.has-custom-cursor textarea,
   body.has-custom-cursor select,
   body.has-custom-cursor [role="button"],
   body.has-custom-cursor [role="tab"],
-  body.has-custom-cursor [tabindex] {
+  body.has-custom-cursor [tabindex],
+  body.has-custom-cursor .row-item {
     cursor: none !important;
   }
 
-  .cursor-dot {
+  /* Keep native text cursor on inputs and textareas (Requirement Setup) */
+  body.has-custom-cursor input,
+  body.has-custom-cursor textarea,
+  body.has-custom-cursor [contenteditable="true"] {
+    cursor: text !important;
+  }
+
+  .cursor-layer-main {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 9999;
+    pointer-events: none;
+    user-select: none;
+  }
+
+  .cursor-layer-effects {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 9998;
+    pointer-events: none;
+    user-select: none;
+  }
+
+  .cursor-layer-telemetry {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 9997;
+    pointer-events: none;
+    user-select: none;
+  }
+
+  /* Hide custom cursor when mouse leaves window or over native inputs */
+  body.cursor-hidden #pk-cursor-dot,
+  body.cursor-hidden #pk-cursor-ring,
+  body.cursor-hidden #pk-scroll-arc,
+  body.cursor-hidden #pk-section-tag,
+  body.cursor-over-input #pk-cursor-dot,
+  body.cursor-over-input #pk-cursor-ring {
+    opacity: 0 !important;
+    transition: opacity 0.18s ease;
+  }
+
+  /* Core Dot (Requirement 1) */
+  #pk-cursor-dot {
     position: fixed;
     top: 0;
     left: 0;
     width: 6px;
     height: 6px;
-    background-color: var(--accent, #d4a528);
     border-radius: 50%;
+    background-color: var(--accent, #c9a227);
     pointer-events: none;
-    z-index: 99999;
-    will-change: transform;
-    box-shadow: 0 0 10px var(--accent, #d4a528), 0 0 4px #ffffff;
-    transition: opacity 0.2s ease, width 0.22s cubic-bezier(0.2, 0.8, 0.2, 1), height 0.22s cubic-bezier(0.2, 0.8, 0.2, 1), border-radius 0.22s ease;
+    z-index: 9999;
+    transform: translate(-100px, -100px);
+    will-change: transform, width, height, border-radius, background-color;
+    box-shadow: 0 0 10px var(--accent, #c9a227), 0 0 4px #ffffff;
+    transition: background-color 0.2s ease, box-shadow 0.2s ease;
   }
 
-  .cursor-ring {
+  /* Dot Text Mode (Requirement 9) */
+  #pk-cursor-dot.mode-text {
+    border-radius: 1px !important;
+    box-shadow: 0 0 6px rgba(201, 162, 39, 0.45);
+    transition: width 0.15s ease, height 0.15s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  #pk-cursor-dot.mode-text.is-pressed {
+    width: 3px !important;
+    box-shadow: 0 0 10px rgba(201, 162, 39, 0.85);
+  }
+
+  /* Solid amber elements: Dot turns dark #1b1608 (Requirement 7) */
+  #pk-cursor-dot.dark-cursor {
+    background-color: #1b1608 !important;
+    box-shadow: 0 0 4px rgba(27, 22, 8, 0.4) !important;
+  }
+
+  #pk-cursor-dot.dot-flash {
+    background-color: #ffd978 !important;
+    box-shadow: 0 0 12px #ffd978, 0 0 4px #ffffff !important;
+  }
+
+  /* Core Ring (Requirement 2) */
+  #pk-cursor-ring {
     position: fixed;
     top: 0;
     left: 0;
     width: 34px;
     height: 34px;
-    border: 1.5px solid var(--accent, #d4a528);
     border-radius: 50%;
+    border: 1.5px solid rgba(201, 162, 39, 0.6);
+    background-color: transparent;
     pointer-events: none;
-    z-index: 99998;
-    will-change: transform;
-    background-color: rgba(212, 165, 40, 0.04);
-    box-shadow: 0 0 18px rgba(212, 165, 40, 0.15);
-    transition: width 0.28s cubic-bezier(0.16, 1, 0.3, 1),
-                height 0.28s cubic-bezier(0.16, 1, 0.3, 1),
+    z-index: 9999;
+    transform: translate(-100px, -100px) translate(-50%, -50%);
+    will-change: transform, width, height, border-radius, border-color, background-color;
+    transition: border-radius 0.28s cubic-bezier(0.16, 1, 0.3, 1),
                 border-color 0.2s ease,
                 background-color 0.2s ease,
-                border-radius 0.28s ease,
-                opacity 0.2s ease;
+                opacity 0.22s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
   }
 
-  /* When cursor leaves window */
-  body.cursor-hidden .cursor-dot,
-  body.cursor-hidden .cursor-ring {
+  #pk-cursor-label {
+    font-family: monospace;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #1b1608;
     opacity: 0;
+    transform: scale(0.85);
+    transition: opacity 0.2s ease, transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+    pointer-events: none;
   }
 
-  /* Hover State (Links, Buttons, Clickables) */
-  body.cursor-hover .cursor-dot {
-    width: 8px;
-    height: 8px;
-    background-color: #ffffff;
-    box-shadow: 0 0 14px var(--accent, #d4a528), 0 0 6px #ffffff;
+  #pk-cursor-ring.mode-text {
+    opacity: 0 !important;
   }
 
-  body.cursor-hover .cursor-ring {
+  /* Target-Lock Mode (Requirement 3) */
+  #pk-cursor-ring.is-locked {
+    border-radius: 11px;
+    border-color: var(--accent, #c9a227);
+    background-color: rgba(201, 162, 39, 0.08);
+    animation: lockedGlowPulse 2.2s ease-in-out infinite;
+  }
+
+  @keyframes lockedGlowPulse {
+    0%, 100% {
+      box-shadow: 0 0 14px rgba(201, 162, 39, 0.16);
+    }
+    50% {
+      box-shadow: 0 0 28px rgba(201, 162, 39, 0.36);
+    }
+  }
+
+  /* Orbiting light while locked (Requirement 5) */
+  #pk-cursor-ring.is-locked::after {
+    content: '';
+    position: absolute;
+    inset: -1.5px;
+    border-radius: 11px;
+    padding: 2px;
+    background: conic-gradient(
+      from var(--ang, 0deg),
+      transparent 0deg,
+      transparent 280deg,
+      #ffd978 345deg,
+      #ffffff 360deg
+    );
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    animation: orbitLightAnim 2.4s linear infinite;
+    pointer-events: none;
+  }
+
+  @keyframes orbitLightAnim {
+    0% {
+      --ang: 0deg;
+    }
+    100% {
+      --ang: 360deg;
+    }
+  }
+
+  /* Lock-on bounce (Requirement 4) */
+  @keyframes lockBounceAnim {
+    0% {
+      transform: scale(1.3);
+      opacity: 0.35;
+    }
+    60% {
+      transform: scale(0.965);
+      opacity: 0.95;
+    }
+    100% {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+  .ring-lock-bounce {
+    animation: lockBounceAnim 400ms cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+  }
+
+  /* Solid amber buttons: Ring turns dark #1b1608 (Requirement 7) */
+  #pk-cursor-ring.dark-cursor {
+    border-color: rgba(27, 22, 8, 0.75) !important;
+    background-color: rgba(27, 22, 8, 0.12) !important;
+    box-shadow: 0 0 14px rgba(27, 22, 8, 0.25) !important;
+  }
+  #pk-cursor-ring.dark-cursor::after {
+    background: conic-gradient(
+      from var(--ang, 0deg),
+      transparent 0deg,
+      transparent 280deg,
+      rgba(27, 22, 8, 0.8) 345deg,
+      #000000 360deg
+    ) !important;
+  }
+
+  /* Large Elements (Requirement 8) */
+  #pk-cursor-ring.is-large-row {
+    width: 54px !important;
+    height: 54px !important;
+    border-radius: 50% !important;
+    border-color: var(--accent, #c9a227);
+    background-color: rgba(201, 162, 39, 0.08);
+    box-shadow: 0 0 20px rgba(201, 162, 39, 0.16);
+  }
+
+  #pk-cursor-ring.is-labeled {
+    width: 62px !important;
+    height: 62px !important;
+    border-radius: 50% !important;
+    background-color: var(--accent, #c9a227) !important;
+    border-color: var(--accent, #c9a227) !important;
+    box-shadow: 0 0 24px rgba(201, 162, 39, 0.36) !important;
+  }
+  #pk-cursor-ring.is-labeled #pk-cursor-label {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  /* Idle Breathing (Requirement 18) */
+  #pk-cursor-ring.is-idle-breathing {
+    animation: ringIdlePulse 2.6s ease-in-out infinite;
+  }
+  @keyframes ringIdlePulse {
+    0%, 100% {
+      box-shadow: 0 0 0px rgba(201, 162, 39, 0);
+    }
+    50% {
+      box-shadow: 0 0 9px rgba(201, 162, 39, 0.12);
+    }
+  }
+
+  /* Mouseup Spring Release (Requirement 14) */
+  @keyframes ringSpringSnap {
+    0% {
+      transform: scale(0.8);
+    }
+    55% {
+      transform: scale(1.25);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+  .ring-spring-release {
+    animation: ringSpringSnap 340ms cubic-bezier(0.18, 0.89, 0.32, 1.28) forwards;
+  }
+
+  /* Spark Lines (Requirement 11) */
+  .pk-spark {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 14px;
+    height: 2px;
+    border-radius: 1px;
+    pointer-events: none;
+    z-index: 9998;
+    transform-origin: left center;
+    will-change: transform, opacity;
+  }
+
+  /* Shock Ring (Requirement 12) */
+  .pk-shock-ring {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 28px;
+    height: 28px;
+    border: 1.5px solid var(--accent, #c9a227);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9998;
+    margin-left: -14px;
+    margin-top: -14px;
+    transform: scale(0.3);
+    opacity: 0.9;
+    animation: shockRingExpand 430ms cubic-bezier(0.1, 0.7, 0.2, 1) forwards;
+  }
+  @keyframes shockRingExpand {
+    0% {
+      transform: scale(0.3);
+      opacity: 0.9;
+    }
+    100% {
+      transform: scale(3.6);
+      opacity: 0;
+    }
+  }
+
+  /* Soft Radial Flash (Requirement 12) */
+  .pk-radial-flash {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9998;
+    margin-left: -22px;
+    margin-top: -22px;
+    background: radial-gradient(circle, rgba(255, 217, 120, 0.7) 0%, rgba(201, 162, 39, 0.25) 50%, transparent 75%);
+    transform: scale(0.6);
+    opacity: 0.85;
+    animation: radialFlashExpand 260ms ease-out forwards;
+  }
+  @keyframes radialFlashExpand {
+    0% {
+      transform: scale(0.6);
+      opacity: 0.85;
+    }
+    100% {
+      transform: scale(2.6);
+      opacity: 0;
+    }
+  }
+
+  /* Clicked Element Amber Outline Pulse (Requirement 13) */
+  .pk-outline-pulse {
+    animation: elementOutlinePulse 480ms cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+  }
+  @keyframes elementOutlinePulse {
+    0% {
+      outline: 0px solid var(--accent, #c9a227);
+      outline-offset: 0px;
+    }
+    40% {
+      outline: 3px solid var(--accent, #c9a227);
+      outline-offset: 6px;
+    }
+    100% {
+      outline: 0px solid rgba(201, 162, 39, 0);
+      outline-offset: 9px;
+    }
+  }
+
+  /* 52px SVG Progress Arc (Requirement 16) */
+  #pk-scroll-arc {
+    position: fixed;
+    top: 0;
+    left: 0;
     width: 52px;
     height: 52px;
-    border-color: var(--accent, #d4a528);
-    background-color: var(--accent-dim, rgba(212, 165, 40, 0.16));
-    box-shadow: 0 0 24px var(--accent-dim, rgba(212, 165, 40, 0.35));
+    margin-left: -26px;
+    margin-top: -26px;
+    pointer-events: none;
+    z-index: 9997;
+    opacity: 0;
+    transform: translate(-100px, -100px);
+    transition: opacity 0.3s ease;
+    will-change: transform, opacity;
+  }
+  #pk-scroll-arc.is-visible {
+    opacity: 0.85;
+  }
+  #pk-scroll-arc-meter {
+    fill: none;
+    stroke: var(--accent, #c9a227);
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-dasharray: 138.23;
+    stroke-dashoffset: 138.23;
+    transform: rotate(-90deg);
+    transform-origin: 26px 26px;
+    filter: drop-shadow(0 0 3px rgba(201, 162, 39, 0.5));
   }
 
-  /* Text State (Inputs, Textareas) - Morphs into Vertical I-Beam */
-  body.cursor-text .cursor-dot {
-    width: 2px;
-    height: 18px;
-    border-radius: 1px;
-    background-color: var(--accent, #d4a528);
-    box-shadow: 0 0 8px var(--accent, #d4a528);
+  /* Section Tag Pill (Requirement 17) */
+  #pk-section-tag {
+    position: fixed;
+    top: 0;
+    left: 0;
+    padding: 3px 8px;
+    background-color: var(--accent, #c9a227);
+    color: #1b1608;
+    font-family: monospace;
+    font-size: 11px;
+    font-weight: 600;
+    line-height: 1;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    border-radius: 999px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4), 0 0 10px rgba(201, 162, 39, 0.35);
+    pointer-events: none;
+    z-index: 9997;
+    opacity: 0;
+    transform: translate(-100px, -100px);
+    transition: opacity 0.25s ease;
+    white-space: nowrap;
+    will-change: transform, opacity;
+  }
+  #pk-section-tag.is-visible {
+    opacity: 1;
   }
 
-  body.cursor-text .cursor-ring {
-    width: 14px;
-    height: 26px;
-    border-radius: 4px;
-    border-width: 1px;
-    border-color: rgba(212, 165, 40, 0.6);
-    background-color: transparent;
+  @keyframes sectionTagRingPulse {
+    0% {
+      transform: scale(1);
+    }
+    45% {
+      transform: scale(1.35);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+  .ring-section-pulse {
+    animation: sectionTagRingPulse 420ms cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
   }
 
-  /* Active State (Mousedown) */
-  body.cursor-active .cursor-dot {
-    transform: scale(0.6);
+  /* Warming Links (Requirement 21) */
+  .warm-target {
+    --warm: 0;
+    color: color-mix(in srgb, var(--accent, #c9a227) calc(var(--warm) * 100%), var(--muted, #8c9099));
+    transition: color 0.12s linear;
   }
 
-  body.cursor-active .cursor-ring {
-    width: 26px;
-    height: 26px;
-    border-width: 2px;
-    background-color: var(--accent-dim, rgba(212, 165, 40, 0.3));
+  /* Leaning (Requirement 22) */
+  .lean-target {
+    will-change: transform;
+    transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
   }
 }
 
 @media (hover: none) or (pointer: coarse) {
-  .cursor-dot,
-  .cursor-ring {
+  .cursor-layer-main,
+  .cursor-layer-effects,
+  .cursor-layer-telemetry,
+  #pk-cursor-dot,
+  #pk-cursor-ring {
     display: none !important;
   }
 }
