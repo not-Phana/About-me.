@@ -4,8 +4,17 @@ import { IconArrowUpRight, IconCompass } from './Icons';
 
 export default function JourneySection() {
   return (
-    <section id="journey" className="border-b border-line bg-bg">
-      <div className="mx-auto max-w-[1400px] border-x border-line">
+    <section id="journey" className="border-b border-line bg-bg relative overflow-hidden">
+      {/* Background Architectural Kinetic Watermark */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none select-none absolute -top-8 right-8 lg:right-24 overflow-hidden opacity-[0.045] font-classical font-semibold text-[5.5rem] sm:text-[8.5rem] lg:text-[11.5rem] tracking-[0.08em] text-ink leading-none whitespace-nowrap z-0"
+        data-bg-motion="journey-watermark"
+      >
+        MILESTONES // 07
+      </div>
+
+      <div className="mx-auto max-w-[1400px] border-x border-line relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-12">
           {/* Left 8 Columns: Verified Milestones */}
           <div className="lg:col-span-8 p-6 sm:p-10 lg:p-14 border-b lg:border-b-0 lg:border-r border-line reveal-on-scroll reveal-delay-1">

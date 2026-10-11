@@ -188,12 +188,14 @@ export default function AboutSection({ onExploreProjects, onPlaySound }) {
       >
         <div
           lang="el"
+          data-bg-motion="about-epigraph-1"
           className="epigraph-ambient absolute -top-12 -right-8 font-classical font-semibold text-[7rem] sm:text-[11rem] lg:text-[14rem] tracking-[0.1em] leading-[0.8] text-[var(--ms-epigraph)] whitespace-nowrap"
         >
           ΓΝΩΘΙ
         </div>
         <div
           lang="el"
+          data-bg-motion="about-epigraph-2"
           className="epigraph-ambient absolute -bottom-10 -left-6 font-classical italic text-[5.5rem] sm:text-[8rem] lg:text-[10.5rem] tracking-[0.06em] leading-none text-[var(--ms-faint)] whitespace-nowrap"
         >
           Τέχνη // Ἐπιστήμη
@@ -202,18 +204,21 @@ export default function AboutSection({ onExploreProjects, onPlaySound }) {
         {/* Ambient floating philosophical runes */}
         <div
           lang="el"
+          data-bg-motion="rune-1"
           className="rune-float-slow pointer-events-none absolute top-1/6 left-2 font-classical text-xl lg:text-2xl text-[var(--ms-bronze)]/15 font-bold select-none"
         >
           Ψ // 01
         </div>
         <div
           lang="el"
+          data-bg-motion="rune-2"
           className="rune-float-medium pointer-events-none absolute top-3/4 right-3 font-classical text-xl lg:text-2xl text-[var(--ms-bronze)]/15 font-bold select-none"
         >
           Ω // 02
         </div>
         <div
           lang="el"
+          data-bg-motion="rune-3"
           className="rune-float-fast pointer-events-none absolute bottom-8 left-6 font-classical text-lg lg:text-xl text-[var(--ms-bronze)]/12 font-bold select-none"
         >
           Δ // 03
@@ -477,6 +482,7 @@ export default function AboutSection({ onExploreProjects, onPlaySound }) {
 
               <div
                 lang="el"
+                data-bg-motion="about-know-thyself"
                 className="absolute inset-x-0 top-8 flex flex-col items-center font-classical font-semibold tracking-[0.12em] leading-[0.84] text-[var(--ms-ivory)] opacity-[0.08]"
               >
                 <span className="text-[5.5rem] sm:text-[7rem] lg:text-[6.2rem] xl:text-[7.4rem]">

@@ -16,6 +16,7 @@ import CustomCursor from './components/CustomCursor';
 import { PROJECTS } from './data/projects';
 import { playTactileClick } from './utils/sound';
 import { useScrollReveal } from './hooks/useScrollReveal';
+import { useBackgroundTextMotion } from './hooks/useBackgroundTextMotion';
 
 function parseHashRoute(hash) {
   const clean = (hash || '').replace(/^#\/?/, '');
@@ -28,6 +29,7 @@ function parseHashRoute(hash) {
 
 export default function App() {
   useScrollReveal();
+  useBackgroundTextMotion();
   const [route, setRoute] = useState(() => parseHashRoute(window.location.hash));
   const [activeSection, setActiveSection] = useState('home');
   const [commandPaletteOpen, setCommandPaletteOpen] = useState(false);
@@ -121,22 +123,27 @@ export default function App() {
     return () => window.removeEventListener('keydown', handleGlobalKeyDown);
   }, [soundEnabled]);
 
-  // Listen to browser hash changes
+  // Listen to browser hash changes & initial hash navigation
   useEffect(() => {
-    const handleHashChange = () => {
+    const handleHashChange = (behavior = 'smooth') => {
       const parsed = parseHashRoute(window.location.hash);
       setRoute(parsed);
       if (parsed.view === 'home' && parsed.section) {
         setActiveSection(parsed.section);
         const el = document.getElementById(parsed.section);
         if (el) {
-          el.scrollIntoView({ behavior: 'smooth' });
+          el.scrollIntoView({ behavior });
         }
       }
     };
 
-    window.addEventListener('hashchange', handleHashChange);
-    return () => window.removeEventListener('hashchange', handleHashChange);
+    if (window.location.hash) {
+      setTimeout(() => handleHashChange('auto'), 120);
+    }
+
+    const onHashChange = () => handleHashChange('smooth');
+    window.addEventListener('hashchange', onHashChange);
+    return () => window.removeEventListener('hashchange', onHashChange);
   }, []);
 
   // IntersectionObserver to highlight current section in Navbar

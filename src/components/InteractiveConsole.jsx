@@ -298,8 +298,17 @@ export default function InteractiveConsole({
   const displayed = customOutput || currentTopic;
 
   return (
-    <section id="console" className="border-b border-line bg-bg">
-      <div className="mx-auto max-w-[1400px] border-x border-line">
+    <section id="console" className="border-b border-line bg-bg relative overflow-hidden">
+      {/* Background Architectural Kinetic Watermark */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none select-none absolute -top-6 left-6 lg:left-16 overflow-hidden opacity-[0.045] font-classical font-semibold text-[5.5rem] sm:text-[8rem] lg:text-[11rem] tracking-[0.08em] text-accent leading-none whitespace-nowrap z-0"
+        data-bg-motion="console-watermark"
+      >
+        TERMINAL // SYS.26
+      </div>
+
+      <div className="mx-auto max-w-[1400px] border-x border-line relative z-10">
         {/* Section Header */}
         <div className="p-6 sm:p-10 border-b border-line flex flex-col lg:flex-row lg:items-end justify-between gap-4 bg-surface/40 reveal-on-scroll">
           <div>

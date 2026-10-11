@@ -320,11 +320,9 @@ body {
 @keyframes epigraphPulse {
   0%, 100% {
     opacity: 0.08;
-    transform: translateY(0);
   }
   50% {
     opacity: 0.14;
-    transform: translateY(-3px);
   }
 }
 
@@ -488,11 +486,11 @@ body {
   transform-origin: center;
 }
 
-/* Floating Philosophical Runes */
+/* Floating Philosophical Runes (Glow oscillation; spatial motion driven by useBackgroundTextMotion) */
 @keyframes runeFloat {
-  0% { transform: translateY(0px) rotate(0deg); opacity: 0.15; }
-  50% { transform: translateY(-14px) rotate(5deg); opacity: 0.35; }
-  100% { transform: translateY(0px) rotate(0deg); opacity: 0.15; }
+  0% { opacity: 0.15; }
+  50% { opacity: 0.35; }
+  100% { opacity: 0.15; }
 }
 
 .rune-float-slow {

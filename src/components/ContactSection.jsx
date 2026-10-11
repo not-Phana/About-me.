@@ -44,8 +44,17 @@ export default function ContactSection({ onPlaySound }) {
   );
 
   return (
-    <section id="contact" className="border-b border-line bg-bg">
-      <div className="mx-auto max-w-[1400px] border-x border-line">
+    <section id="contact" className="border-b border-line bg-bg relative overflow-hidden">
+      {/* Background Architectural Kinetic Watermark */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none select-none absolute -top-8 left-6 lg:left-16 overflow-hidden opacity-[0.045] font-classical font-semibold text-[5.5rem] sm:text-[8.5rem] lg:text-[11.5rem] tracking-[0.08em] text-accent leading-none whitespace-nowrap z-0"
+        data-bg-motion="contact-watermark"
+      >
+        TRANSMISSION // 08
+      </div>
+
+      <div className="mx-auto max-w-[1400px] border-x border-line relative z-10">
         <div className="p-6 sm:p-10 lg:p-16 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
           <div className="lg:col-span-7 reveal-on-scroll reveal-delay-1">
             <div className="hud-label text-accent mb-3">

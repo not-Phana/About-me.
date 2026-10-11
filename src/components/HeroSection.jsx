@@ -201,6 +201,7 @@ export default function HeroSection({
       >
         <div
           lang="el"
+          data-bg-motion="hero-epigraph"
           className="font-classical italic text-[11px] sm:text-xs tracking-[0.24em] text-accent/60 mb-1 select-none flex items-center gap-2"
         >
           <span className="w-3 h-[1px] bg-accent/40 inline-block" />
@@ -209,16 +210,23 @@ export default function HeroSection({
         </div>
 
         <div className="font-classical font-semibold tracking-[-0.015em] text-center lg:text-left leading-[0.88] select-none">
-          <div className="text-[3.8rem] sm:text-[6rem] lg:text-[7.5rem] xl:text-[8.5rem] whitespace-nowrap text-stroke-watermark">
+          <div
+            data-bg-motion="hero-name-1"
+            className="text-[3.8rem] sm:text-[6rem] lg:text-[7.5rem] xl:text-[8.5rem] whitespace-nowrap text-stroke-watermark"
+          >
             Phanna
           </div>
-          <div className="text-[3.8rem] sm:text-[6rem] lg:text-[7.5rem] xl:text-[8.5rem] whitespace-nowrap text-stroke-watermark-gold">
+          <div
+            data-bg-motion="hero-name-2"
+            className="text-[3.8rem] sm:text-[6rem] lg:text-[7.5rem] xl:text-[8.5rem] whitespace-nowrap text-stroke-watermark-gold"
+          >
             Kurosaki
           </div>
         </div>
 
         <div
           lang="el"
+          data-bg-motion="hero-greek"
           className="font-classical italic tracking-[0.22em] text-[11px] sm:text-xs text-accent/50 mt-2.5 select-none flex items-center gap-2"
         >
           <span>Φάννα Κυροσάκι</span>
