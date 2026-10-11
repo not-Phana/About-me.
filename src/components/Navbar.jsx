@@ -190,10 +190,11 @@ export default function Navbar({
         </div>
 
         {/* ================================================================
-            RIGHT: HARDWARE INSTRUMENT CLUSTER & GITHUB CTA
+            RIGHT: STUDIO CONTROLS & GITHUB CTA
+            Clean architectural hierarchy with zero collision on any viewport
             ================================================================ */}
         <div className="flex shrink-0 items-stretch">
-          {/* 1. Recessed Telemetry Clock Module */}
+          {/* 1. Recessed Telemetry Clock Module (Ultra-wide only) */}
           <div
             className="hidden 2xl:flex items-center border-l border-line px-3 bg-surface/40"
             title="Local studio system clock"
@@ -206,27 +207,9 @@ export default function Navbar({
             </div>
           </div>
 
-          {/* 2. Mechanical Keycap Command Palette Trigger */}
-          <div className="hidden md:flex items-center border-l border-line px-2.5 bg-bg">
-            <button
-              type="button"
-              onClick={onOpenCommandPalette}
-              title="Open Command Palette (Ctrl + K)"
-              className="pk-keycap flex items-center gap-2 bg-surface hover:border-accent px-2.5 py-1 font-mono text-[11px] text-ink whitespace-nowrap"
-            >
-              <IconTerminal className="w-3.5 h-3.5 text-accent" />
-              <span className="text-[10px] tracking-wider uppercase font-semibold">
-                CMD
-              </span>
-              <kbd className="border border-line bg-bg px-1.5 py-[1px] text-[9px] text-accent font-bold">
-                Ctrl+K
-              </kbd>
-            </button>
-          </div>
-
-          {/* 3. Precision LED Accent Matrix Pod */}
+          {/* 2. Precision LED Accent Matrix Pod (2xl desktop) */}
           <div
-            className="hidden sm:flex items-center border-l border-line px-2.5 bg-bg"
+            className="hidden 2xl:flex items-center border-l border-line px-2.5 bg-bg"
             role="group"
             aria-label="Accent color preset"
           >
@@ -252,7 +235,7 @@ export default function Navbar({
             </div>
           </div>
 
-          {/* 4. Tactile WebAudio Synth Equalizer Toggle */}
+          {/* 3. Tactile WebAudio SFX Toggle (2xl desktop) */}
           <button
             type="button"
             onClick={onToggleSound}
@@ -260,9 +243,8 @@ export default function Navbar({
             aria-label={
               soundEnabled ? 'Mute UI sound effects' : 'Enable UI sound effects'
             }
-            className="hidden sm:flex items-center gap-2 border-l border-line px-3 font-mono text-[10px] uppercase tracking-wider text-muted hover:text-ink hover:bg-surface transition-colors whitespace-nowrap"
+            className="hidden 2xl:flex items-center gap-2 border-l border-line px-3 font-mono text-[10px] uppercase tracking-wider text-muted hover:text-ink hover:bg-surface transition-colors whitespace-nowrap"
           >
-            {/* Mini equalizer bars SVG */}
             <span className="flex items-end gap-[2px] h-3" aria-hidden="true">
               <span
                 className={`w-[2px] transition-all ${
@@ -288,6 +270,24 @@ export default function Navbar({
               SFX
             </span>
           </button>
+
+          {/* 4. Mechanical Keycap Command Palette Trigger (xl desktop) */}
+          <div className="hidden xl:flex items-center border-l border-line px-2.5 bg-bg">
+            <button
+              type="button"
+              onClick={onOpenCommandPalette}
+              title="Open Command Palette (Ctrl + K)"
+              className="pk-keycap flex items-center gap-2 bg-surface hover:border-accent px-2.5 py-1 font-mono text-[11px] text-ink whitespace-nowrap"
+            >
+              <IconTerminal className="w-3.5 h-3.5 text-accent" />
+              <span className="text-[10px] tracking-wider uppercase font-semibold">
+                CMD
+              </span>
+              <kbd className="border border-line bg-bg px-1.5 py-[1px] text-[9px] text-accent font-bold">
+                Ctrl+K
+              </kbd>
+            </button>
+          </div>
 
           {/* 5. Theme Switcher */}
           <button

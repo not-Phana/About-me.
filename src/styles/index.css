@@ -244,47 +244,43 @@ body {
 }
 
 /* ==========================================================================
-   Ancient Greek Exhibition & Philosophical Manuscript Palette (About Section)
-   Default: Warm Parchment, Aged Ivory, Pale Limestone, Muted Charcoal & Dark Brown
+   Ancient Greek Exhibition & Philosophical Manuscript (Dark Museum Gallery)
+   Consistent with the dark luxury, spacious architectural aesthetic of ArtCraft
    ========================================================================== */
-.greek-archive-section,
-.greek-archive-section[data-folio="vellum"] {
-  --ms-bg: #ebe3d3;
-  --ms-surface: #e2d8c5;
-  --ms-parchment: #d8ccb6;
-  --ms-ivory: #1a1714;
-  --ms-limestone: #363028;
-  --ms-marble: #6b6153;
-  --ms-faint: rgba(26, 23, 20, 0.055);
-  --ms-epigraph: rgba(42, 34, 24, 0.11);
-  --ms-rule: #c8bca6;
-  --ms-rule-strong: #9c8e75;
-  --ms-bronze: #63441e;
-  --ms-rubric: #7c3626;
+.greek-archive-section {
+  --ms-bg: #090a0d;
+  --ms-surface: #101217;
+  --ms-surface2: #16181f;
+  --ms-ivory: #f4f3ef;
+  --ms-limestone: #9ea2ad;
+  --ms-marble: #686d79;
+  --ms-faint: rgba(255, 255, 255, 0.035);
+  --ms-epigraph: rgba(255, 255, 255, 0.075);
+  --ms-rule: #1e2129;
+  --ms-rule-strong: #2c313d;
+  --ms-bronze: var(--accent);
+  --ms-rubric: var(--accent);
   background-color: var(--ms-bg);
   background-image:
-    radial-gradient(ellipse at 72% 45%, rgba(255, 251, 242, 0.55) 0%, transparent 65%),
-    radial-gradient(ellipse at 15% 85%, rgba(168, 148, 116, 0.18) 0%, transparent 60%);
+    radial-gradient(ellipse at 75% 40%, rgba(212, 165, 40, 0.05) 0%, transparent 60%),
+    radial-gradient(ellipse at 25% 80%, rgba(255, 255, 255, 0.02) 0%, transparent 50%);
   color: var(--ms-ivory);
-  transition: background-color 0.35s ease, color 0.35s ease;
 }
 
-.greek-archive-section[data-folio="stone"] {
-  --ms-bg: #12110e;
-  --ms-surface: #181612;
-  --ms-parchment: #201d18;
-  --ms-ivory: #efe8d8;
-  --ms-limestone: #c9bfa9;
-  --ms-marble: #8f8777;
-  --ms-faint: rgba(239, 232, 216, 0.055);
-  --ms-epigraph: rgba(239, 232, 216, 0.095);
-  --ms-rule: #2c2821;
-  --ms-rule-strong: #4a4236;
-  --ms-bronze: #cda869;
-  --ms-rubric: #b86b52;
+[data-theme="light"] .greek-archive-section {
+  --ms-bg: #eae6dd;
+  --ms-surface: #ded9cd;
+  --ms-surface2: #d4cebf;
+  --ms-ivory: #14161a;
+  --ms-limestone: #4a4f5a;
+  --ms-marble: #767c8a;
+  --ms-faint: rgba(0, 0, 0, 0.04);
+  --ms-epigraph: rgba(0, 0, 0, 0.07);
+  --ms-rule: #c8c2b3;
+  --ms-rule-strong: #a49c8a;
+  --ms-bronze: var(--accent);
+  --ms-rubric: var(--accent);
   background-color: var(--ms-bg);
-  background-image:
-    radial-gradient(ellipse at 72% 45%, rgba(205, 168, 105, 0.09) 0%, transparent 65%);
   color: var(--ms-ivory);
 }
 
@@ -292,29 +288,29 @@ body {
 .manuscript-dropcap::first-letter {
   float: left;
   font-family: 'Cormorant Garamond', Georgia, serif;
-  font-size: 4.3rem;
+  font-size: 4.2rem;
   line-height: 0.8;
-  padding-top: 0.14rem;
-  padding-right: 0.8rem;
-  padding-bottom: 0.08rem;
+  padding-top: 0.12rem;
+  padding-right: 0.75rem;
+  padding-bottom: 0.06rem;
   color: var(--ms-bronze);
   font-weight: 600;
 }
 
-/* Realistic museum shadow cast by cutout marble bust onto the parchment folio */
+/* Realistic museum shadow cast by cutout marble bust onto the dark gallery stone */
 .sculpture-cutout-shadow {
   filter:
-    drop-shadow(-18px 26px 28px rgba(24, 19, 13, 0.36))
-    drop-shadow(-4px 6px 10px rgba(24, 19, 13, 0.22));
+    drop-shadow(-20px 30px 32px rgba(0, 0, 0, 0.75))
+    drop-shadow(-4px 8px 12px rgba(0, 0, 0, 0.45));
   transition: transform 0.65s cubic-bezier(0.22, 1, 0.36, 1),
     filter 0.65s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .sculpture-stage:hover .sculpture-cutout-shadow {
-  transform: translateY(-4px) scale(1.015);
+  transform: translateY(-5px) scale(1.02);
   filter:
-    drop-shadow(-24px 32px 34px rgba(24, 19, 13, 0.42))
-    drop-shadow(-6px 8px 12px rgba(24, 19, 13, 0.25));
+    drop-shadow(-28px 38px 40px rgba(0, 0, 0, 0.85))
+    drop-shadow(-6px 10px 14px rgba(0, 0, 0, 0.5));
 }
 
 /* Subtle engraved double-frame for manuscript folio */

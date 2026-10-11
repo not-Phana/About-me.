@@ -93,7 +93,6 @@ export default function InteractiveConsole({
   const [activeKey, setActiveKey] = useState('khmer-nida');
   const [inputVal, setInputVal] = useState('');
   const [customOutput, setCustomOutput] = useState(null);
-  const [matrixActive, setMatrixActive] = useState(false);
 
   const currentTopic =
     CONSOLE_TOPICS.find((t) => t.key === activeKey) || CONSOLE_TOPICS[0];
@@ -101,7 +100,6 @@ export default function InteractiveConsole({
   const handleSelectTopic = (key) => {
     onPlaySound?.('switch');
     setCustomOutput(null);
-    setMatrixActive(false);
     setActiveKey(key);
   };
 
@@ -112,14 +110,14 @@ export default function InteractiveConsole({
     onPlaySound?.('keycap');
     setInputVal('');
 
-    if (raw === 'matrix') {
-      setMatrixActive(true);
+    if (raw === 'matrix' || raw === 'telemetry') {
       onPlaySound?.('pulse');
       setCustomOutput({
-        command: 'matrix --engage',
+        command: 'pk sys --architecture-map',
         lines: [
-          'HACK THE PLANET // Quantum matrix rain streaming live.',
-          'Type "clear" to restore standard system output.',
+          'CORE STACK: React 18 · Vite · Tailwind CSS 3 · HTML5 Canvas (60 FPS) · Web Audio Procedural Synth.',
+          'MONUMENTAL HELLENIC ENGINE: Cormorant Garamond · Met Museum CC0 Pentelic Marble · Delphic Epigraphy.',
+          'DEV ARCHITECTURE: Zero-dependency Monaco Editor IDE · Node SSE Streaming · Khmer NiDA Keyboard 40-level engine.',
         ],
         projectSlug: null,
       });
@@ -127,18 +125,16 @@ export default function InteractiveConsole({
     }
 
     if (raw === 'clear' || raw === 'cls') {
-      setMatrixActive(false);
       setCustomOutput(null);
       return;
     }
 
     if (raw === 'help' || raw === '?') {
-      setMatrixActive(false);
       setCustomOutput({
         command: 'help',
         lines: [
           'Available topics: whoami, khmer-nida, neon-engine, studio-code, kon-ai, pk-icons',
-          'Interactive tools: "matrix", "status", "theme light", "theme dark", "accent cyan", "accent amber", "accent emerald", "accent crimson", "sfx", "clear"',
+          'Interactive tools: "telemetry", "status", "theme light", "theme dark", "accent cyan", "accent amber", "accent emerald", "accent crimson", "sfx", "clear"',
         ],
         projectSlug: null,
       });
@@ -296,19 +292,6 @@ export default function InteractiveConsole({
               }}
               aria-hidden="true"
             />
-
-            {/* Matrix Rain Easter Egg Mode */}
-            {matrixActive && (
-              <div
-                aria-hidden="true"
-                className="pointer-events-none absolute inset-0 p-4 font-mono text-xs text-[#4ade80]/20 select-none overflow-hidden leading-relaxed break-all"
-              >
-                01010100 01000101 01000011 01001000 01001110 01000101 //
-                ΓΝΩΘΙ ΣΑΥΤΟΝ // 01001011 01001111 01001110 // PK STUDIO CODE //
-                VALKYRIE MK-IV PROTOCOL // UNICODE U+1780-U+17FF // SYNTH 440HZ
-                01010000 01001000 01000001 01001110 01000001 //
-              </div>
-            )}
 
             <div className="relative z-10">
               {/* Terminal Window Header Bar */}
