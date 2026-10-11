@@ -7,6 +7,7 @@ import {
   IconCpu,
   IconGrid,
   IconArrowRight,
+  IconCheck,
 } from './Icons';
 
 const CONSOLE_TOPICS = [
@@ -92,6 +93,7 @@ export default function InteractiveConsole({
   const [activeKey, setActiveKey] = useState('khmer-nida');
   const [inputVal, setInputVal] = useState('');
   const [customOutput, setCustomOutput] = useState(null);
+  const [matrixActive, setMatrixActive] = useState(false);
 
   const currentTopic =
     CONSOLE_TOPICS.find((t) => t.key === activeKey) || CONSOLE_TOPICS[0];
@@ -99,6 +101,7 @@ export default function InteractiveConsole({
   const handleSelectTopic = (key) => {
     onPlaySound?.('switch');
     setCustomOutput(null);
+    setMatrixActive(false);
     setActiveKey(key);
   };
 
@@ -109,12 +112,63 @@ export default function InteractiveConsole({
     onPlaySound?.('keycap');
     setInputVal('');
 
+    if (raw === 'matrix') {
+      setMatrixActive(true);
+      onPlaySound?.('pulse');
+      setCustomOutput({
+        command: 'matrix --engage',
+        lines: [
+          'HACK THE PLANET // Quantum matrix rain streaming live.',
+          'Type "clear" to restore standard system output.',
+        ],
+        projectSlug: null,
+      });
+      return;
+    }
+
+    if (raw === 'clear' || raw === 'cls') {
+      setMatrixActive(false);
+      setCustomOutput(null);
+      return;
+    }
+
     if (raw === 'help' || raw === '?') {
+      setMatrixActive(false);
       setCustomOutput({
         command: 'help',
         lines: [
           'Available topics: whoami, khmer-nida, neon-engine, studio-code, kon-ai, pk-icons',
-          'Interactive commands: "open khmer", "open game", "open icons", "theme light", "theme dark", "accent cyan", "accent amber", "accent emerald", "accent crimson"',
+          'Interactive tools: "matrix", "status", "theme light", "theme dark", "accent cyan", "accent amber", "accent emerald", "accent crimson", "sfx", "clear"',
+        ],
+        projectSlug: null,
+      });
+      return;
+    }
+
+    if (raw === 'status' || raw === 'sys') {
+      setMatrixActive(false);
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+      const dpr = window.devicePixelRatio || 1;
+      setCustomOutput({
+        command: 'pk sys --telemetry',
+        lines: [
+          `Viewport: ${w}x${h} px (Device Pixel Ratio: ${dpr}x).`,
+          `Time: ${new Date().toISOString()} · Platform: ${navigator.platform || 'Unknown'}.`,
+          'Status: PK Studio OS Kernel v2.6 · All hardware subsystems nominal.',
+        ],
+        projectSlug: null,
+      });
+      return;
+    }
+
+    if (raw === 'sfx' || raw === 'sound') {
+      onPlaySound?.('pulse');
+      setCustomOutput({
+        command: 'pk audio --test',
+        lines: [
+          'Web Audio procedural oscillator synthesized 440Hz -> 880Hz frequency sweep.',
+          'Mechanical tactile switches active.',
         ],
         projectSlug: null,
       });
@@ -189,9 +243,9 @@ export default function InteractiveConsole({
             </h2>
           </div>
           <p className="font-mono text-xs text-muted">
-            Select a system module or type <code className="text-accent">help</code>,{' '}
-            <code className="text-accent">accent cyan</code>, or{' '}
-            <code className="text-accent">theme</code> in the prompt below.
+            Select a system module or type <code className="text-accent">matrix</code>,{' '}
+            <code className="text-accent">status</code>, or{' '}
+            <code className="text-accent">help</code> in the terminal prompt below.
           </p>
         </div>
 
@@ -232,24 +286,54 @@ export default function InteractiveConsole({
           </div>
 
           {/* Right 9 Columns: Terminal Output & Interactive Input */}
-          <div className="lg:col-span-9 bg-[#090a0d] text-[#eceae4] p-6 sm:p-8 flex flex-col justify-between min-h-[300px] font-mono">
-            <div>
-              {/* Command Prompt Header */}
-              <div className="flex items-center justify-between border-b border-[#22252e] pb-3 text-xs">
-                <div>
-                  <span className="text-[#8c9099]">phana@kon-studio</span>{' '}
+          <div className="relative lg:col-span-9 bg-[#08090b] text-[#eceae4] p-6 sm:p-8 flex flex-col justify-between min-h-[340px] font-mono overflow-hidden">
+            {/* CRT Screen Scanline Overlay */}
+            <div
+              className="pointer-events-none absolute inset-0 opacity-[0.06] select-none"
+              style={{
+                backgroundImage:
+                  'repeating-linear-gradient(to bottom, transparent 0px, transparent 2px, rgba(0, 0, 0, 0.8) 2px, rgba(0, 0, 0, 0.8) 4px)',
+              }}
+              aria-hidden="true"
+            />
+
+            {/* Matrix Rain Easter Egg Mode */}
+            {matrixActive && (
+              <div
+                aria-hidden="true"
+                className="pointer-events-none absolute inset-0 p-4 font-mono text-xs text-[#4ade80]/20 select-none overflow-hidden leading-relaxed break-all"
+              >
+                01010100 01000101 01000011 01001000 01001110 01000101 //
+                ΓΝΩΘΙ ΣΑΥΤΟΝ // 01001011 01001111 01001110 // PK STUDIO CODE //
+                VALKYRIE MK-IV PROTOCOL // UNICODE U+1780-U+17FF // SYNTH 440HZ
+                01010000 01001000 01000001 01001110 01000001 //
+              </div>
+            )}
+
+            <div className="relative z-10">
+              {/* Terminal Window Header Bar */}
+              <div className="flex items-center justify-between border-b border-[#20232b] pb-3 text-xs">
+                <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-1.5" aria-hidden="true">
+                    <span className="w-2.5 h-2.5 rounded-full bg-[#ef4444]/80 inline-block" />
+                    <span className="w-2.5 h-2.5 rounded-full bg-[#facc15]/80 inline-block" />
+                    <span className="w-2.5 h-2.5 rounded-full bg-[#4ade80]/80 inline-block" />
+                  </div>
+                  <span className="ml-2 text-[#8c9099]">phana@kon-studio</span>{' '}
                   <span className="text-accent">~ $</span>{' '}
                   <span className="text-white font-semibold">
                     {displayed.command}
                   </span>
                 </div>
-                <span className="text-[10px] text-[#4ade80]">STATUS: OK</span>
+                <span className="text-[10px] text-[#4ade80] font-bold">
+                  KERNEL: OK
+                </span>
               </div>
 
               {/* Output Paragraphs */}
               <div className="mt-5 space-y-3.5 text-xs sm:text-sm leading-relaxed text-[#d1d5db]">
                 {displayed.lines.map((line, idx) => (
-                  <p key={idx} className="border-l-2 border-[#232730] pl-3.5">
+                  <p key={idx} className="border-l-2 border-accent/70 pl-3.5">
                     <span className="text-accent mr-2">0{idx + 1} //</span>
                     {line}
                   </p>
@@ -261,7 +345,7 @@ export default function InteractiveConsole({
                   <button
                     type="button"
                     onClick={() => onSelectProject(displayed.projectSlug)}
-                    className="inline-flex items-center gap-2 border border-accent/60 bg-accentDim px-4 py-2 text-xs text-white hover:bg-accent hover:text-[#0b0b0c] font-semibold transition-colors"
+                    className="inline-flex items-center gap-2 border border-accent bg-accent text-[#0b0b0c] px-4 py-2 text-xs font-bold hover:opacity-90 transition-opacity"
                   >
                     <span>Open Full Project Specification</span>
                     <IconArrowRight className="w-3.5 h-3.5" />
@@ -273,7 +357,7 @@ export default function InteractiveConsole({
             {/* Interactive Command Input */}
             <form
               onSubmit={handleCommandSubmit}
-              className="mt-8 pt-4 border-t border-[#22252e] flex items-center gap-2.5 text-xs sm:text-sm"
+              className="relative z-10 mt-8 pt-4 border-t border-[#20232b] flex items-center gap-2.5 text-xs sm:text-sm"
             >
               <span className="text-accent font-bold shrink-0">
                 pk@kon ~ $
@@ -282,15 +366,15 @@ export default function InteractiveConsole({
                 type="text"
                 value={inputVal}
                 onChange={(e) => setInputVal(e.target.value)}
-                placeholder="Type 'help', 'khmer-nida', 'neon-engine', 'accent cyan', or 'theme'..."
+                placeholder="Type 'matrix', 'status', 'sfx', 'theme', or 'help'..."
                 aria-label="Interactive console command input"
-                className="w-full bg-transparent text-white placeholder:text-[#5b606b] focus:outline-none"
+                className="w-full bg-transparent text-white placeholder:text-[#525763] focus:outline-none"
               />
               <button
                 type="submit"
-                className="border border-[#2b2f3a] bg-[#14171f] px-3 py-1 text-xs text-[#eceae4] hover:border-accent transition-colors shrink-0"
+                className="border border-[#2b2f3a] bg-[#14171f] px-3.5 py-1 text-xs text-[#eceae4] hover:border-accent hover:text-accent transition-colors shrink-0 font-bold"
               >
-                RUN
+                EXEC
               </button>
             </form>
           </div>
