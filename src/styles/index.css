@@ -854,7 +854,7 @@ body {
     transition: opacity 0.15s ease, visibility 0.15s ease;
   }
 
-  /* Multiplayer Blue Arrow Pointer & You Badge */
+  /* Multiplayer Arrow Pointer & You Badge */
   #pk-cursor-dot {
     position: fixed;
     top: 0;
@@ -871,37 +871,108 @@ body {
     display: block;
     margin-left: -3px;
     margin-top: -2px;
-    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.45));
+    filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.75)) drop-shadow(0 0 8px rgba(212, 165, 40, 0.4));
     transition: transform 0.08s ease;
   }
 
+  .pk-cursor-arrow path {
+    fill: var(--accent, #d4a528);
+    stroke: #090a0c;
+    stroke-width: 1.8px;
+    stroke-linejoin: round;
+    transition: fill 0.2s ease, stroke 0.2s ease;
+  }
+
+  /* Sleek Cyber / Architectural Glass Badge */
   .pk-cursor-tag {
     position: absolute;
-    top: 11px;
+    top: 13px;
     left: 14px;
-    background-color: #2563eb;
-    border: 2px solid #ffffff;
-    border-radius: 7px;
-    padding: 1px 7px;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Inter, sans-serif;
-    font-size: 11px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4.5px;
+    background-color: rgba(11, 12, 15, 0.94);
+    border: 1px solid var(--accent, #d4a528);
+    border-radius: 9999px;
+    padding: 1.5px 6.5px 1.5px 5px;
+    font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
+    font-size: 9.5px;
     font-weight: 700;
-    color: #ffffff;
-    line-height: 14px;
-    letter-spacing: -0.01em;
+    line-height: 12px;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
     user-select: none;
     white-space: nowrap;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.45);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.65), 0 0 8px rgba(212, 165, 40, 0.2);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
     pointer-events: none;
-    transition: opacity 0.15s ease, transform 0.15s ease;
+    transition: opacity 0.2s ease, transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.2s ease, border-color 0.2s ease;
+  }
+
+  .pk-cursor-status-dot {
+    width: 4.5px;
+    height: 4.5px;
+    border-radius: 50%;
+    background-color: var(--accent, #d4a528);
+    box-shadow: 0 0 6px var(--accent, #d4a528);
+    flex-shrink: 0;
+    animation: pkDotPulse 2s ease-in-out infinite;
+  }
+
+  @keyframes pkDotPulse {
+    0%, 100% {
+      opacity: 0.85;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 1;
+      transform: scale(1.25);
+      box-shadow: 0 0 8px var(--accent, #d4a528);
+    }
+  }
+
+  .pk-cursor-tag-text {
+    display: inline-block;
+    color: var(--accent, #d4a528);
+    font-weight: 700;
+    font-size: 9.5px;
+  }
+
+  /* When locked onto interactive buttons/cards, gracefully hide tag to avoid obscuring controls */
+  #pk-cursor-dot.is-locked .pk-cursor-tag {
+    opacity: 0;
+    transform: translate(2px, 2px) scale(0.7);
+    pointer-events: none;
+  }
+
+  /* Solid amber targets: Invert arrow to dark obsidian and tag to amber */
+  #pk-cursor-dot.dark-cursor .pk-cursor-arrow path {
+    fill: #0b0b0c !important;
+    stroke: var(--accent, #d4a528) !important;
+  }
+
+  #pk-cursor-dot.dark-cursor .pk-cursor-tag {
+    background-color: var(--accent, #d4a528) !important;
+    border-color: #0b0b0c !important;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.5) !important;
+  }
+
+  #pk-cursor-dot.dark-cursor .pk-cursor-status-dot {
+    background-color: #0b0b0c !important;
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.8) !important;
+  }
+
+  #pk-cursor-dot.dark-cursor .pk-cursor-tag-text {
+    color: #0b0b0c !important;
   }
 
   .pk-cursor-text-beam {
     display: none;
     width: 2px;
     height: 18px;
-    background-color: #2563eb;
-    box-shadow: 0 0 8px rgba(37, 99, 235, 0.6);
+    background-color: var(--accent, #d4a528);
+    box-shadow: 0 0 8px rgba(212, 165, 40, 0.6);
     border-radius: 1px;
   }
 
@@ -917,10 +988,10 @@ body {
 
   #pk-cursor-dot.mode-text.is-pressed .pk-cursor-text-beam {
     width: 3px !important;
-    box-shadow: 0 0 10px rgba(37, 99, 235, 0.9);
+    box-shadow: 0 0 10px rgba(212, 165, 40, 0.9);
   }
 
-  /* Core Ring (Requirement 2) */
+  /* Core Ring - Hidden by default in open space, revealed when locked or labeled */
   #pk-cursor-ring {
     position: fixed;
     top: 0;
@@ -933,15 +1004,25 @@ body {
     pointer-events: none;
     z-index: 9999;
     transform: translate(-100px, -100px) translate(-50%, -50%);
-    will-change: transform, width, height, border-radius, border-color, background-color;
+    will-change: transform, width, height, border-radius, border-color, background-color, opacity;
+    opacity: 0;
+    visibility: hidden;
     transition: border-radius 0.28s cubic-bezier(0.16, 1, 0.3, 1),
                 border-color 0.2s ease,
                 background-color 0.2s ease,
-                opacity 0.22s ease;
+                opacity 0.2s ease,
+                visibility 0.2s ease;
     display: flex;
     align-items: center;
     justify-content: center;
     overflow: hidden;
+  }
+
+  body:not(.cursor-hidden):not(.cursor-over-input) #pk-cursor-ring.is-locked,
+  body:not(.cursor-hidden):not(.cursor-over-input) #pk-cursor-ring.is-labeled,
+  body:not(.cursor-hidden):not(.cursor-over-input) #pk-cursor-ring.is-large-row {
+    opacity: 1;
+    visibility: visible;
   }
 
   #pk-cursor-label {

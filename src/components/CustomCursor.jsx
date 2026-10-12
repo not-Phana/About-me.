@@ -118,7 +118,7 @@ export default function CustomCursor() {
       isLargeRow = false;
       ring.classList.remove('is-locked', 'is-labeled', 'is-large-row', 'dark-cursor');
       ring.style.borderRadius = '';
-      dot.classList.remove('dark-cursor');
+      dot.classList.remove('dark-cursor', 'is-locked');
       mouseX = -100;
       mouseY = -100;
       targetRingX = -100;
@@ -168,7 +168,7 @@ export default function CustomCursor() {
       clearTimeout(idleTimer);
       idleTimer = setTimeout(() => {
         isIdle = true;
-        if (!lockedTargetElement && !isTextMode) {
+        if (lockedTargetElement && !isTextMode) {
           ring.classList.add('is-idle-breathing');
         }
       }, 2500);
@@ -400,6 +400,7 @@ export default function CustomCursor() {
             lockedTargetElement = null;
             ring.classList.remove('is-locked', 'dark-cursor');
             ring.style.borderRadius = '';
+            dot.classList.remove('dark-cursor', 'is-locked');
           }
           isLargeRow = true;
           currentLabel = labelType;
@@ -462,6 +463,7 @@ export default function CustomCursor() {
           }
 
           ring.classList.add('is-locked');
+          dot.classList.add('is-locked');
         }
         return;
       }
@@ -470,7 +472,7 @@ export default function CustomCursor() {
       if (lockedTargetElement) {
         lockedTargetElement = null;
         isSolidAmberTarget = false;
-        dot.classList.remove('dark-cursor');
+        dot.classList.remove('dark-cursor', 'is-locked');
         ring.classList.remove('dark-cursor', 'is-locked');
         ring.style.borderRadius = '';
       }
@@ -720,6 +722,7 @@ export default function CustomCursor() {
           lockedTargetElement = null;
           ring.classList.remove('is-locked', 'dark-cursor');
           ring.style.borderRadius = '';
+          dot.classList.remove('dark-cursor', 'is-locked');
         } else {
           const rect = lockedTargetElement.getBoundingClientRect();
           if (
@@ -733,6 +736,7 @@ export default function CustomCursor() {
             lockedTargetElement = null;
             ring.classList.remove('is-locked', 'dark-cursor');
             ring.style.borderRadius = '';
+            dot.classList.remove('dark-cursor', 'is-locked');
           } else {
             const elemCenterX = rect.left + rect.width / 2;
             const elemCenterY = rect.top + rect.height / 2;
@@ -761,11 +765,13 @@ export default function CustomCursor() {
           targetRingY = mouseY;
           targetRingWidth = currentLabel ? 62 : 54;
           targetRingHeight = currentLabel ? 62 : 54;
+          currentLerp = 0.25;
         } else {
           targetRingX = mouseX;
           targetRingY = mouseY;
           targetRingWidth = 34;
           targetRingHeight = 34;
+          currentLerp = 0.45;
         }
       }
 
@@ -861,14 +867,17 @@ export default function CustomCursor() {
           >
             <path
               d="M3 2a1 1 0 0 1 1.6-.75l13.5 10a1 1 0 0 1-.5 1.8l-5.6.8a1 1 0 0 0-.8.7l-2.6 5.5a1 1 0 0 1-1.9-.3L3 2z"
-              fill="#2563eb"
-              stroke="#ffffff"
-              strokeWidth="2.2"
+              fill="var(--accent, #d4a528)"
+              stroke="#0b0b0c"
+              strokeWidth="1.8"
               strokeLinecap="round"
               strokeLinejoin="round"
             />
           </svg>
-          <div className="pk-cursor-tag">You</div>
+          <div className="pk-cursor-tag">
+            <span className="pk-cursor-status-dot" />
+            <span className="pk-cursor-tag-text">You</span>
+          </div>
           <div className="pk-cursor-text-beam" />
         </div>
         <div ref={ringRef} id="pk-cursor-ring">
