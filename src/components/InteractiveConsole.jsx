@@ -254,15 +254,13 @@ export default function InteractiveConsole({
     ) {
       onPlaySound?.('switch');
       setCustomOutput({
-        command: 'pk inspect pk-brain-lab --cognitive-cores',
+        command: 'pk brain --topography=live-60fps',
         lines: [
-          'PK BRAIN LAB // DIGITAL SECOND BRAIN & NEURAL WORKBENCH',
-          'DUAL-HEMISPHERE SYSTEM: Left Cortex (Intuitive Organic) + Right Circuit (Algorithmic Logic).',
-          'COGNITIVE CORES (9 MODULES): Logic Lab, Memory Core, Pattern Hunter, Spatial Challenge, Strategy Room, Math Reactor, Deduction Files, Neural Interference, Quantum Focus.',
-          'REFLEX TELEMETRY: Procedural Web Audio, millisecond reaction latency measurement, and cognitive endurance scaling.',
-          'INSPECTION: Press Inspect Project below or visit the Flagship Second Brain Showcase in Active Builds.',
+          'NEURAL TOPOGRAPHY // INTERACTIVE MOVING MAP OF PHANA\'S BRAIN',
+          '7 CORTICAL NODES: Prefrontal Architecture, Broca/Wernicke Bilingual Khmer-AST, Corpus Callosum AI Bridge, Parietal 60FPS Kinematics, Occipital 24x24 SVG, Temporal WebAudio Synth, Cerebellum Melete.',
+          'LIVE STREAM: 60 FPS action-potential comet pulses, 44 micro-neurons, 3 view projections (Lateral, Dual-Hemisphere, Connectome), and 3-channel EEG oscilloscope.',
         ],
-        projectSlug: 'pk-brain-lab',
+        projectSlug: null,
       });
       return;
     }
