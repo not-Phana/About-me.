@@ -28,9 +28,9 @@ const FOOTER_TECH_DOSSIERS = [
     name: 'GitHub Open-Source Architecture',
     subtitle: 'Zero templates, real commit history, and public code verification.',
     description:
-      'Every project in this portfolio is an authentic, publicly inspectable build hosted on GitHub (github.com/phanaach4889). Built from scratch without pre-packaged templates. The site continuously queries GitHub\'s REST API for live commit counts, language breakdowns, and public release branches.',
+      'Every project in this portfolio is an authentic, publicly inspectable build hosted on GitHub (github.com/not-Phana). Built from scratch without pre-packaged templates. The site continuously queries GitHub\'s REST API for live commit counts, language breakdowns, and public release branches.',
     pills: ['8 Repositories', 'Zero Templates', 'GitHub REST API', 'Public Git Clones'],
-    link: 'https://github.com/phanaach4889',
+    link: 'https://github.com/not-Phana',
     linkLabel: 'Open GitHub Profile',
     icon: IconGitHub,
     status: 'ACTIVE SYNC',
@@ -44,7 +44,7 @@ const FOOTER_TECH_DOSSIERS = [
     description:
       'Khmer is an ancient Austroasiatic abugida script where consonants attach dependent vowels in four directions and stack subjoined Coeng consonants. The NiDA layout structures stacking logically: typing base consonant + Coeng marker [J] (្) + subjoined consonant (e.g. [K] ក + [J] ្ + [K] ក produces ក្ក). PK Khmer Type delivers 40 levels, 218 lessons, 3D kinematic hand guides, and real-time Unicode normalization.',
     pills: ['NiDA Subscript [J]', 'Khmer Standard', '40 Levels / 218 Lessons', 'Unicode Normalization'],
-    link: 'https://phanaach4889.github.io/PK-Khmer-Type/',
+    link: 'https://not-phana.github.io/PK-Khmer-Type/',
     linkLabel: 'Launch Khmer Studio',
     icon: IconKeyboard,
     status: 'SHIPPED V2.4',
@@ -58,7 +58,7 @@ const FOOTER_TECH_DOSSIERS = [
     description:
       'A zero-dependency browser game running on a pure 60 FPS HTML5 Canvas loop across a 4,200 x 4,200 coordinate cyber-grid. Instead of loading external audio files, all sound effects, lasers, hums, and dynamic combat beats are synthesized procedurally in real time through the browser\'s native Web Audio API oscillators.',
     pills: ['60 FPS Canvas Loop', 'Web Audio Oscillators', '4200x4200 Cyber-Grid', 'Zero Game Engines'],
-    link: 'https://phanaach4889.github.io/PK-game/',
+    link: 'https://not-phana.github.io/PK-game/',
     linkLabel: 'Launch Neon Protocol',
     icon: IconGamepad,
     status: 'LIVE ON PAGES',
@@ -72,7 +72,7 @@ const FOOTER_TECH_DOSSIERS = [
     description:
       'Standard Unicode emojis render unpredictably across Apple, Windows, and Android, and clash with high-density architectural interfaces. PK Icons Studio is a proprietary library of 50 pixel-perfect 24x24 vector SVG stroke icons built to enforce a strict Zero-Emoji policy with dark-mode-optimized stroke geometry (stroke-width=2.2).',
     pills: ['50 Custom Vectors', '24x24 Pixel Grid', 'Strict Zero-Emoji Policy', 'Live Stroke Customizer'],
-    link: 'https://phanaach4889.github.io/PK-icons/',
+    link: 'https://not-phana.github.io/PK-icons/',
     linkLabel: 'Open PK Icons Studio',
     icon: IconGrid,
     status: 'EXPANDING',
@@ -146,7 +146,7 @@ const LEGAL_COMPLIANCE_CLAUSES = [
     pills: ['Khmer NiDA Standard', 'KhmerOS Heritage', 'Subscript Coeng [J]', 'Non-Commercial Open Access'],
     badge: 'CULTURAL ATTRIBUTION',
     icon: IconKeyboard,
-    externalLink: 'https://phanaach4889.github.io/PK-Khmer-Type/',
+    externalLink: 'https://not-phana.github.io/PK-Khmer-Type/',
     externalLinkLabel: 'Launch PK Khmer Type Trainer',
   },
   {
@@ -472,7 +472,7 @@ export default function Footer({ onNavigateHome, onPlaySound }) {
               <div className="space-y-1.5 text-xs">
                 <div>
                   <a
-                    href="https://phanaach4889.github.io/PK-Khmer-Type/"
+                    href="https://not-phana.github.io/PK-Khmer-Type/"
                     target="_blank"
                     rel="noopener noreferrer"
                     onClick={() => onPlaySound?.('switch')}
@@ -484,7 +484,7 @@ export default function Footer({ onNavigateHome, onPlaySound }) {
                 </div>
                 <div>
                   <a
-                    href="https://phanaach4889.github.io/PK-game/"
+                    href="https://not-phana.github.io/PK-game/"
                     target="_blank"
                     rel="noopener noreferrer"
                     onClick={() => onPlaySound?.('switch')}
@@ -496,7 +496,7 @@ export default function Footer({ onNavigateHome, onPlaySound }) {
                 </div>
                 <div>
                   <a
-                    href="https://phanaach4889.github.io/PK-icons/"
+                    href="https://not-phana.github.io/PK-icons/"
                     target="_blank"
                     rel="noopener noreferrer"
                     onClick={() => onPlaySound?.('switch')}

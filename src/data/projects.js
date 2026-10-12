@@ -32,20 +32,20 @@ export const PROJECTS = [
     currentlyBuilding: true,
     createdDate: '2026-09-20',
     updatedDate: '2026-10-11',
-    repoUrl: 'https://github.com/phanaach4889/PK-Khmer-Type',
-    liveUrl: 'https://phanaach4889.github.io/PK-Khmer-Type/',
+    repoUrl: 'https://github.com/not-Phana/PK-Khmer-Type',
+    liveUrl: 'https://not-phana.github.io/PK-Khmer-Type/',
     secondaryLinks: [
       {
         label: 'Launch Deck',
-        url: 'https://phanaach4889.github.io/PK-Khmer-Type/launch/',
+        url: 'https://not-phana.github.io/PK-Khmer-Type/launch/',
       },
       {
         label: 'Mastery Dashboard',
-        url: 'https://phanaach4889.github.io/PK-Khmer-Type/dashboard.html',
+        url: 'https://not-phana.github.io/PK-Khmer-Type/dashboard.html',
       },
       {
         label: '3D Keycap Docs',
-        url: 'https://phanaach4889.github.io/PK-Khmer-Type/Documents/',
+        url: 'https://not-phana.github.io/PK-Khmer-Type/Documents/',
       },
     ],
     shortDescription:
@@ -110,8 +110,8 @@ export const PROJECTS = [
     currentlyBuilding: false,
     createdDate: '2026-10-09',
     updatedDate: '2026-10-10',
-    repoUrl: 'https://github.com/phanaach4889/PK-game',
-    liveUrl: 'https://phanaach4889.github.io/PK-game/',
+    repoUrl: 'https://github.com/not-Phana/PK-game',
+    liveUrl: 'https://not-phana.github.io/PK-game/',
     secondaryLinks: [],
     shortDescription:
       'A zero-dependency 60 FPS HTML5 Canvas and procedural WebAudio cyber-arena game featuring 6 tactical abilities, live mid-combat contracts, and custom vector geometry.',
@@ -158,8 +158,8 @@ export const PROJECTS = [
     currentlyBuilding: true,
     createdDate: '2026-09-22',
     updatedDate: '2026-09-22',
-    repoUrl: 'https://github.com/phanaach4889/PK-icons',
-    liveUrl: 'https://phanaach4889.github.io/PK-icons/',
+    repoUrl: 'https://github.com/not-Phana/PK-icons',
+    liveUrl: 'https://not-phana.github.io/PK-icons/',
     secondaryLinks: [],
     shortDescription:
       'A pixel-perfect 24x24 stroke SVG icon collection (50 icons) and interactive browser gallery with live stroke customization, search, and batch ZIP export.',
@@ -286,7 +286,7 @@ export const PROJECTS = [
     currentlyBuilding: false,
     createdDate: '2026-01-15',
     updatedDate: '2026-09-15',
-    repoUrl: 'https://github.com/phanaach4889/Phana-cofee-shop',
+    repoUrl: 'https://github.com/not-Phana/Phana-cofee-shop',
     liveUrl: 'https://phana-cofee-shop.vercel.app',
     secondaryLinks: [],
     shortDescription:

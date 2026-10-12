@@ -391,7 +391,7 @@ export default function ContextMenu({
         </button>
 
         <a
-          href="https://github.com/phanaach4889"
+          href="https://github.com/not-Phana"
           target="_blank"
           rel="noopener noreferrer"
           onClick={() => playTactileClick('keycap', soundEnabled)}

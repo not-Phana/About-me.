@@ -1,7 +1,7 @@
 # Agent Instructions — PHANA Personal Developer Platform
 
 ## 1. Always Build, Commit, and Push to GitHub When Done
-- Every completed change in `E:\about me` must be built, committed, and pushed to `origin/main` (`https://github.com/phanaach4889/About-me..git`) automatically so GitHub Pages (`https://phanaach4889.github.io/About-me./`) deploys immediately.
+- Every completed change in `E:\about me` must be built, committed, and pushed to `origin/main` (`https://github.com/not-Phana/About-me..git`) automatically so GitHub Pages (`https://not-phana.github.io/About-me./`) deploys immediately.
 - Execute:
   ```powershell
   powershell -ExecutionPolicy Bypass -File "E:\about me\deploy.ps1" -Message "feat: <summary>"

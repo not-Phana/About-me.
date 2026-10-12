@@ -1,36 +1,36 @@
 import { useState, useEffect, useCallback } from 'react';
 
-const GITHUB_USERNAME = 'phanaach4889';
-const CACHE_KEY = 'pk_github_cache_v1';
+const GITHUB_USERNAME = 'not-Phana';
+const CACHE_KEY = 'pk_github_cache_v2';
 const CACHE_TTL_MS = 10 * 60 * 1000; // 10 minutes session cache to respect rate limits
 
 /**
- * Verified local fallback snapshot of https://api.github.com/users/phanaach4889
+ * Verified local fallback snapshot of https://api.github.com/users/not-Phana
  * and public repositories, ensuring the site works offline or if GitHub rate-limits
  * unauthenticated requests. Never fabricates stars or metrics.
  */
 export const FALLBACK_GITHUB_DATA = {
   profile: {
-    login: 'phanaach4889',
+    login: 'not-Phana',
     name: 'Kon',
     avatar_url: 'https://avatars.githubusercontent.com/u/255106015?v=4',
-    html_url: 'https://github.com/phanaach4889',
+    html_url: 'https://github.com/not-Phana',
     bio: 'Building something good for my society.',
-    public_repos: 7,
+    public_repos: 9,
     followers: 3,
     following: 5,
     created_at: '2026-01-15T11:09:14Z',
-    updated_at: '2026-10-11T04:52:26Z',
+    updated_at: '2026-10-11T16:52:38Z',
   },
   repos: [
     {
       id: 1377975940,
       name: 'PK-Khmer-Type',
-      full_name: 'phanaach4889/PK-Khmer-Type',
-      html_url: 'https://github.com/phanaach4889/PK-Khmer-Type',
+      full_name: 'not-Phana/PK-Khmer-Type',
+      html_url: 'https://github.com/not-Phana/PK-Khmer-Type',
       description:
         'For Cambodian to teach how to teach everyone want to typing Khmer and better and another.',
-      homepage: 'https://phanaach4889.github.io/PK-Khmer-Type/',
+      homepage: 'https://not-phana.github.io/PK-Khmer-Type/',
       language: 'JavaScript',
       stargazers_count: 0,
       forks_count: 1,
@@ -43,10 +43,10 @@ export const FALLBACK_GITHUB_DATA = {
     {
       id: 1411682732,
       name: 'PK-game',
-      full_name: 'phanaach4889/PK-game',
-      html_url: 'https://github.com/phanaach4889/PK-game',
+      full_name: 'not-Phana/PK-game',
+      html_url: 'https://github.com/not-Phana/PK-game',
       description: 'just for my fun.',
-      homepage: 'https://phanaach4889.github.io/PK-game/',
+      homepage: 'https://not-phana.github.io/PK-game/',
       language: 'HTML',
       stargazers_count: 0,
       forks_count: 0,
@@ -59,10 +59,10 @@ export const FALLBACK_GITHUB_DATA = {
     {
       id: 1383356034,
       name: 'phanaach4889.github.io',
-      full_name: 'phanaach4889/phanaach4889.github.io',
-      html_url: 'https://github.com/phanaach4889/phanaach4889.github.io',
+      full_name: 'not-Phana/phanaach4889.github.io',
+      html_url: 'https://github.com/not-Phana/phanaach4889.github.io',
       description: 'Personal developer website and project index on GitHub Pages.',
-      homepage: 'https://phanaach4889.github.io/',
+      homepage: 'https://not-phana.github.io/',
       language: 'JavaScript',
       stargazers_count: 0,
       forks_count: 0,
@@ -75,10 +75,10 @@ export const FALLBACK_GITHUB_DATA = {
     {
       id: 1381825597,
       name: 'PK-icons',
-      full_name: 'phanaach4889/PK-icons',
-      html_url: 'https://github.com/phanaach4889/PK-icons',
+      full_name: 'not-Phana/PK-icons',
+      html_url: 'https://github.com/not-Phana/PK-icons',
       description: 'For myself and everyone else need it.',
-      homepage: 'https://phanaach4889.github.io/PK-icons/',
+      homepage: 'https://not-phana.github.io/PK-icons/',
       language: 'HTML',
       stargazers_count: 0,
       forks_count: 0,
@@ -91,8 +91,8 @@ export const FALLBACK_GITHUB_DATA = {
     {
       id: 1373878717,
       name: 'gemini-cli',
-      full_name: 'phanaach4889/gemini-cli',
-      html_url: 'https://github.com/phanaach4889/gemini-cli',
+      full_name: 'not-Phana/gemini-cli',
+      html_url: 'https://github.com/not-Phana/gemini-cli',
       description:
         'An open-source AI agent that brings the power of Gemini directly into your terminal.',
       homepage: 'https://geminicli.com',
@@ -108,8 +108,8 @@ export const FALLBACK_GITHUB_DATA = {
     {
       id: 1134916131,
       name: 'Phana-cofee-shop',
-      full_name: 'phanaach4889/Phana-cofee-shop',
-      html_url: 'https://github.com/phanaach4889/Phana-cofee-shop',
+      full_name: 'not-Phana/Phana-cofee-shop',
+      html_url: 'https://github.com/not-Phana/Phana-cofee-shop',
       description: 'My coffee is good bro.',
       homepage: 'https://phana-cofee-shop.vercel.app',
       language: 'HTML',
@@ -124,8 +124,8 @@ export const FALLBACK_GITHUB_DATA = {
     {
       id: 1358263398,
       name: 'FREE-openai-api-keys',
-      full_name: 'phanaach4889/FREE-openai-api-keys',
-      html_url: 'https://github.com/phanaach4889/FREE-openai-api-keys',
+      full_name: 'not-Phana/FREE-openai-api-keys',
+      html_url: 'https://github.com/not-Phana/FREE-openai-api-keys',
       description: 'collection for free openai keys to use in your projects',
       homepage: null,
       language: null,
@@ -196,11 +196,11 @@ export function useGitHubData() {
           homepage:
             r.homepage ||
             (r.name === 'PK-Khmer-Type'
-              ? 'https://phanaach4889.github.io/PK-Khmer-Type/'
+              ? 'https://not-phana.github.io/PK-Khmer-Type/'
               : r.name === 'PK-game'
-              ? 'https://phanaach4889.github.io/PK-game/'
+              ? 'https://not-phana.github.io/PK-game/'
               : r.name === 'PK-icons'
-              ? 'https://phanaach4889.github.io/PK-icons/'
+              ? 'https://not-phana.github.io/PK-icons/'
               : null),
         }));
 

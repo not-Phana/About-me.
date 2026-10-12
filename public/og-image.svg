@@ -8,7 +8,7 @@
 
   <!-- Top HUD bar -->
   <text x="132" y="52" fill="#ECEAE4" font-family="monospace" font-size="18" font-weight="700" letter-spacing="4">PK // PHANA KUROSAKI</text>
-  <text x="900" y="52" fill="#D4A528" font-family="monospace" font-size="16" font-weight="600" letter-spacing="2">GITHUB.COM/PHANAACH4889</text>
+  <text x="900" y="52" fill="#D4A528" font-family="monospace" font-size="16" font-weight="600" letter-spacing="2">GITHUB.COM/NOT-PHANA</text>
 
   <!-- Main Headline -->
   <text x="132" y="230" fill="#8C9099" font-family="monospace" font-size="18" letter-spacing="3">INDEPENDENT BUILDER · ALWAYS LEARNING</text>

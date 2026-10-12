@@ -144,7 +144,7 @@ export default function CommandPalette({
       id: 'ext-github',
       group: 'EXTERNAL PROFILE',
       label: `Open GitHub Profile (@${PROFILE.githubUsername})`,
-      meta: 'github.com/phanaach4889',
+      meta: `github.com/${PROFILE.githubUsername}`,
       external: true,
       run: () => {
         window.open(PROFILE.githubUrl, '_blank', 'noopener,noreferrer');

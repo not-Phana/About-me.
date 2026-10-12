@@ -186,7 +186,7 @@ export default function GitHubSection() {
             />
             <span className="text-ink">
               {status === 'live' &&
-                'Connected to live GitHub REST API (api.github.com/users/phanaach4889)'}
+                `Connected to live GitHub REST API (api.github.com/users/${PROFILE.githubUsername})`}
               {status === 'loading' &&
                 'Fetching public repository data from GitHub REST API...'}
               {status === 'fallback' &&
@@ -470,7 +470,7 @@ export default function GitHubSection() {
 
                     <p className="mt-2 text-sm text-muted leading-relaxed">
                       {repo.description ||
-                        'Public GitHub repository maintained by phanaach4889.'}
+                        `Public GitHub repository maintained by @${PROFILE.githubUsername}.`}
                     </p>
                   </div>
 

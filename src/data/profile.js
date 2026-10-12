@@ -17,8 +17,8 @@ export const PROFILE = {
   heroSubheadline: 'Software, experiments, and projects by Phanna Kurosaki.',
   heroSummary:
     "I'm an independent builder who enjoys creating software, websites, developer tools, and interactive projects. I use AI to help me build, learn, and solve problems while continuing to understand the work behind what I create.",
-  githubUsername: 'phanaach4889',
-  githubUrl: 'https://github.com/phanaach4889',
+  githubUsername: 'not-Phana',
+  githubUrl: 'https://github.com/not-Phana',
   githubBio: 'Building something good for my society.',
   facebookMainUrl: 'https://web.facebook.com/profile.php?id=61586407973552',
   facebookDmUrl: 'https://web.facebook.com/profile.php?id=61595335949001',
@@ -69,8 +69,8 @@ export const PROFILE = {
       title: 'Joined GitHub & Shipped Phana Coffee Shop',
       category: 'First Public Repo',
       description:
-        'Created the phanaach4889 GitHub account and published my first multi-page frontend website (Phana-cofee-shop), practicing HTML, CSS, JavaScript filtering, and Vercel deployment.',
-      link: 'https://github.com/phanaach4889/Phana-cofee-shop',
+        'Created the GitHub account (@not-Phana) and published my first multi-page frontend website (Phana-cofee-shop), practicing HTML, CSS, JavaScript filtering, and Vercel deployment.',
+      link: 'https://github.com/not-Phana/Phana-cofee-shop',
     },
     {
       date: 'August 2026',
@@ -97,7 +97,7 @@ export const PROFILE = {
       category: 'Public Releases',
       description:
         'Launched PK Khmer Type to help people learn Khmer Standard, Khmer NiDA, and English touch-typing, followed two days later by PK Icons Studio with 50 custom 24x24 stroke SVG icons.',
-      link: 'https://github.com/phanaach4889/PK-Khmer-Type',
+      link: 'https://github.com/not-Phana/PK-Khmer-Type',
     },
     {
       date: 'October 2026',
@@ -106,7 +106,7 @@ export const PROFILE = {
       category: 'Latest Builds',
       description:
         'Expanded PK Khmer Type to 40 levels / 218 lessons with a live mastery heatmap dashboard and 3D hand guides, and shipped NEON PROTOCOL // OVERDRIVE (PK-game) on GitHub Pages.',
-      link: 'https://github.com/phanaach4889/PK-game',
+      link: 'https://github.com/not-Phana/PK-game',
     },
   ],
   exploringTopics: [

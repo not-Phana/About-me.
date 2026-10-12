@@ -35,7 +35,7 @@ export default function ContactSection({ onPlaySound }) {
       github: PROFILE.githubUrl,
       facebook_main: PROFILE.facebookMainUrl,
       facebook_dm: PROFILE.facebookDmUrl,
-      flagship: 'https://phanaach4889.github.io/PK-Khmer-Type/',
+      flagship: 'https://not-phana.github.io/PK-Khmer-Type/',
       focus: ['Software', 'Websites', 'Developer Tools', 'Games'],
       status: 'Independent Builder · Always Learning',
     },
@@ -119,7 +119,7 @@ export default function ContactSection({ onPlaySound }) {
                 onClick={() =>
                   handleCopy(
                     'clone',
-                    'git clone https://github.com/phanaach4889/About-me..git'
+                    'git clone https://github.com/not-Phana/About-me..git'
                   )
                 }
                 className="inline-flex items-center gap-2 border border-line bg-surface hover:border-accent px-4 py-2.5 font-mono text-xs text-ink transition-colors card-laser-lift"

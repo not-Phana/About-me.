@@ -2,7 +2,7 @@
 
 Personal developer platform and project showcase for **Phana Kurosaki** (**Phana** / **KON** / **PK**).
 
-- **GitHub Profile**: [https://github.com/phanaach4889](https://github.com/phanaach4889)
+- **GitHub Profile**: [https://github.com/not-Phana](https://github.com/not-Phana)
 - **Stack**: React 18, Vite 6, Tailwind CSS 3, Inline SVG Vector Icons, GitHub REST API
 
 ---
@@ -41,8 +41,8 @@ To add a new project or update an existing one:
 ## Deploying to GitHub Pages
 
 This project is pre-configured with `base: './'` in `vite.config.js` so it works on both:
-- Root GitHub Pages (`https://phanaach4889.github.io/` via the `phanaach4889.github.io` repository)
-- Any project subpath (`https://phanaach4889.github.io/<repo-name>/`)
+- Root GitHub Pages (`https://not-phana.github.io/` via the `phanaach4889.github.io` repository)
+- Any project subpath (`https://not-phana.github.io/<repo-name>/`)
 
 ### GitHub Repository Settings Required:
 1. Push this project to your GitHub repository on the `main` branch.
