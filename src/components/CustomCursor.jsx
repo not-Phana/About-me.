@@ -33,6 +33,7 @@ export default function CustomCursor() {
 
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+    document.documentElement.classList.add('has-custom-cursor');
     document.body.classList.add('has-custom-cursor', 'pk-has-custom-cursor', 'cursor-hidden');
 
     const dot = dotRef.current;
@@ -149,6 +150,11 @@ export default function CustomCursor() {
 
       mouseX = e.clientX;
       mouseY = e.clientY;
+
+      if (dot && !isTextMode) {
+        const pressScale = isMouseDown ? 0.92 : 1.0;
+        dot.style.transform = `translate(${mouseX}px, ${mouseY}px) scale(${pressScale})`;
+      }
 
       if (isFirstMove || ringX < 0 || ringY < 0) {
         isFirstMove = false;
@@ -843,6 +849,7 @@ export default function CustomCursor() {
       document.documentElement.removeEventListener('mouseenter', handleMouseEnter);
       window.removeEventListener('scroll', handleScroll);
       window.removeEventListener('wheel', handleWheel);
+      document.documentElement.classList.remove('has-custom-cursor');
       document.body.classList.remove(
         'has-custom-cursor',
         'pk-has-custom-cursor',

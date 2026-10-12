@@ -796,18 +796,22 @@ body {
    PK Corporation Precision Custom Cursor Engine
    ========================================================================== */
 @media (hover: hover) and (pointer: fine) {
+  html,
+  body,
+  *,
+  *::before,
+  *::after,
   body.has-custom-cursor,
-  body.has-custom-cursor a,
-  body.has-custom-cursor button,
-  body.has-custom-cursor select,
-  body.has-custom-cursor [role="button"],
-  body.has-custom-cursor [role="tab"],
-  body.has-custom-cursor [tabindex],
-  body.has-custom-cursor .row-item {
+  body.has-custom-cursor *,
+  body.has-custom-cursor *::before,
+  body.has-custom-cursor *::after {
     cursor: none !important;
   }
 
-  /* Keep native text cursor on inputs and textareas (Requirement Setup) */
+  /* Keep native text cursor strictly on text inputs and textareas */
+  input,
+  textarea,
+  [contenteditable="true"],
   body.has-custom-cursor input,
   body.has-custom-cursor textarea,
   body.has-custom-cursor [contenteditable="true"] {
