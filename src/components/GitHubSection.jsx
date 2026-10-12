@@ -323,30 +323,30 @@ export default function GitHubSection({ onPlaySound }) {
                       className="inline-block h-8 w-8 rounded-full ring-2 ring-[#38bdf8] object-cover bg-surface"
                     />
                     <img
-                      src="./assets/contributor-claude.png"
-                      alt="Claude AI"
-                      className="inline-block h-8 w-8 rounded-full ring-2 ring-[#f97316] object-cover bg-surface"
-                    />
-                    <img
-                      src="./assets/contributor-gemini.png"
-                      alt="Gemini AI"
+                      src="./assets/contributor-antigravity.svg"
+                      alt="Antigravity Agent"
                       className="inline-block h-8 w-8 rounded-full ring-2 ring-[#818cf8] object-cover bg-surface"
                     />
                     <img
-                      src="./assets/contributor-chatgpt.png"
-                      alt="ChatGPT AI"
+                      src="./assets/contributor-claude-code.svg"
+                      alt="Claude Code CLI"
+                      className="inline-block h-8 w-8 rounded-full ring-2 ring-[#f97316] object-cover bg-surface"
+                    />
+                    <img
+                      src="./assets/contributor-codex.svg"
+                      alt="OpenAI Codex Agent"
                       className="inline-block h-8 w-8 rounded-full ring-2 ring-[#34d399] object-cover bg-surface"
                     />
                   </div>
                   <div>
                     <div className="font-mono text-xs font-bold text-ink group-hover:text-accent transition-colors flex items-center gap-1.5">
-                      <span>Contributors</span>
+                      <span>Collaborators</span>
                       <span className="border border-line bg-accentDim text-accent px-1.5 py-0.2 rounded-full text-[10px] font-bold">
-                        5
+                        8
                       </span>
                     </div>
                     <span className="font-mono text-[10px] text-muted">
-                      2 Humans · 3 Frontier AI Models
+                      2 Humans · 3 Coding Agents · 3 Chatbots
                     </span>
                   </div>
                 </div>

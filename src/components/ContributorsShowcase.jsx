@@ -9,12 +9,13 @@ import {
 } from './Icons';
 
 export default function ContributorsShowcase({ onPlaySound }) {
-  const [activeFilter, setActiveFilter] = useState('all'); // 'all' | 'human' | 'ai'
+  const [activeFilter, setActiveFilter] = useState('all'); // 'all' | 'human' | 'agent' | 'chatbot'
   const [selectedId, setSelectedId] = useState(CONTRIBUTORS[0]?.id || 'kon-kurosaki');
 
   const filteredContributors = CONTRIBUTORS.filter((c) => {
     if (activeFilter === 'human') return c.category === 'human';
-    if (activeFilter === 'ai') return c.category === 'ai';
+    if (activeFilter === 'agent') return c.category === 'agent';
+    if (activeFilter === 'chatbot') return c.category === 'chatbot';
     return true;
   });
 
@@ -29,6 +30,15 @@ export default function ContributorsShowcase({ onPlaySound }) {
   const handleFilterChange = (filter) => {
     onPlaySound?.('switch');
     setActiveFilter(filter);
+    const nextList = CONTRIBUTORS.filter((c) => {
+      if (filter === 'human') return c.category === 'human';
+      if (filter === 'agent') return c.category === 'agent';
+      if (filter === 'chatbot') return c.category === 'chatbot';
+      return true;
+    });
+    if (nextList.length > 0 && !nextList.some((c) => c.id === selectedId)) {
+      setSelectedId(nextList[0].id);
+    }
   };
 
   return (
@@ -39,7 +49,7 @@ export default function ContributorsShowcase({ onPlaySound }) {
         className="pointer-events-none select-none absolute -bottom-10 right-6 overflow-hidden opacity-[0.03] font-classical font-semibold text-[7rem] sm:text-[10rem] tracking-[0.1em] text-ink leading-none whitespace-nowrap z-0"
         data-bg-motion="contributors-watermark"
       >
-        COLLECTIVE // 05
+        COLLECTIVE // 08
       </div>
 
       <div className="p-6 sm:p-10 lg:p-12 relative z-10">
@@ -48,13 +58,13 @@ export default function ContributorsShowcase({ onPlaySound }) {
           <div>
             <div className="flex items-center gap-2 font-mono text-[11px] tracking-[0.2em] uppercase text-accent font-bold mb-2">
               <span className="w-2 h-2 rounded-full bg-accent animate-pulse" />
-              <span>THE ALLIANCE // 5 VERIFIED CONTRIBUTORS · 200 COMMITS</span>
+              <span>THE ALLIANCE // 8 COLLABORATORS · 200 VERIFIED COMMITS</span>
             </div>
             <h3 className="font-display text-2xl sm:text-4xl font-extrabold tracking-tight text-ink">
-              Human Architects &amp; Synthetic Intelligence
+              Human Architects, Autonomous Agents &amp; AI Chatbots
             </h3>
             <p className="mt-2 text-sm sm:text-base text-muted max-w-3xl leading-relaxed">
-              Software engineering is no longer solitary. The PK Studio codebase is co-authored by human vision and frontier AI reasoning—pairing biological intuition with autonomous agentic intelligence.
+              Software engineering is no longer solitary. The PK Studio ecosystem is co-authored across three complementary tiers: human vision, autonomous coding agents with terminal automation, and conversational AI chatbots.
             </p>
           </div>
 
@@ -69,7 +79,7 @@ export default function ContributorsShowcase({ onPlaySound }) {
                   : 'border-line bg-surface text-muted hover:text-ink'
               }`}
             >
-              All Contributors (5)
+              All Collaborators (8)
             </button>
             <button
               type="button"
@@ -84,20 +94,31 @@ export default function ContributorsShowcase({ onPlaySound }) {
             </button>
             <button
               type="button"
-              onClick={() => handleFilterChange('ai')}
+              onClick={() => handleFilterChange('agent')}
               className={`border px-3.5 py-1.5 transition-colors ${
-                activeFilter === 'ai'
+                activeFilter === 'agent'
                   ? 'border-accent bg-accentDim text-ink font-bold shadow-sm'
                   : 'border-line bg-surface text-muted hover:text-ink'
               }`}
             >
-              Synthetic Models (3)
+              Autonomous Agents (3)
+            </button>
+            <button
+              type="button"
+              onClick={() => handleFilterChange('chatbot')}
+              className={`border px-3.5 py-1.5 transition-colors ${
+                activeFilter === 'chatbot'
+                  ? 'border-accent bg-accentDim text-ink font-bold shadow-sm'
+                  : 'border-line bg-surface text-muted hover:text-ink'
+              }`}
+            >
+              AI Chatbots (3)
             </button>
           </div>
         </div>
 
-        {/* 5 Prominent Contributor Cards Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-4 mt-8">
+        {/* Responsive Grid of Cards */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mt-8">
           {filteredContributors.map((c) => {
             const isSelected = c.id === selectedId;
             return (
@@ -120,7 +141,7 @@ export default function ContributorsShowcase({ onPlaySound }) {
                   <div className="flex items-start justify-between gap-3 mb-4">
                     <div className="relative">
                       <div
-                        className={`w-16 h-16 rounded-full p-0.5 transition-transform duration-300 group-hover:scale-105 ${
+                        className={`w-14 h-14 sm:w-16 sm:h-16 rounded-full p-0.5 transition-transform duration-300 group-hover:scale-105 ${
                           c.badgeTone === 'gold'
                             ? 'ring-2 ring-accent/80 shadow-[0_0_12px_rgba(212,165,40,0.3)]'
                             : c.badgeTone === 'cyan'
@@ -151,7 +172,15 @@ export default function ContributorsShowcase({ onPlaySound }) {
                       />
                     </div>
 
-                    <span className="font-mono text-[10px] text-muted border border-line bg-surface px-1.5 py-0.5 uppercase tracking-wider">
+                    <span
+                      className={`font-mono text-[10px] px-1.5 py-0.5 uppercase tracking-wider ${
+                        c.roleTag === 'AGENT'
+                          ? 'border border-accent/60 bg-accentDim text-accent font-bold'
+                          : c.roleTag === 'CHATBOT'
+                          ? 'border border-line bg-surface text-muted'
+                          : 'border border-line bg-surface text-ink font-semibold'
+                      }`}
+                    >
                       {c.roleTag}
                     </span>
                   </div>
@@ -187,12 +216,23 @@ export default function ContributorsShowcase({ onPlaySound }) {
                   </div>
 
                   {/* Role & Model */}
-                  <p className="text-xs text-ink/90 font-medium leading-snug mb-2">
+                  <p className="text-xs text-ink/90 font-medium leading-snug mb-1.5">
                     {c.role}
                   </p>
-                  <p className="font-mono text-[11px] text-muted leading-relaxed line-clamp-3">
+                  <p className="font-mono text-[11px] text-muted leading-relaxed line-clamp-2">
                     {c.focus}
                   </p>
+
+                  {/* Counterpart Pill */}
+                  <div className="mt-3 pt-2 border-t border-lineSoft flex items-center justify-between font-mono text-[10px] text-muted">
+                    <span className="uppercase text-[9px] tracking-wider text-muted">
+                      {c.category === 'agent'
+                        ? 'Autonomous Agent'
+                        : c.category === 'chatbot'
+                        ? 'Conversational Chat'
+                        : 'Human Architect'}
+                    </span>
+                  </div>
                 </div>
 
                 {/* Footer Metrics */}
@@ -235,6 +275,22 @@ export default function ContributorsShowcase({ onPlaySound }) {
                 <span className="font-mono text-[10px] text-muted uppercase">
                   STATUS: {selectedContributor.status}
                 </span>
+                <span className="text-line">•</span>
+                <span
+                  className={`font-mono text-[10px] uppercase font-bold px-1.5 py-0.2 border ${
+                    selectedContributor.category === 'agent'
+                      ? 'border-accent/60 bg-accentDim text-accent'
+                      : selectedContributor.category === 'chatbot'
+                      ? 'border-line bg-surface text-muted'
+                      : 'border-[#38bdf8]/40 bg-[#38bdf8]/10 text-[#38bdf8]'
+                  }`}
+                >
+                  {selectedContributor.category === 'agent'
+                    ? 'AUTONOMOUS AGENT (TERMINAL & TOOL EXECUTION)'
+                    : selectedContributor.category === 'chatbot'
+                    ? 'CONVERSATIONAL CHATBOT (WEB & PROMPT INTERFACE)'
+                    : 'HUMAN CREATOR (CORE DECISION MAKER)'}
+                </span>
               </div>
               <h4 className="font-display text-xl sm:text-2xl font-bold text-ink">
                 {selectedContributor.name} ({selectedContributor.handle})
@@ -242,6 +298,14 @@ export default function ContributorsShowcase({ onPlaySound }) {
               <p className="mt-1.5 text-sm text-muted max-w-2xl leading-relaxed">
                 {selectedContributor.description}
               </p>
+
+              {/* Counterpart Ecosystem Note */}
+              {selectedContributor.pairedWith && (
+                <div className="mt-2.5 font-mono text-xs text-accent/90 flex items-center gap-1.5">
+                  <span className="text-muted">COLLABORATIVE PAIR:</span>
+                  <span>{selectedContributor.pairedWith}</span>
+                </div>
+              )}
 
               {/* Key Contributions List */}
               <div className="mt-4 flex flex-wrap gap-2">
@@ -258,7 +322,7 @@ export default function ContributorsShowcase({ onPlaySound }) {
             </div>
           </div>
 
-          {/* Quick Action to External GitHub Profile / System Link */}
+          {/* Quick Action to External Link */}
           <div className="shrink-0 flex sm:flex-col items-center sm:items-end justify-between gap-3 pt-4 lg:pt-0 border-t lg:border-t-0 border-lineSoft">
             <a
               href={selectedContributor.profileUrl}
@@ -267,7 +331,7 @@ export default function ContributorsShowcase({ onPlaySound }) {
               onClick={() => onPlaySound?.('switch')}
               className="inline-flex items-center gap-2 bg-invertBg text-invertFg px-5 py-2.5 hud-label hover:opacity-90 transition-opacity whitespace-nowrap"
             >
-              {selectedContributor.category === 'human' ? (
+              {selectedContributor.category === 'human' || selectedContributor.profileUrl.includes('github.com') ? (
                 <IconGitHub className="w-4 h-4" />
               ) : (
                 <IconTerminal className="w-4 h-4" />
