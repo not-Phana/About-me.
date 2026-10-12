@@ -1,35 +1,22 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
   <defs>
-    <radialGradient id="cc-bg" cx="50%" cy="50%" r="50%">
-      <stop offset="0%" stop-color="#431407"/>
-      <stop offset="100%" stop-color="#0c0704"/>
+    <radialGradient id="claude-code-bg" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#2c150e"/>
+      <stop offset="100%" stop-color="#0e0705"/>
     </radialGradient>
-    <linearGradient id="cc-glow" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#fdba74"/>
-      <stop offset="50%" stop-color="#f97316"/>
-      <stop offset="100%" stop-color="#c2410c"/>
-    </linearGradient>
   </defs>
-  <!-- Background circle -->
-  <circle cx="64" cy="64" r="62" fill="url(#cc-bg)" stroke="#f97316" stroke-width="2" stroke-opacity="0.4"/>
-  <!-- Anthropic Sunburst Rays (Outer) -->
-  <g stroke="url(#cc-glow)" stroke-width="4.5" stroke-linecap="round" opacity="0.45">
-    <line x1="64" y1="16" x2="64" y2="28"/>
-    <line x1="64" y1="100" x2="64" y2="112"/>
-    <line x1="16" y1="64" x2="28" y2="64"/>
-    <line x1="100" y1="64" x2="112" y2="64"/>
-    <line x1="30" y1="30" x2="39" y2="39"/>
-    <line x1="89" y1="89" x2="98" y2="98"/>
-    <line x1="98" y1="30" x2="89" y2="39"/>
-    <line x1="39" y1="89" x2="30" y2="98"/>
+  <circle cx="32" cy="32" r="31" fill="url(#claude-code-bg)" stroke="#d97757" stroke-width="1.2" stroke-opacity="0.5"/>
+  <!-- Claude Code Official Anthropic Mark -->
+  <g transform="translate(14, 13) scale(1.5)">
+    <path
+      clip-rule="evenodd"
+      d="M 20.998,10.949 H 24 v 3.102 h -3 v 3.028 H 19.513 V 20 H 18 V 17.079 H 16.513 V 20 H 15 V 17.079 H 9 V 20 H 7.488 V 17.079 H 6 V 20 H 4.487 V 17.079 H 3 V 14.05 H 0 v -3.1 H 3 V 5 H 20.998 Z M 6,10.949 H 7.488 V 8.102 H 6 Z m 10.51,0 H 18 V 8.102 h -1.49 z"
+      fill="#d97757"
+      fill-rule="evenodd"
+    />
   </g>
-  <!-- Inner Terminal Monolith -->
-  <rect x="34" y="36" width="60" height="56" rx="8" fill="#180b06" stroke="#f97316" stroke-width="2.2"/>
-  <!-- Terminal Header Dots -->
-  <circle cx="44" cy="45" r="2" fill="#ea580c"/>
-  <circle cx="51" cy="45" r="2" fill="#ea580c" opacity="0.6"/>
-  <circle cx="58" cy="45" r="2" fill="#ea580c" opacity="0.3"/>
-  <!-- Terminal Prompt >_ -->
-  <path d="M 46 58 L 56 66 L 46 74" fill="none" stroke="#fdba74" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-  <line x1="62" y1="74" x2="74" y2="74" stroke="#fdba74" stroke-width="3" stroke-linecap="round"/>
+  <!-- Mini Terminal Prompt Badge in bottom-right -->
+  <rect x="36" y="36" width="20" height="18" rx="4" fill="#0e0705" stroke="#f97316" stroke-width="1.4"/>
+  <path d="M 40 45 L 44 48 L 40 51" fill="none" stroke="#fdba74" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+  <line x1="46" y1="51" x2="52" y2="51" stroke="#fdba74" stroke-width="1.4" stroke-linecap="round"/>
 </svg>

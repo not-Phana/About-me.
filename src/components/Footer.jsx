@@ -105,6 +105,20 @@ const FOOTER_TECH_DOSSIERS = [
     icon: IconCpu,
     status: 'DESIGN PHASE',
   },
+  {
+    id: 'ai-cognitive-pipeline',
+    index: 'SPEC 07',
+    category: 'AGENTIC ENGINEERING',
+    name: 'Autonomous AI Agents & Cognitive Pipeline',
+    subtitle: 'Pairing biological human vision with Antigravity, Claude Code, and Codex execution.',
+    description:
+      'Software engineering has evolved into an alliance between human architecture and synthetic execution. Antigravity (Google DeepMind) executes autonomous terminal commands, inspects live viewports via Edge CDP, and validates Vite builds. Claude Code (Anthropic) refactors source trees and invariant proofs in the CLI. Codex (OpenAI) synthesizes algorithmic pipelines and Khmer NiDA Unicode tables. Conversational chatbots (Gemini, Claude, ChatGPT) assist with ideation and prompt crafting, while human architect Phana Kurosaki maintains total creative direction, verification, and code ownership.',
+    pills: ['Google DeepMind Antigravity', 'Anthropic Claude Code', 'OpenAI Codex', 'Human-Directed Architecture'],
+    link: '#contributors',
+    linkLabel: 'Inspect 8 Collaborators',
+    icon: IconCode,
+    status: 'ACTIVE PIPELINE',
+  },
 ];
 
 const LEGAL_COMPLIANCE_CLAUSES = [
@@ -120,9 +134,11 @@ const LEGAL_COMPLIANCE_CLAUSES = [
       'GitHub and the GitHub Octocat logo are registered trademarks of GitHub, Inc., a subsidiary of Microsoft Corporation.',
       'Microsoft, Monaco Editor, Windows, and Visual Studio Code are registered trademarks of Microsoft Corporation in the United States and other jurisdictions.',
       'Meta, Facebook, and Messenger are registered trademarks or service marks of Meta Platforms, Inc.',
-      'Google, Gmail, Chrome, and Chromium are registered trademarks of Google LLC / Alphabet Inc.',
+      'Google, Gmail, Chrome, Chromium, Gemini, Antigravity, and Google DeepMind are trademarks or registered trademarks of Google LLC / Alphabet Inc.',
+      'Anthropic, Claude, and Claude Code are trademarks or service marks of Anthropic PBC in the United States and other jurisdictions.',
+      'OpenAI, ChatGPT, and Codex are trademarks or service marks of OpenAI OpCo, LLC in the United States and other jurisdictions.',
       'React is open-source software maintained by Meta Open Source; Vite is maintained by Evan You and Vite Contributors; Electron is a project of the OpenJS Foundation.',
-      'Disclaimer of Affiliation: Phana Kurosaki (PK) is an independent software developer. Neither this portfolio nor any hosted projects are sponsored, endorsed, certified, or formally affiliated with GitHub, Microsoft, Meta, Google, or any other trademark owner mentioned herein.',
+      'Disclaimer of Affiliation: Phana Kurosaki (PK) is an independent software developer. Neither this portfolio nor any hosted projects are sponsored, endorsed, certified, or formally affiliated with GitHub, Microsoft, Meta, Google, Alphabet, Google DeepMind, Anthropic, OpenAI, or any other trademark owner mentioned herein.',
     ],
     pills: ['Nominative Fair Use', 'No Endorsement Implied', 'Independent Development', '15 U.S.C. § 1115(b)(4)'],
     badge: 'DISCLAIMER ACTIVE',
@@ -226,6 +242,27 @@ const LEGAL_COMPLIANCE_CLAUSES = [
     icon: IconMail,
     externalLink: 'mailto:phleyphana@gmail.com?subject=%5BLEGAL%20%2F%20IP%20INQUIRY%5D%20Notice%20of%20Claimed%20Infringement',
     externalLinkLabel: 'Transmit Legal Inquiry to phleyphana@gmail.com',
+  },
+  {
+    id: 'ai-safe-harbor',
+    num: 'CLAUSE 07',
+    category: 'AI CITATION & STATUTORY SAFE HARBOR',
+    statute: 'US Copyright Office AI Guidance / Fair Use / Non-Affiliation',
+    title: 'Autonomous AI Agents, Chatbots & Complete Statutory Safe Harbor',
+    summary:
+      'Full legal disclosure regarding the auxiliary use of third-party Artificial Intelligence developer tools, autonomous coding agents (Google DeepMind Antigravity, Anthropic Claude Code, OpenAI Codex), and conversational chatbots (Gemini, Claude, ChatGPT). Establishes independent developer authorship, non-affiliation, and total exclusion of liability to prevent frivolous litigation.',
+    details: [
+      'Two-Tier AI Architecture Disclosure: The PK Studio codebase is developed utilizing artificial intelligence in two clearly demarcated categories: (a) Autonomous Coding Agents (Antigravity by Google DeepMind, Claude Code by Anthropic, Codex by OpenAI) operating via command-line interfaces, terminal subprocesses, AST code modifications, and build verification scripts; and (b) Conversational AI Chatbots (Gemini, Claude, ChatGPT) used exclusively for exploratory ideation, prompt drafting, and design dialogues.',
+      'Absolute Non-Affiliation & Corporate Separation: Phana Kurosaki (PK) is an independent private developer. There is no corporate partnership, joint venture, agency, endorsement, sponsorship, or employment relationship between the author and Google LLC, Alphabet Inc., Google DeepMind, Anthropic PBC, OpenAI OpCo, LLC, or Microsoft Corporation. All AI logos, product names, and brand badges are referenced solely under the doctrine of Nominative Fair Use (15 U.S.C. § 1115(b)(4)) to truthfully credit the developer tooling used during engineering.',
+      'Human Authorship & Copyright Sovereignty: In compliance with the United States Copyright Office Policy Statement on Copyright Registration Guidance for Works Containing Materials Generated by AI (88 FR 16190), all human architecture, creative direction, system invariants, UI styling, sound synthesis algorithms, Khmer orthographic logic, and final deployment approvals are original creative expressions originated and directed by Phana Kurosaki. Third-party AI agents operate strictly as auxiliary assistive instruments and compilers under direct human orchestration.',
+      'Complete Liability & Indemnity Shield: All code, algorithms, visual components, and web applications co-authored with AI tools are released "AS IS" under the MIT License without warranties of any kind. Under no circumstances shall the author be liable for any claims, damages, patent disputes, downstream deployments, or third-party interpretations arising from the use of AI tools or associated repositories.',
+      'Expedited Good-Faith Remediation: Any rightsholder or enterprise possessing questions or concerns regarding nominative attribution or logo display is invited to contact phleyphana@gmail.com for instant amicable resolution within 24 to 48 hours, fully precluding the necessity of adversarial legal proceedings.',
+    ],
+    pills: ['US Copyright Office Guidance', 'Nominative Fair Use', 'Zero Corporate Affiliation', 'MIT Warranty Exclusion', '24-48h Remediation'],
+    badge: 'LEGAL SAFE HARBOR',
+    icon: IconShield,
+    externalLink: 'https://www.copyright.gov/ai/',
+    externalLinkLabel: 'US Copyright Office AI Guidance',
   },
 ];
 
@@ -526,8 +563,7 @@ export default function Footer({ onNavigateHome, onPlaySound }) {
                 How It Works &amp; Statutory Legal Ledger
               </h3>
               <p className="mt-1 text-xs text-muted max-w-3xl leading-relaxed">
-                Technical explanations of core architectures alongside audited legal disclosures covering third-party trademark fair use (15 U.S.C. § 1115(b)(4)),
-                Khmer NiDA standards, The Met CC0 public domain art, and MIT "AS IS" liability waivers.
+                Technical explanations of core architectures alongside audited statutory legal disclosures covering third-party AI agents (Antigravity, Claude Code, Codex), conversational chatbots, trademark fair use (15 U.S.C. § 1115(b)(4)), Khmer NiDA standards, The Met CC0 public domain art, and MIT "AS IS" liability waivers.
               </p>
             </div>
 
@@ -546,7 +582,7 @@ export default function Footer({ onNavigateHome, onPlaySound }) {
                 }`}
               >
                 <IconCode className="w-3.5 h-3.5" />
-                <span>TECH SPECS (6)</span>
+                <span>TECH SPECS ({FOOTER_TECH_DOSSIERS.length})</span>
               </button>
 
               <button
@@ -562,7 +598,7 @@ export default function Footer({ onNavigateHome, onPlaySound }) {
                 }`}
               >
                 <IconShield className="w-3.5 h-3.5" />
-                <span>LEGAL SHIELD (6)</span>
+                <span>LEGAL SHIELD ({LEGAL_COMPLIANCE_CLAUSES.length})</span>
               </button>
 
               <button
@@ -578,7 +614,7 @@ export default function Footer({ onNavigateHome, onPlaySound }) {
                 }`}
               >
                 <IconGrid className="w-3.5 h-3.5" />
-                <span>ALL COMPACT (12)</span>
+                <span>ALL COMPACT ({FOOTER_TECH_DOSSIERS.length + LEGAL_COMPLIANCE_CLAUSES.length})</span>
               </button>
 
               <a

@@ -323,7 +323,7 @@ export default function GitHubSection({ onPlaySound }) {
                       className="inline-block h-8 w-8 rounded-full ring-2 ring-[#38bdf8] object-cover bg-surface"
                     />
                     <img
-                      src="./assets/contributor-antigravity.svg"
+                      src="./assets/contributor-antigravity.png"
                       alt="Antigravity Agent"
                       className="inline-block h-8 w-8 rounded-full ring-2 ring-[#818cf8] object-cover bg-surface"
                     />
