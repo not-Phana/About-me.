@@ -12,6 +12,7 @@ import {
   IconTerminal,
   IconClose,
 } from './Icons';
+import ContributorsShowcase from './ContributorsShowcase';
 
 function formatDate(isoString) {
   if (!isoString) return 'Unknown';
@@ -36,7 +37,7 @@ const LANG_COLORS = {
   Other: '#a1a1aa',
 };
 
-export default function GitHubSection() {
+export default function GitHubSection({ onPlaySound }) {
   const { profile, repos, status, errorMessage, refresh } = useGitHubData();
   const [repoFilter, setRepoFilter] = useState('original'); // 'original' | 'all'
   const [selectedLang, setSelectedLang] = useState('');
@@ -301,6 +302,61 @@ export default function GitHubSection() {
                 </dd>
               </div>
             </dl>
+
+            {/* Quick Contributor Avatars Header Pill */}
+            <div className="mt-5 pt-4 border-t border-lineSoft">
+              <a
+                href="#contributors"
+                onClick={() => onPlaySound?.('switch')}
+                className="group flex items-center justify-between border border-line bg-surface/80 hover:border-accent hover:bg-surface p-3 transition-colors text-left"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="flex -space-x-2.5 overflow-hidden">
+                    <img
+                      src="./assets/contributor-phana.jpg"
+                      alt="Phanna Kurosaki"
+                      className="inline-block h-8 w-8 rounded-full ring-2 ring-accent object-cover bg-surface"
+                    />
+                    <img
+                      src="./assets/contributor-kon.jpg"
+                      alt="Kon Kurosaki"
+                      className="inline-block h-8 w-8 rounded-full ring-2 ring-[#38bdf8] object-cover bg-surface"
+                    />
+                    <img
+                      src="./assets/contributor-claude.png"
+                      alt="Claude AI"
+                      className="inline-block h-8 w-8 rounded-full ring-2 ring-[#f97316] object-cover bg-surface"
+                    />
+                    <img
+                      src="./assets/contributor-gemini.png"
+                      alt="Gemini AI"
+                      className="inline-block h-8 w-8 rounded-full ring-2 ring-[#818cf8] object-cover bg-surface"
+                    />
+                    <img
+                      src="./assets/contributor-chatgpt.png"
+                      alt="ChatGPT AI"
+                      className="inline-block h-8 w-8 rounded-full ring-2 ring-[#34d399] object-cover bg-surface"
+                    />
+                  </div>
+                  <div>
+                    <div className="font-mono text-xs font-bold text-ink group-hover:text-accent transition-colors flex items-center gap-1.5">
+                      <span>Contributors</span>
+                      <span className="border border-line bg-accentDim text-accent px-1.5 py-0.2 rounded-full text-[10px] font-bold">
+                        5
+                      </span>
+                    </div>
+                    <span className="font-mono text-[10px] text-muted">
+                      2 Humans · 3 Frontier AI Models
+                    </span>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-1 font-mono text-[11px] text-accent group-hover:underline shrink-0">
+                  <span>Inspect</span>
+                  <IconArrowUpRight className="w-3 h-3" />
+                </div>
+              </a>
+            </div>
           </div>
 
           {/* Right: Official API Repository Activity Cadence (2026) */}
@@ -364,6 +420,9 @@ export default function GitHubSection() {
             </div>
           </div>
         </div>
+
+        {/* Core Contributors // The Human & AI Engineering Collective (5) */}
+        <ContributorsShowcase onPlaySound={onPlaySound} />
 
         {/* Repository Filter Bar */}
         <div className="border-b border-line bg-surface px-6 py-4 sm:px-10 flex flex-wrap items-center justify-between gap-4">

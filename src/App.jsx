@@ -318,7 +318,7 @@ export default function App() {
               onToggleTheme={toggleTheme}
               onPlaySound={triggerSound}
             />
-            <GitHubSection />
+            <GitHubSection onPlaySound={triggerSound} />
             <CurrentlyBuilding
               projects={PROJECTS}
               onSelectProject={handleSelectProject}

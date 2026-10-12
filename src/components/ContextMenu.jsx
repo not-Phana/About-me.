@@ -406,6 +406,18 @@ export default function ContextMenu({
 
         <button
           type="button"
+          onClick={() => handleJumpSection('contributors')}
+          className="flex w-full items-center justify-between border border-line bg-surface px-2.5 py-1.5 text-left font-mono text-[10px] text-ink transition-colors hover:border-accent hover:bg-surface2"
+        >
+          <div className="flex items-center gap-2">
+            <IconTerminal className="w-3.5 h-3.5 text-accent" />
+            <span>Core Contributors (5)</span>
+          </div>
+          <span className="text-[9px] font-mono text-accent font-bold">HUMAN &amp; AI</span>
+        </button>
+
+        <button
+          type="button"
           onClick={() => handleJumpSection('footer-legal-section')}
           className="flex w-full items-center justify-between border border-line bg-surface px-2.5 py-1.5 text-left font-mono text-[10px] text-ink transition-colors hover:border-accent hover:bg-surface2"
         >

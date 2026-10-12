@@ -81,6 +81,16 @@ export default function CommandPalette({
       },
     },
     {
+      id: 'nav-contributors',
+      group: 'STUDIO NAVIGATION & CONTROLS',
+      label: 'Inspect Core Contributors (Human & AI Collective)',
+      meta: '5 Contributors // Phana, Kon, Claude, Gemini, ChatGPT',
+      run: () => {
+        onNavigateHome('contributors');
+        onClose();
+      },
+    },
+    {
       id: 'toggle-theme',
       group: 'STUDIO NAVIGATION & CONTROLS',
       label: `Switch Theme Mode (Current: ${theme.toUpperCase()})`,
