@@ -205,7 +205,7 @@ export default function HeroSection({
           className="font-classical italic text-[11px] sm:text-xs tracking-[0.24em] text-accent/60 mb-1 select-none flex items-center gap-2"
         >
           <span className="w-3 h-[1px] bg-accent/40 inline-block" />
-          <span>// ΕΠΙΓΡΑΦΗ · PHANNA KUROSAKI //</span>
+          <span>// ΕΠΙΓΡΑΦΗ · PHANA KUROSAKI //</span>
           <span className="w-3 h-[1px] bg-accent/40 inline-block" />
         </div>
 
@@ -214,7 +214,7 @@ export default function HeroSection({
             data-bg-motion="hero-name-1"
             className="text-[3.8rem] sm:text-[6rem] lg:text-[7.5rem] xl:text-[8.5rem] whitespace-nowrap text-stroke-watermark"
           >
-            Phanna
+            Phana
           </div>
           <div
             data-bg-motion="hero-name-2"

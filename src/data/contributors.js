@@ -3,64 +3,67 @@
  * ---------------------------------------------------------------------------
  * Verified co-authors, maintainers, and synthetic intelligence models
  * contributing to the PK Studio open-source ecosystem.
+ *
+ * Sourced directly from GitHub REST API contributor telemetry for
+ * not-Phana/PK-Khmer-Type (200 total commits).
  */
 
 export const CONTRIBUTORS = [
   {
-    id: 'phana',
+    id: 'kon-kurosaki',
     name: 'Phana Kurosaki',
-    handle: '@not-Phana',
-    profileUrl: 'https://github.com/not-Phana',
-    avatar: './assets/contributor-phana.jpg',
+    handle: '@Kon-Kurosaki',
+    profileUrl: 'https://github.com/Kon-Kurosaki',
+    avatar: './assets/avatar-kon-kurosaki.jpg',
     avatarFallback: 'https://avatars.githubusercontent.com/u/297607780?v=4',
     category: 'human',
-    typeBadge: 'LEAD ARCHITECT',
+    typeBadge: 'LEAD CONTRIBUTOR',
     badgeTone: 'gold',
     model: 'Biological Neural Network',
-    role: 'Founder & Full-Stack Architect',
-    focus: 'UI/UX Design · Full-Stack Systems · Creative Direction',
+    role: 'Lead Architect & Full-Stack Core',
+    focus: 'Core Engine · Interactive Lessons · UI/UX Systems',
     status: 'ONLINE // ACTIVE',
     statusDotColor: '#4ade80',
     description:
-      'Creator of PK Studio, PK Khmer Type, and interactive web engines. Directs the human vision and coordinates autonomous AI agents into cohesive production software.',
+      'Lead author with 167 verified commits on PK Khmer Type. Built the core interactive typing engine, 218 lessons, state management, and real-time audio telemetry.',
     keyContributions: [
-      'PK Khmer Type tactile engine & 218 interactive lessons',
-      'Architectural vision, aesthetics, and sound engineering',
-      'State-driven custom physics and reactive telemetry'
+      '167 verified commits on PK Khmer Type',
+      'Tactile typing engine & 218 interactive lessons',
+      'Full-stack architecture & reactive telemetry'
     ],
-    commitsCount: '150+ Commits',
+    commitsCount: '167 Commits',
     roleTag: 'HUMAN'
   },
   {
-    id: 'kon',
-    name: 'Kon Kurosaki',
-    handle: '@Kon-Kurosaki',
-    profileUrl: 'https://github.com/Kon-Kurosaki',
-    avatar: './assets/contributor-kon.jpg',
+    id: 'not-phana',
+    name: 'Phana',
+    handle: '@not-Phana',
+    profileUrl: 'https://github.com/not-Phana',
+    avatar: './assets/avatar-not-phana.jpg',
     avatarFallback: 'https://avatars.githubusercontent.com/u/255106015?v=4',
     category: 'human',
-    typeBadge: 'CORE MAINTAINER',
+    typeBadge: 'REPO OWNER',
     badgeTone: 'cyan',
-    model: 'Systems & Runtime Ops',
-    role: 'Core Systems Maintainer',
-    focus: 'Pipeline Automation · Repository Ops · Multi-Branch Syncing',
+    model: 'Biological Neural Network',
+    role: 'Repository Owner & Creator',
+    focus: 'Ecosystem Architecture · Repo Hygiene · Releases',
     status: 'ONLINE // SYNCED',
     statusDotColor: '#38bdf8',
     description:
-      'Co-maintains repository pipelines, milestone execution, dependency trees, and cross-platform verification across production releases.',
+      'Official repository owner of not-Phana/PK-Khmer-Type and PK Studio ecosystems with 30 verified commits. Directs public releases, documentation, and web hosting.',
     keyContributions: [
-      'Continuous build and deployment pipelines',
-      'Multi-branch pull request lifecycle and repo hygiene',
-      'Cross-platform desktop and web verification'
+      '30 verified commits & repository owner',
+      'Public GitHub Pages deployment & domain ops',
+      'Ecosystem integration and community tools'
     ],
-    commitsCount: '60+ Commits',
+    commitsCount: '30 Commits',
     roleTag: 'HUMAN'
   },
   {
     id: 'claude',
     name: 'Claude',
     handle: '@claude',
-    profileUrl: 'https://claude.ai',
+    profileUrl: 'https://github.com/claude',
     avatar: './assets/contributor-claude.png',
     avatarFallback: 'https://avatars.githubusercontent.com/u/81847?v=4',
     category: 'ai',
@@ -72,20 +75,20 @@ export const CONTRIBUTORS = [
     status: 'AUTONOMOUS // READY',
     statusDotColor: '#f97316',
     description:
-      'Powers deep structural code reasoning, philosophical curation (Delphic maxims), and component architectural refinement with strict logic verification.',
+      'Verified co-author on PK Khmer Type with 1 commit. Provided deep structural code reasoning, philosophical curation, and component architectural refinement.',
     keyContributions: [
+      '1 verified commit on PK Khmer Type',
       'Greek philosophical framework & curator integration',
-      'Component modularization and high-order refactoring',
       'Edge-case state handling and invariant proofs'
     ],
-    commitsCount: '45+ Commits',
+    commitsCount: '1 Commit',
     roleTag: 'SYNTHETIC'
   },
   {
     id: 'gemini',
     name: 'Gemini',
     handle: '@gemini-code-assist',
-    profileUrl: 'https://gemini.google.com',
+    profileUrl: 'https://github.com/apps/gemini-code-assist',
     avatar: './assets/contributor-gemini.png',
     avatarFallback: 'https://avatars.githubusercontent.com/in/956858?v=4',
     category: 'ai',
@@ -97,20 +100,20 @@ export const CONTRIBUTORS = [
     status: 'AUTONOMOUS // ACTIVE',
     statusDotColor: '#818cf8',
     description:
-      'Acts as the live autonomous agentic pair programmer—handling terminal execution, Vite build validation, browser CDP visual testing, and zero-emoji compliance audits.',
+      'Verified co-author on PK Khmer Type with 1 commit. Autonomous agentic pair programmer for terminal execution, Vite build validation, and headless visual verification.',
     keyContributions: [
+      '1 verified commit on PK Khmer Type',
       'Headless Edge CDP visual verification engine',
-      'Custom precision cursor vector transformation',
-      'Automated deployment scripts and GitHub milestone triggers'
+      'Custom precision cursor vector transformation'
     ],
-    commitsCount: '70+ Commits',
+    commitsCount: '1 Commit',
     roleTag: 'SYNTHETIC'
   },
   {
     id: 'chatgpt',
     name: 'ChatGPT',
     handle: '@chatgpt-codex-connector',
-    profileUrl: 'https://chatgpt.com',
+    profileUrl: 'https://github.com/apps/chatgpt-codex-connector',
     avatar: './assets/contributor-chatgpt.png',
     avatarFallback: 'https://avatars.githubusercontent.com/in/1144995?v=4',
     category: 'ai',
@@ -122,13 +125,13 @@ export const CONTRIBUTORS = [
     status: 'AUTONOMOUS // STANDBY',
     statusDotColor: '#34d399',
     description:
-      'Assists with rapid algorithm prototyping, Unicode char-code mapping tables for Khmer NiDA keyboards, and complex regular expression compilation.',
+      'Verified co-author on PK Khmer Type with 1 commit. Assisted with Unicode character-code mapping tables for Khmer NiDA keyboards and algorithm prototyping.',
     keyContributions: [
+      '1 verified commit on PK Khmer Type',
       'Khmer NiDA character stacking tables & unicode maps',
-      'Complex regex parsing for keyboard layout validation',
       'Rapid prototype scaffolding and algorithmic templates'
     ],
-    commitsCount: '30+ Commits',
+    commitsCount: '1 Commit',
     roleTag: 'SYNTHETIC'
   }
 ];

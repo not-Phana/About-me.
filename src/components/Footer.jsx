@@ -122,7 +122,7 @@ const LEGAL_COMPLIANCE_CLAUSES = [
       'Meta, Facebook, and Messenger are registered trademarks or service marks of Meta Platforms, Inc.',
       'Google, Gmail, Chrome, and Chromium are registered trademarks of Google LLC / Alphabet Inc.',
       'React is open-source software maintained by Meta Open Source; Vite is maintained by Evan You and Vite Contributors; Electron is a project of the OpenJS Foundation.',
-      'Disclaimer of Affiliation: Phanna Kurosaki (PK) is an independent software developer. Neither this portfolio nor any hosted projects are sponsored, endorsed, certified, or formally affiliated with GitHub, Microsoft, Meta, Google, or any other trademark owner mentioned herein.',
+      'Disclaimer of Affiliation: Phana Kurosaki (PK) is an independent software developer. Neither this portfolio nor any hosted projects are sponsored, endorsed, certified, or formally affiliated with GitHub, Microsoft, Meta, Google, or any other trademark owner mentioned herein.',
     ],
     pills: ['Nominative Fair Use', 'No Endorsement Implied', 'Independent Development', '15 U.S.C. § 1115(b)(4)'],
     badge: 'DISCLAIMER ACTIVE',
@@ -179,7 +179,7 @@ const LEGAL_COMPLIANCE_CLAUSES = [
       'All source code, web applications, audio synthesizers, interactive canvas games (NEON PROTOCOL), developer tools, and algorithms published across this portfolio are provided on an "AS IS" and "AS AVAILABLE" basis without warranties of any kind.',
     details: [
       'Exclusion of Warranties: To the maximum extent permitted by applicable law, the author disclaims all representations and warranties, whether express, statutory, or implied, including but not limited to implied warranties of merchantability, fitness for a particular purpose, operational continuity, data accuracy, and non-infringement.',
-      'Limitation of Liability: Under no legal theory—whether in tort (including negligence), contract, strict liability, or otherwise—shall the author (Phanna Kurosaki / Phana Ach) be liable for any direct, indirect, incidental, special, exemplary, punitive, or consequential damages (including loss of data, loss of revenue, browser disruption, or hardware wear) arising from the use or inability to use this site, games, procedural audio routines, or associated code repositories.',
+      'Limitation of Liability: Under no legal theory—whether in tort (including negligence), contract, strict liability, or otherwise—shall the author (Phana Kurosaki / Phana Ach) be liable for any direct, indirect, incidental, special, exemplary, punitive, or consequential damages (including loss of data, loss of revenue, browser disruption, or hardware wear) arising from the use or inability to use this site, games, procedural audio routines, or associated code repositories.',
       'Client Sandbox Execution: All games, procedural WebAudio oscillators, and 60 FPS canvas loops execute strictly client-side inside the visitor\'s own browser sandbox at the visitor\'s sole election.',
     ],
     pills: ['MIT License Disclaimer', 'AS IS / AS AVAILABLE', 'Zero Author Liability', 'Client Sandbox Only'],
@@ -214,7 +214,7 @@ const LEGAL_COMPLIANCE_CLAUSES = [
     statute: '17 U.S.C. § 512 / Notice & Takedown Protocol',
     title: 'Intellectual Property Inquiries & DMCA Safe Harbor Channel',
     summary:
-      'Phanna Kurosaki upholds the intellectual property rights of all copyright holders, trademark owners, and cultural institutions. A good-faith expedited notice-and-takedown protocol is maintained for instant, amicable resolution.',
+      'Phana Kurosaki upholds the intellectual property rights of all copyright holders, trademark owners, and cultural institutions. A good-faith expedited notice-and-takedown protocol is maintained for instant, amicable resolution.',
     details: [
       'Direct Notification Channel: If you are a copyright or trademark owner or an authorized agent and believe in good faith that any content, code, imagery, or reference on this website infringes upon your protected intellectual property, please submit an inquiry directly via email.',
       'Official IP Inquiry Address: phleyphana@gmail.com with subject line: "[LEGAL / IP INQUIRY] Notice of Claimed Infringement".',
@@ -423,7 +423,7 @@ export default function Footer({ onNavigateHome, onPlaySound }) {
                     </span>
                     <div>
                       <div className="text-[11px] font-bold text-ink group-hover:text-accent transition-colors">
-                        Phanna Kurosaki
+                        Phana Kurosaki
                       </div>
                       <div className="text-[9px] text-muted tracking-wider">
                         FACEBOOK // MAIN PROFILE

@@ -313,13 +313,13 @@ export default function GitHubSection({ onPlaySound }) {
                 <div className="flex items-center gap-3">
                   <div className="flex -space-x-2.5 overflow-hidden">
                     <img
-                      src="./assets/contributor-phana.jpg"
-                      alt="Phanna Kurosaki"
+                      src="./assets/avatar-kon-kurosaki.jpg"
+                      alt="Phana Kurosaki (@Kon-Kurosaki)"
                       className="inline-block h-8 w-8 rounded-full ring-2 ring-accent object-cover bg-surface"
                     />
                     <img
-                      src="./assets/contributor-kon.jpg"
-                      alt="Kon Kurosaki"
+                      src="./assets/avatar-not-phana.jpg"
+                      alt="Phana (@not-Phana)"
                       className="inline-block h-8 w-8 rounded-full ring-2 ring-[#38bdf8] object-cover bg-surface"
                     />
                     <img

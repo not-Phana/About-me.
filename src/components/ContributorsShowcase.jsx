@@ -10,7 +10,7 @@ import {
 
 export default function ContributorsShowcase({ onPlaySound }) {
   const [activeFilter, setActiveFilter] = useState('all'); // 'all' | 'human' | 'ai'
-  const [selectedId, setSelectedId] = useState('phana');
+  const [selectedId, setSelectedId] = useState(CONTRIBUTORS[0]?.id || 'kon-kurosaki');
 
   const filteredContributors = CONTRIBUTORS.filter((c) => {
     if (activeFilter === 'human') return c.category === 'human';
@@ -48,7 +48,7 @@ export default function ContributorsShowcase({ onPlaySound }) {
           <div>
             <div className="flex items-center gap-2 font-mono text-[11px] tracking-[0.2em] uppercase text-accent font-bold mb-2">
               <span className="w-2 h-2 rounded-full bg-accent animate-pulse" />
-              <span>THE ALLIANCE // 5 VERIFIED CONTRIBUTORS</span>
+              <span>THE ALLIANCE // 5 VERIFIED CONTRIBUTORS · 200 COMMITS</span>
             </div>
             <h3 className="font-display text-2xl sm:text-4xl font-extrabold tracking-tight text-ink">
               Human Architects &amp; Synthetic Intelligence
