@@ -13,6 +13,7 @@ import {
   IconClose,
 } from './Icons';
 import ContributorsShowcase from './ContributorsShowcase';
+import RepoLabCard from './RepoLabCard';
 
 function formatDate(isoString) {
   if (!isoString) return 'Unknown';
@@ -106,6 +107,21 @@ export default function GitHubSection({ onPlaySound }) {
       return matchesLang && matchesMonth;
     });
   }, [baseRepos, selectedLang, selectedMonth]);
+
+  const labCardColSpan = useMemo(() => {
+    const remainderLg = displayedRepos.length % 3;
+    const spanLg =
+      remainderLg === 1
+        ? 'lg:col-span-2'
+        : remainderLg === 2
+        ? 'lg:col-span-1'
+        : 'lg:col-span-3';
+
+    const remainderMd = displayedRepos.length % 2;
+    const spanMd = remainderMd === 1 ? 'md:col-span-1' : 'md:col-span-2';
+
+    return `col-span-1 ${spanMd} ${spanLg}`;
+  }, [displayedRepos.length]);
 
   const handleCopyClone = (repoName, cloneUrl) => {
     const cmd = `git clone ${
@@ -621,6 +637,13 @@ export default function GitHubSection({ onPlaySound }) {
                 </article>
               );
             })}
+
+            {/* PK Labs Interactive Repository Deck (Completes grid dynamically) */}
+            <RepoLabCard
+              colSpanClass={labCardColSpan}
+              onPlaySound={onPlaySound}
+              repos={baseRepos}
+            />
           </div>
         )}
       </div>
