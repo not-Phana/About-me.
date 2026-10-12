@@ -203,6 +203,51 @@ export default function ProjectPreviewVisual({ project, className = '' }) {
     );
   }
 
+  if (project.previewType === 'brain-lab') {
+    return (
+      <div
+        className={`relative w-full h-full overflow-hidden bg-[#090b10] p-6 flex flex-col justify-between select-none ${className}`}
+      >
+        <div className="flex items-center justify-between border-b border-line pb-2.5 font-mono text-[11px] text-muted">
+          <span className="text-ink font-semibold flex items-center gap-1.5">
+            <span className="h-1.5 w-1.5 rounded-full bg-accent animate-ping" />
+            <span>PK Brain Lab // Neural Core</span>
+          </span>
+          <span className="text-accent font-bold">9 Cognitive Cores</span>
+        </div>
+
+        <div className="my-auto py-4 flex flex-col items-center justify-center relative">
+          <div className="relative w-36 h-36 flex items-center justify-center">
+            <div className="absolute inset-0 rounded-full border border-accent/20 border-dashed animate-spin [animation-duration:20s]" />
+            <img
+              src="./assets/pk-brain-logo.svg"
+              alt="PK Brain Lab Golden Emblem"
+              className="w-24 h-24 object-contain filter drop-shadow-[0_0_16px_rgba(212,165,40,0.4)]"
+            />
+          </div>
+          <div className="mt-2 font-mono text-xs text-accent font-bold tracking-wider uppercase">
+            Dual-Hemisphere Architecture
+          </div>
+          <div className="text-[10px] text-muted font-mono mt-0.5">
+            Organic Cortex · Digital Synapse Circuit
+          </div>
+        </div>
+
+        <div className="grid grid-cols-3 gap-1.5 font-mono text-[10px] text-center">
+          <div className="border border-line bg-surface/80 p-1.5 text-muted truncate">
+            Dual N-Back
+          </div>
+          <div className="border border-line bg-surface/80 p-1.5 text-muted truncate">
+            Adaptive Engine
+          </div>
+          <div className="border border-line bg-surface/80 p-1.5 text-muted truncate">
+            Reflex Latency
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   // Default architectural fallback preview (e.g., Arachne Desktop Clock or future entries)
   return (
     <div

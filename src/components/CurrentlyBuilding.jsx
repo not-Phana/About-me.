@@ -1,12 +1,16 @@
-import React from 'react';
 import {
   IconArrowUpRight,
   IconArrowRight,
   IconGitHub,
   IconTerminal,
 } from './Icons';
+import BrainLabShowcase from './BrainLabShowcase';
 
-export default function CurrentlyBuilding({ projects, onSelectProject }) {
+export default function CurrentlyBuilding({
+  projects,
+  onSelectProject,
+  onPlaySound,
+}) {
   // Featured active builds controlled directly from src/data/projects.js (`currentlyBuilding: true`)
   const activeBuilds = projects.filter((p) => p.currentlyBuilding);
 
@@ -125,6 +129,12 @@ export default function CurrentlyBuilding({ projects, onSelectProject }) {
             </div>
           ))}
         </div>
+
+        {/* Flagship Second Brain Cognitive Architecture Showcase */}
+        <BrainLabShowcase
+          onSelectProject={onSelectProject}
+          onPlaySound={onPlaySound}
+        />
       </div>
     </section>
   );

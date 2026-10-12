@@ -322,6 +322,7 @@ export default function App() {
             <CurrentlyBuilding
               projects={PROJECTS}
               onSelectProject={handleSelectProject}
+              onPlaySound={triggerSound}
             />
             <JourneySection />
             <ContactSection onPlaySound={triggerSound} />

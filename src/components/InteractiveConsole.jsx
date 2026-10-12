@@ -160,8 +160,8 @@ export default function InteractiveConsole({
       setCustomOutput({
         command: 'help',
         lines: [
-          'Available topics: whoami, khmer-nida, neon-engine, studio-code, kon-ai, pk-icons, cursor-fx',
-          'Interactive tools: "cursor", "status", "contact", "legal", "theme light", "theme dark", "accent cyan", "accent amber", "accent emerald", "accent crimson", "sfx", "clear"',
+          'Available topics: whoami, khmer-nida, neon-engine, studio-code, kon-ai, pk-icons, cursor-fx, brain',
+          'Interactive tools: "cursor", "brain", "status", "contact", "legal", "theme light", "theme dark", "accent cyan", "accent amber", "accent emerald", "accent crimson", "sfx", "clear"',
         ],
         projectSlug: null,
       });
@@ -239,6 +239,30 @@ export default function InteractiveConsole({
           'ROADMAP TARGET: Scheduled for activation when large-scale multi-repository automation expands.',
         ],
         projectSlug: null,
+      });
+      return;
+    }
+
+    if (
+      raw === 'brain' ||
+      raw === 'brain-lab' ||
+      raw === 'pk-brain' ||
+      raw === 'pk-brain-lab' ||
+      raw === 'second-brain' ||
+      raw === 'pk brain' ||
+      raw.includes('brain')
+    ) {
+      onPlaySound?.('switch');
+      setCustomOutput({
+        command: 'pk inspect pk-brain-lab --cognitive-cores',
+        lines: [
+          'PK BRAIN LAB // DIGITAL SECOND BRAIN & NEURAL WORKBENCH',
+          'DUAL-HEMISPHERE SYSTEM: Left Cortex (Intuitive Organic) + Right Circuit (Algorithmic Logic).',
+          'COGNITIVE CORES (9 MODULES): Logic Lab, Memory Core, Pattern Hunter, Spatial Challenge, Strategy Room, Math Reactor, Deduction Files, Neural Interference, Quantum Focus.',
+          'REFLEX TELEMETRY: Procedural Web Audio, millisecond reaction latency measurement, and cognitive endurance scaling.',
+          'INSPECTION: Press Inspect Project below or visit the Flagship Second Brain Showcase in Active Builds.',
+        ],
+        projectSlug: 'pk-brain-lab',
       });
       return;
     }
