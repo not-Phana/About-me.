@@ -31,7 +31,7 @@ export const CONTRIBUTORS = [
       'Tactile typing engine & 218 interactive lessons',
       'Full-stack architecture & reactive telemetry'
     ],
-    commitsCount: '167 Commits',
+    commitsCount: '168 Commits',
     roleTag: 'HUMAN',
     entityType: 'human',
     pairedWith: 'Phana (@not-Phana)'
@@ -98,24 +98,26 @@ export const CONTRIBUTORS = [
     avatar: './assets/contributor-claude-code.svg',
     avatarFallback: 'https://avatars.githubusercontent.com/u/81847?v=4',
     category: 'agent',
-    typeBadge: 'AUTONOMOUS AGENT',
+    typeBadge: 'FUTURE AGENT',
     badgeTone: 'coral',
     model: 'Claude 3.7 Sonnet / Code CLI',
-    role: 'Autonomous Terminal & CLI Agent',
-    focus: 'CLI Code Operations · Invariant Proofs · Deep Logic Refactoring',
-    status: 'AUTONOMOUS // READY',
+    role: 'Autonomous CLI Agent (Roadmap Pipeline)',
+    focus: 'Terminal Orchestration · AST Invariant Proofs · Deep Refactoring',
+    status: 'ROADMAP // FUTURE PIPELINE',
     statusDotColor: '#f97316',
+    isFuture: true,
+    futureBadge: 'HORIZON 2026+',
     description:
-      'Agentic command-line tool powered by Anthropic. Unlike web chatbots, Claude Code runs directly inside the local terminal to navigate file trees, edit multi-file codebases, execute git commands, and verify complex logic.',
+      'Reserved for next-generation engineering workflows. While PK Studio currently builds with biological direction, Antigravity, and Codex, Claude Code is queued on the developer roadmap as a future autonomous terminal agent for multi-file refactoring, AST invariant checking, and automated git workflows.',
     keyContributions: [
-      '1 verified commit on PK Khmer Type',
-      'Greek philosophical framework & curator integration',
-      'High-order component modularization & state invariant proofs'
+      '[ROADMAP] Queued for future automated terminal orchestration & CLI refactors',
+      '[ROADMAP] Planned integration for multi-file AST invariant proofs',
+      '[ROADMAP] High-order component modularization & headless test verification'
     ],
-    commitsCount: '1 Commit',
+    commitsCount: 'Future Roadmap',
     roleTag: 'AGENT',
     entityType: 'agent',
-    pairedWith: 'Claude (Conversational Chatbot)'
+    pairedWith: 'Claude (Conversational Ideation & Future CLI Specs)'
   },
   {
     id: 'codex',

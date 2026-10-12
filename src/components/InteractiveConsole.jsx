@@ -96,6 +96,19 @@ const CONSOLE_TOPICS = [
     projectSlug: null,
     isCursorLab: true,
   },
+  {
+    key: 'claude-code',
+    label: 'future-agent',
+    icon: IconTerminal,
+    command: 'pk roadmap --agent=claude-code',
+    lines: [
+      'Target: Claude Code CLI (Anthropic Autonomous Terminal Agent).',
+      'Status: Queued in the PK Studio developer roadmap for future engineering phases.',
+      'Projected Role: High-order AST multi-file refactoring, CLI automation, and invariant verification.',
+      'Active Alliance: Biological lead Phana steers active production with Antigravity and Codex.',
+    ],
+    projectSlug: null,
+  },
 ];
 
 export default function InteractiveConsole({
@@ -211,6 +224,22 @@ export default function InteractiveConsole({
       onPlaySound?.('switch');
       setActiveKey('cursor-lab');
       setCustomOutput(null);
+      return;
+    }
+
+    if (raw === 'claude' || raw === 'claude-code' || raw === 'future' || raw === 'roadmap') {
+      onPlaySound?.('switch');
+      setCustomOutput({
+        command: 'pk roadmap --agent=claude-code',
+        lines: [
+          'CLAUDE CODE CLI // FUTURE ROADMAP AUTONOMOUS AGENT',
+          'STATUS: QUEUED FOR FUTURE PIPELINE (HORIZON 2026+)',
+          'ROLE: Autonomous Terminal & CLI Agent for AST multi-file refactoring and invariant proofs.',
+          'CURRENT STACK: Active production co-authored with Antigravity (Google DeepMind) and Codex (OpenAI).',
+          'ROADMAP TARGET: Scheduled for activation when large-scale multi-repository automation expands.',
+        ],
+        projectSlug: null,
+      });
       return;
     }
 

@@ -329,8 +329,8 @@ export default function GitHubSection({ onPlaySound }) {
                     />
                     <img
                       src="./assets/contributor-claude-code.svg"
-                      alt="Claude Code CLI"
-                      className="inline-block h-8 w-8 rounded-full ring-2 ring-[#f97316] object-cover bg-surface"
+                      alt="Claude Code CLI (Future Roadmap Agent)"
+                      className="inline-block h-8 w-8 rounded-full ring-2 ring-dashed ring-[#f97316] object-cover bg-surface"
                     />
                     <img
                       src="./assets/contributor-codex.svg"
@@ -346,7 +346,7 @@ export default function GitHubSection({ onPlaySound }) {
                       </span>
                     </div>
                     <span className="font-mono text-[10px] text-muted">
-                      2 Humans · 3 Coding Agents · 3 Chatbots
+                      2 Humans · 2 Active Agents · 1 Future Agent · 3 Chatbots
                     </span>
                   </div>
                 </div>

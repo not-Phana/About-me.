@@ -6,11 +6,45 @@ import {
   IconCheck,
   IconTerminal,
   IconSparkles,
+  IconRefresh,
 } from './Icons';
 
 export default function ContributorsShowcase({ onPlaySound }) {
   const [activeFilter, setActiveFilter] = useState('all'); // 'all' | 'human' | 'agent' | 'chatbot'
   const [selectedId, setSelectedId] = useState(CONTRIBUTORS[0]?.id || 'kon-kurosaki');
+  const [isSimulatingHandshake, setIsSimulatingHandshake] = useState(false);
+  const [simulatedLogs, setSimulatedLogs] = useState([
+    '[HORIZON 2026+] Handshake: Anthropic Claude Code CLI protocol mapped to PK Studio.',
+    '[HORIZON 2026+] AST Target: High-order component modularization & multi-file invariant proofs.',
+    '[HORIZON 2026+] Status: Formally queued on developer roadmap for upcoming engineering phases.',
+    '[HORIZON 2026+] Current active steering: Biological architect Phana maintains 100% control.',
+  ]);
+
+  const handleRunSimulation = (e) => {
+    e?.stopPropagation?.();
+    onPlaySound?.('switch');
+    setIsSimulatingHandshake(true);
+    setSimulatedLogs(['[CONNECTING] Querying Anthropic Claude Code CLI protocol...']);
+    setTimeout(() => {
+      setSimulatedLogs((prev) => [
+        ...prev,
+        '[PIPELINE] Protocol verified. Target: not-phana/PK-Khmer-Type repository tree.',
+      ]);
+    }, 350);
+    setTimeout(() => {
+      setSimulatedLogs((prev) => [
+        ...prev,
+        '[AST INSPECTION] Queued for future automated terminal AST refactors and invariant proofs.',
+      ]);
+    }, 700);
+    setTimeout(() => {
+      setSimulatedLogs((prev) => [
+        ...prev,
+        '[STANDBY] Agent ready in roadmap. Awaiting human deployment trigger by architect Phana.',
+      ]);
+      setIsSimulatingHandshake(false);
+    }, 1100);
+  };
 
   const filteredContributors = CONTRIBUTORS.filter((c) => {
     if (activeFilter === 'human') return c.category === 'human';
@@ -142,7 +176,9 @@ export default function ContributorsShowcase({ onPlaySound }) {
                     <div className="relative">
                       <div
                         className={`w-14 h-14 sm:w-16 sm:h-16 rounded-full p-0.5 transition-transform duration-300 group-hover:scale-105 ${
-                          c.badgeTone === 'gold'
+                          c.isFuture
+                            ? 'ring-2 ring-dashed ring-[#f97316] shadow-[0_0_15px_rgba(249,115,22,0.35)]'
+                            : c.badgeTone === 'gold'
                             ? 'ring-2 ring-accent/80 shadow-[0_0_12px_rgba(212,165,40,0.3)]'
                             : c.badgeTone === 'cyan'
                             ? 'ring-2 ring-[#38bdf8]/80 shadow-[0_0_12px_rgba(56,189,248,0.3)]'
@@ -172,17 +208,24 @@ export default function ContributorsShowcase({ onPlaySound }) {
                       />
                     </div>
 
-                    <span
-                      className={`font-mono text-[10px] px-1.5 py-0.5 uppercase tracking-wider ${
-                        c.roleTag === 'AGENT'
-                          ? 'border border-accent/60 bg-accentDim text-accent font-bold'
-                          : c.roleTag === 'CHATBOT'
-                          ? 'border border-line bg-surface text-muted'
-                          : 'border border-line bg-surface text-ink font-semibold'
-                      }`}
-                    >
-                      {c.roleTag}
-                    </span>
+                    {c.isFuture ? (
+                      <span className="font-mono text-[9px] px-2 py-0.5 uppercase tracking-wider border border-[#f97316]/60 bg-[#f97316]/10 text-[#f97316] font-bold flex items-center gap-1.5">
+                        <span className="w-1.5 h-1.5 rounded-full bg-[#f97316] animate-pulse" />
+                        <span>HORIZON 2026+</span>
+                      </span>
+                    ) : (
+                      <span
+                        className={`font-mono text-[10px] px-1.5 py-0.5 uppercase tracking-wider ${
+                          c.roleTag === 'AGENT'
+                            ? 'border border-accent/60 bg-accentDim text-accent font-bold'
+                            : c.roleTag === 'CHATBOT'
+                            ? 'border border-line bg-surface text-muted'
+                            : 'border border-line bg-surface text-ink font-semibold'
+                        }`}
+                      >
+                        {c.roleTag}
+                      </span>
+                    )}
                   </div>
 
                   {/* Name & Handle */}
@@ -226,7 +269,9 @@ export default function ContributorsShowcase({ onPlaySound }) {
                   {/* Counterpart Pill */}
                   <div className="mt-3 pt-2 border-t border-lineSoft flex items-center justify-between font-mono text-[10px] text-muted">
                     <span className="uppercase text-[9px] tracking-wider text-muted">
-                      {c.category === 'agent'
+                      {c.isFuture
+                        ? 'Future Roadmap Agent'
+                        : c.category === 'agent'
                         ? 'Autonomous Agent'
                         : c.category === 'chatbot'
                         ? 'Conversational Chat'
@@ -237,13 +282,19 @@ export default function ContributorsShowcase({ onPlaySound }) {
 
                 {/* Footer Metrics */}
                 <div className="mt-4 pt-3 border-t border-lineSoft flex items-center justify-between font-mono text-[11px]">
-                  <span className="text-muted">{c.commitsCount}</span>
+                  <span className={c.isFuture ? 'text-[#f97316] font-bold' : 'text-muted'}>
+                    {c.commitsCount}
+                  </span>
                   <span
                     className={`font-semibold ${
-                      isSelected ? 'text-accent' : 'text-muted group-hover:text-ink'
+                      isSelected
+                        ? 'text-accent'
+                        : c.isFuture
+                        ? 'text-[#f97316] group-hover:underline'
+                        : 'text-muted group-hover:text-ink'
                     }`}
                   >
-                    {isSelected ? 'INSPECTING' : 'VIEW LOG'}
+                    {isSelected ? 'INSPECTING' : c.isFuture ? 'VIEW ROADMAP' : 'VIEW LOG'}
                   </span>
                 </div>
               </div>
@@ -278,14 +329,18 @@ export default function ContributorsShowcase({ onPlaySound }) {
                 <span className="text-line">•</span>
                 <span
                   className={`font-mono text-[10px] uppercase font-bold px-1.5 py-0.2 border ${
-                    selectedContributor.category === 'agent'
+                    selectedContributor.isFuture
+                      ? 'border-[#f97316]/50 bg-[#f97316]/10 text-[#f97316]'
+                      : selectedContributor.category === 'agent'
                       ? 'border-accent/60 bg-accentDim text-accent'
                       : selectedContributor.category === 'chatbot'
                       ? 'border-line bg-surface text-muted'
                       : 'border-[#38bdf8]/40 bg-[#38bdf8]/10 text-[#38bdf8]'
                   }`}
                 >
-                  {selectedContributor.category === 'agent'
+                  {selectedContributor.isFuture
+                    ? 'NEXT-GEN HORIZON // PLANNED CLI INTEGRATION'
+                    : selectedContributor.category === 'agent'
                     ? 'AUTONOMOUS AGENT (TERMINAL & TOOL EXECUTION)'
                     : selectedContributor.category === 'chatbot'
                     ? 'CONVERSATIONAL CHATBOT (WEB & PROMPT INTERFACE)'
@@ -319,6 +374,45 @@ export default function ContributorsShowcase({ onPlaySound }) {
                   </span>
                 ))}
               </div>
+
+              {/* Futuristic Interactive Terminal Handshake Simulation for Future Agent */}
+              {selectedContributor.isFuture && (
+                <div className="mt-5 border border-[#f97316]/40 bg-[#0b0b0e] p-4 font-mono text-xs text-ink/90 relative overflow-hidden">
+                  <div className="flex flex-wrap items-center justify-between border-b border-lineSoft pb-2.5 mb-3 gap-2 text-[11px] text-[#f97316]">
+                    <div className="flex items-center gap-2">
+                      <IconTerminal className="w-3.5 h-3.5 text-[#f97316]" />
+                      <span className="font-bold tracking-wider uppercase">CLAUDE CODE CLI // FUTURE ROADMAP SIMULATOR</span>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={handleRunSimulation}
+                      className="flex items-center gap-1.5 text-[10px] uppercase font-bold text-ink hover:text-[#f97316] border border-line px-2.5 py-1 bg-surface/80 hover:border-[#f97316]/60 transition-colors"
+                    >
+                      <IconRefresh className={`w-3 h-3 ${isSimulatingHandshake ? 'animate-spin text-[#f97316]' : ''}`} />
+                      <span>{isSimulatingHandshake ? 'SIMULATING HANDSHAKE...' : 'RERUN CLI HANDSHAKE'}</span>
+                    </button>
+                  </div>
+                  <div className="space-y-1.5 text-[11px] leading-relaxed">
+                    <div className="text-muted flex items-center gap-1.5">
+                      <span className="text-[#f97316] font-bold">$</span>
+                      <span>claude-code --autonomous --roadmap-pipeline</span>
+                    </div>
+                    {simulatedLogs.map((log, i) => (
+                      <div key={i} className="flex items-start gap-1.5 text-ink/90">
+                        <span className="text-[#f97316] font-bold">&gt;</span>
+                        <span>{log}</span>
+                      </div>
+                    ))}
+                    {isSimulatingHandshake && (
+                      <div className="inline-block w-2 h-3.5 bg-[#f97316] animate-pulse align-middle ml-1" />
+                    )}
+                  </div>
+                  <div className="mt-3 pt-2.5 border-t border-lineSoft/60 flex flex-wrap items-center justify-between gap-2 text-[10px] text-muted">
+                    <span>PROTOCOL: ANTHROPIC CLI PIPELINE</span>
+                    <span className="text-[#f97316] font-semibold uppercase">STANDBY FOR HORIZON 2026+ ACTIVATION</span>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
 
@@ -336,11 +430,17 @@ export default function ContributorsShowcase({ onPlaySound }) {
               ) : (
                 <IconTerminal className="w-4 h-4" />
               )}
-              <span>Open {selectedContributor.handle}</span>
+              <span>
+                {selectedContributor.isFuture
+                  ? `Inspect ${selectedContributor.name} Roadmap`
+                  : `Open ${selectedContributor.handle}`}
+              </span>
               <IconArrowUpRight className="w-3.5 h-3.5" />
             </a>
             <span className="font-mono text-[11px] text-muted">
-              {selectedContributor.commitsCount} recorded
+              {selectedContributor.isFuture
+                ? 'Horizon 2026+ · Queued for Deployment'
+                : `${selectedContributor.commitsCount} recorded`}
             </span>
           </div>
         </div>
