@@ -71,6 +71,7 @@ export default function CustomCursor() {
     let isSolidAmberTarget = false;
     let isLargeRow = false;
     let currentLabel = '';
+    let ringBounceScale = 1.0;
 
     // Dot Squash/Stretch
     let dotAngle = 0;
@@ -116,6 +117,7 @@ export default function CustomCursor() {
       lockedTargetElement = null;
       isLargeRow = false;
       ring.classList.remove('is-locked', 'is-labeled', 'is-large-row', 'dark-cursor');
+      ring.style.borderRadius = '';
       dot.classList.remove('dark-cursor');
       mouseX = -100;
       mouseY = -100;
@@ -235,10 +237,7 @@ export default function CustomCursor() {
       dot.classList.remove('dot-flash', 'is-pressed');
 
       if (!prefersReducedMotion && !isTextMode) {
-        ring.classList.remove('ring-spring-release');
-        void ring.offsetWidth;
-        ring.classList.add('ring-spring-release');
-        setTimeout(() => ring.classList.remove('ring-spring-release'), 350);
+        ringBounceScale = 1.05;
       }
     };
 
@@ -307,6 +306,75 @@ export default function CustomCursor() {
     };
 
     // ------------------------------------------------------------------------
+    // Target-Locking Element Detector (All Interactive Controls & UI Boxes)
+    // ------------------------------------------------------------------------
+    const findTargetElement = (target) => {
+      if (!target || !(target instanceof Element)) return null;
+
+      // 1. High-priority interactive controls: buttons, links, tabs, keycaps
+      const interactiveEl = target.closest(
+        'button, a, [role="button"], [role="tab"], [role="menuitem"], summary, .pk-keycap, [tabindex="0"], .cursor-pointer'
+      );
+      if (interactiveEl) {
+        const rect = interactiveEl.getBoundingClientRect();
+        if (
+          rect.width > 0 &&
+          rect.height > 0 &&
+          rect.width <= window.innerWidth * 0.96 &&
+          rect.height <= window.innerHeight * 0.95
+        ) {
+          return interactiveEl;
+        }
+      }
+
+      // 2. Structured cards, panels, modules, and boxes
+      const boxEl = target.closest(
+        '.spotlight-card, .card-laser-lift, .card-panel, .hud-frame, article, ' +
+        '.incubation-card, .interactive-sandbox-card, .tech-card, .stat-card, ' +
+        '.row-item, .terminal-window, [data-box], [data-card], ' +
+        '.context-menu-hud, .command-palette-modal'
+      );
+      if (boxEl) {
+        const rect = boxEl.getBoundingClientRect();
+        if (
+          rect.width >= 32 &&
+          rect.height >= 24 &&
+          rect.width <= window.innerWidth * 0.96 &&
+          rect.height <= window.innerHeight * 0.92
+        ) {
+          return boxEl;
+        }
+      }
+
+      // 3. Any bordered container / card surface in sections
+      let curr = target;
+      while (curr && curr !== document.body && curr !== document.documentElement) {
+        const tag = curr.tagName;
+        if (tag === 'SECTION' || tag === 'MAIN' || tag === 'NAV' || tag === 'HEADER' || tag === 'BODY') {
+          break;
+        }
+        if (curr.classList) {
+          const hasBorder = curr.classList.contains('border') || curr.classList.contains('border-line');
+          const hasSurface = curr.classList.contains('bg-surface') || curr.classList.contains('bg-surface2') || curr.classList.contains('bg-bg');
+          if (hasBorder || hasSurface) {
+            const rect = curr.getBoundingClientRect();
+            if (
+              rect.width >= 48 &&
+              rect.height >= 32 &&
+              rect.width <= window.innerWidth * 0.94 &&
+              rect.height <= window.innerHeight * 0.88
+            ) {
+              return curr;
+            }
+          }
+        }
+        curr = curr.parentElement;
+      }
+
+      return null;
+    };
+
+    // ------------------------------------------------------------------------
     // Hover Context Detection
     // ------------------------------------------------------------------------
     const handleMouseOver = (e) => {
@@ -323,11 +391,93 @@ export default function CustomCursor() {
         document.body.classList.remove('cursor-over-input');
       }
 
-      // Text Mode
-      const textTarget = target.closest('p, li, h1, h2, h3, h4, blockquote');
-      const isClickable = target.closest('button, a, [role="button"], [role="tab"], input, textarea, select');
+      // 1. Custom Labeled Elements (Requirement 8)
+      const customTag = target.closest('[data-cursor]');
+      if (customTag) {
+        const labelType = customTag.getAttribute('data-cursor');
+        if (['view', 'open', 'drag', 'type'].includes(labelType)) {
+          if (lockedTargetElement) {
+            lockedTargetElement = null;
+            ring.classList.remove('is-locked', 'dark-cursor');
+            ring.style.borderRadius = '';
+          }
+          isLargeRow = true;
+          currentLabel = labelType;
+          ring.classList.add('is-labeled');
+          ring.classList.remove('is-large-row');
+          if (ringLabel) ringLabel.textContent = labelType;
+          return;
+        }
+      }
 
-      if (textTarget && !isClickable) {
+      // 2. Precision Target Locking for all buttons, links, boxes, and cards
+      const clickTarget = findTargetElement(target);
+      if (clickTarget) {
+        isLargeRow = false;
+        currentLabel = '';
+        ring.classList.remove('is-labeled', 'is-large-row');
+
+        // Turn off text mode since we are inside an interactive element or box
+        if (isTextMode) {
+          isTextMode = false;
+          dot.classList.remove('mode-text');
+          ring.classList.remove('mode-text');
+        }
+
+        if (lockedTargetElement !== clickTarget) {
+          lockedTargetElement = clickTarget;
+
+          // Compute and adapt corner radius concentric with target
+          const computed = window.getComputedStyle(clickTarget);
+          const rawRadius = computed.borderRadius;
+          const parsedRadius = parseFloat(rawRadius) || 0;
+          let ringRadius = '10px';
+          if (rawRadius.includes('%') || parsedRadius >= 999) {
+            ringRadius = '9999px';
+          } else if (parsedRadius > 0) {
+            ringRadius = `${Math.round(parsedRadius + 3)}px`;
+          } else {
+            ringRadius = '4px';
+          }
+          ring.style.borderRadius = ringRadius;
+
+          // Check if solid amber
+          const bg = computed.backgroundColor;
+          isSolidAmberTarget = clickTarget.classList.contains('bg-accent') ||
+                               clickTarget.classList.contains('btn-laser-sweep') ||
+                               bg.includes('212, 165, 40') ||
+                               bg.includes('201, 162, 39');
+
+          if (isSolidAmberTarget) {
+            dot.classList.add('dark-cursor');
+            ring.classList.add('dark-cursor');
+          } else {
+            dot.classList.remove('dark-cursor');
+            ring.classList.remove('dark-cursor');
+          }
+
+          // Trigger smooth spring bounce via ringBounceScale
+          if (!prefersReducedMotion) {
+            ringBounceScale = 1.05;
+          }
+
+          ring.classList.add('is-locked');
+        }
+        return;
+      }
+
+      // Clear Lock if moved outside interactive elements and boxes
+      if (lockedTargetElement) {
+        lockedTargetElement = null;
+        isSolidAmberTarget = false;
+        dot.classList.remove('dark-cursor');
+        ring.classList.remove('dark-cursor', 'is-locked');
+        ring.style.borderRadius = '';
+      }
+
+      // 3. Text Mode (ONLY for narrative body text outside of cards and boxes)
+      const textTarget = target.closest('p, li, h1, h2, h3, h4, blockquote');
+      if (textTarget) {
         isTextMode = true;
         const computed = window.getComputedStyle(textTarget);
         const fSize = parseFloat(computed.fontSize) || 16;
@@ -340,82 +490,6 @@ export default function CustomCursor() {
         isTextMode = false;
         dot.classList.remove('mode-text');
         ring.classList.remove('mode-text');
-      }
-
-      // 1. Custom Labeled Elements (Requirement 8)
-      const customTag = target.closest('[data-cursor]');
-      if (customTag) {
-        const labelType = customTag.getAttribute('data-cursor');
-        if (['view', 'open', 'drag', 'type'].includes(labelType)) {
-          isLargeRow = true;
-          currentLabel = labelType;
-          ring.classList.add('is-labeled');
-          if (ringLabel) ringLabel.textContent = labelType;
-          return;
-        }
-      }
-
-      // 2. Small Links & Interactive Buttons (<= 380x80)
-      const clickTarget = target.closest(
-        'a, button, [role="button"], [role="tab"], .pk-keycap, .cursor-pointer, .hud-frame, .spotlight-card, [tabindex="0"]'
-      );
-      if (clickTarget) {
-        const rect = clickTarget.getBoundingClientRect();
-        if (rect.width > 0 && rect.height > 0 && rect.width <= 380 && rect.height <= 80) {
-          if (lockedTargetElement !== clickTarget) {
-            lockedTargetElement = clickTarget;
-
-            // Check if solid amber
-            const bg = window.getComputedStyle(clickTarget).backgroundColor;
-            isSolidAmberTarget = clickTarget.classList.contains('bg-accent') ||
-                                 clickTarget.classList.contains('btn-laser-sweep') ||
-                                 bg.includes('212, 165, 40') ||
-                                 bg.includes('201, 162, 39');
-
-            if (isSolidAmberTarget) {
-              dot.classList.add('dark-cursor');
-              ring.classList.add('dark-cursor');
-            } else {
-              dot.classList.remove('dark-cursor');
-              ring.classList.remove('dark-cursor');
-            }
-
-            if (!prefersReducedMotion) {
-              ring.classList.remove('ring-lock-bounce');
-              void ring.offsetWidth;
-              ring.classList.add('ring-lock-bounce');
-              setTimeout(() => ring.classList.remove('ring-lock-bounce'), 410);
-            }
-
-            ring.classList.add('is-locked');
-          }
-          return;
-        } else if (rect.width > 0 && rect.height > 0) {
-          // Large Elements & Cards (Requirement 8): 54px circle with amber tint
-          isLargeRow = true;
-          currentLabel = '';
-          ring.classList.remove('is-labeled');
-          ring.classList.add('is-large-row');
-          return;
-        }
-      }
-
-      // Clear Lock
-      if (lockedTargetElement) {
-        lockedTargetElement = null;
-        isSolidAmberTarget = false;
-        dot.classList.remove('dark-cursor');
-        ring.classList.remove('dark-cursor', 'is-locked');
-      }
-
-      // Large Rows / Spotlight Cards
-      const wideRow = target.closest('.row-item, .spotlight-card');
-      if (wideRow) {
-        isLargeRow = true;
-        currentLabel = '';
-        ring.classList.remove('is-labeled');
-        ring.classList.add('is-large-row');
-        return;
       }
 
       isLargeRow = false;
@@ -634,35 +708,70 @@ export default function CustomCursor() {
         dot.style.height = '6px';
       }
 
+      // Smooth decay of ring bounce scale towards 1.0
+      ringBounceScale += (1.0 - ringBounceScale) * 0.22;
+
       // Ring Target Calculations
       let currentLerp = 0.20;
 
       if (lockedTargetElement) {
-        const rect = lockedTargetElement.getBoundingClientRect();
-        const elemCenterX = rect.left + rect.width / 2;
-        const elemCenterY = rect.top + rect.height / 2;
+        if (!lockedTargetElement.isConnected) {
+          lockedTargetElement = null;
+          ring.classList.remove('is-locked', 'dark-cursor');
+          ring.style.borderRadius = '';
+        } else {
+          const rect = lockedTargetElement.getBoundingClientRect();
+          if (
+            rect.bottom < -20 ||
+            rect.top > window.innerHeight + 20 ||
+            rect.right < -20 ||
+            rect.left > window.innerWidth + 20 ||
+            rect.width === 0 ||
+            rect.height === 0
+          ) {
+            lockedTargetElement = null;
+            ring.classList.remove('is-locked', 'dark-cursor');
+            ring.style.borderRadius = '';
+          } else {
+            const elemCenterX = rect.left + rect.width / 2;
+            const elemCenterY = rect.top + rect.height / 2;
 
-        targetRingX = elemCenterX + (mouseX - elemCenterX) * 0.12;
-        targetRingY = elemCenterY + (mouseY - elemCenterY) * 0.18;
-        targetRingWidth = rect.width + 14;
-        targetRingHeight = rect.height + 10;
-        currentLerp = 0.30;
-      } else if (isLargeRow) {
-        targetRingX = mouseX;
-        targetRingY = mouseY;
-        targetRingWidth = currentLabel ? 62 : 54;
-        targetRingHeight = currentLabel ? 62 : 54;
-      } else {
-        targetRingX = mouseX;
-        targetRingY = mouseY;
-        targetRingWidth = 34;
-        targetRingHeight = 34;
+            // Subtle magnetic pull clamped to max 3px to prevent misalignment
+            const maxPull = 3;
+            const pullX = Math.max(-maxPull, Math.min(maxPull, (mouseX - elemCenterX) * 0.03));
+            const pullY = Math.max(-maxPull, Math.min(maxPull, (mouseY - elemCenterY) * 0.03));
+
+            targetRingX = elemCenterX + pullX;
+            targetRingY = elemCenterY + pullY;
+
+            // Proportional padding: tight on small buttons, crisp on large cards
+            const padX = rect.width > 240 ? 12 : 10;
+            const padY = rect.height > 100 ? 12 : 8;
+            targetRingWidth = rect.width + padX;
+            targetRingHeight = rect.height + padY;
+            currentLerp = 0.35;
+          }
+        }
+      }
+
+      if (!lockedTargetElement) {
+        if (isLargeRow) {
+          targetRingX = mouseX;
+          targetRingY = mouseY;
+          targetRingWidth = currentLabel ? 62 : 54;
+          targetRingHeight = currentLabel ? 62 : 54;
+        } else {
+          targetRingX = mouseX;
+          targetRingY = mouseY;
+          targetRingWidth = 34;
+          targetRingHeight = 34;
+        }
       }
 
       ringX += (targetRingX - ringX) * currentLerp;
       ringY += (targetRingY - ringY) * currentLerp;
-      ringWidth += (targetRingWidth - ringWidth) * 0.25;
-      ringHeight += (targetRingHeight - ringHeight) * 0.25;
+      ringWidth += (targetRingWidth - ringWidth) * 0.26;
+      ringHeight += (targetRingHeight - ringHeight) * 0.26;
 
       // Scroll Stretch Spring Simulation
       scrollVelocity *= 0.87;
@@ -675,10 +784,16 @@ export default function CustomCursor() {
         scrollStretch = 1;
       }
 
-      ring.style.width = `${ringWidth.toFixed(1)}px`;
-      ring.style.height = `${ringHeight.toFixed(1)}px`;
+      // Round to integer pixels to prevent subpixel mask aliasing artifacts
+      ring.style.width = `${Math.round(ringWidth)}px`;
+      ring.style.height = `${Math.round(ringHeight)}px`;
 
-      if (isMouseDown && !lockedTargetElement && !isTextMode) {
+      if (lockedTargetElement) {
+        // Locked on target: locked scale without scroll stretch distortion
+        const pressScale = isMouseDown ? 0.98 : 1.0;
+        const finalScale = (pressScale * ringBounceScale).toFixed(3);
+        ring.style.transform = `translate(${ringX.toFixed(1)}px, ${ringY.toFixed(1)}px) translate(-50%, -50%) scale(${finalScale})`;
+      } else if (isMouseDown && !isTextMode) {
         ring.style.transform = `translate(${ringX.toFixed(1)}px, ${ringY.toFixed(1)}px) translate(-50%, -50%) scale(0.8, ${(0.8 * scrollStretch).toFixed(3)})`;
       } else {
         ring.style.transform = `translate(${ringX.toFixed(1)}px, ${ringY.toFixed(1)}px) translate(-50%, -50%) scale(1, ${scrollStretch.toFixed(3)})`;
