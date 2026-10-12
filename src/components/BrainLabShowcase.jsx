@@ -261,10 +261,8 @@ const MICRO_NEURONS = Array.from({ length: 44 }, (_, i) => {
 
 export default function BrainLabShowcase({ onSelectProject, onPlaySound }) {
   const [selectedId, setSelectedId] = useState('callosum');
-  const [hoveredId, setHoveredId] = useState(null);
   const [viewMode, setViewMode] = useState('lateral'); // 'lateral' | 'hemispheres' | 'connectome'
   const [neuralState, setNeuralState] = useState('active'); // 'calm' | 'active' | 'overdrive'
-  const [autoTour, setAutoTour] = useState(true);
   const [surgeCount, setSurgeCount] = useState(0);
 
   const canvasRef = useRef(null);
@@ -273,22 +271,9 @@ export default function BrainLabShowcase({ onSelectProject, onPlaySound }) {
   const pulsesRef = useRef([]);
   const ripplesRef = useRef([]);
 
-  const activeRegionId = hoveredId || selectedId;
+  const activeRegionId = selectedId;
   const activeRegion =
     BRAIN_REGIONS.find((r) => r.id === activeRegionId) || BRAIN_REGIONS[2];
-
-  // Auto-tour cycling through Phana's brain regions unless paused or hovered
-  useEffect(() => {
-    if (!autoTour || hoveredId) return undefined;
-    const timer = setInterval(() => {
-      setSelectedId((prev) => {
-        const idx = BRAIN_REGIONS.findIndex((r) => r.id === prev);
-        const nextIdx = (idx + 1) % BRAIN_REGIONS.length;
-        return BRAIN_REGIONS[nextIdx].id;
-      });
-    }, 5200);
-    return () => clearInterval(timer);
-  }, [autoTour, hoveredId]);
 
   // Trigger a massive cascade of neural impulses across all pathways
   const triggerSynapticSurge = () => {
@@ -370,16 +355,7 @@ export default function BrainLabShowcase({ onSelectProject, onPlaySound }) {
 
       ctx.clearRect(0, 0, W, H);
 
-      // 1. Subtle fMRI Cortical Scan Sweep Beam
-      const scanX = 120 + ((time * 52) % 520);
-      const scanGrad = ctx.createLinearGradient(scanX - 45, 0, scanX + 45, 0);
-      scanGrad.addColorStop(0, 'rgba(212, 165, 40, 0)');
-      scanGrad.addColorStop(0.5, 'rgba(212, 165, 40, 0.055)');
-      scanGrad.addColorStop(1, 'rgba(212, 165, 40, 0)');
-      ctx.fillStyle = scanGrad;
-      ctx.fillRect(scanX - 45, 45, 90, 355);
-
-      // 2. Update & Draw Sub-Cortical Micro-Neurons
+      // 1. Update & Draw Sub-Cortical Micro-Neurons
       const microPositions = MICRO_NEURONS.map((n) => {
         const baseX = viewMode === 'hemispheres' ? n.hx : n.lx;
         const baseY = viewMode === 'hemispheres' ? n.hy : n.ly;
@@ -651,7 +627,6 @@ export default function BrainLabShowcase({ onSelectProject, onPlaySound }) {
   const handleSelectRegion = (id) => {
     onPlaySound?.('switch');
     setSelectedId(id);
-    setAutoTour(false);
   };
 
   return (
@@ -737,21 +712,6 @@ export default function BrainLabShowcase({ onSelectProject, onPlaySound }) {
               >
                 State: <span className="text-accent font-bold">{neuralState}</span>
               </button>
-
-              <button
-                type="button"
-                onClick={() => {
-                  onPlaySound?.('switch');
-                  setAutoTour((a) => !a);
-                }}
-                className={`border px-3 py-1.5 text-[11px] uppercase transition-colors ${
-                  autoTour
-                    ? 'border-[#4ade80]/50 bg-[#4ade80]/10 text-[#4ade80]'
-                    : 'border-line bg-surface text-muted hover:text-ink'
-                }`}
-              >
-                Auto-Scan: {autoTour ? 'ON' : 'PAUSED'}
-              </button>
             </div>
           </div>
         </div>
@@ -761,17 +721,17 @@ export default function BrainLabShowcase({ onSelectProject, onPlaySound }) {
       <div className="grid grid-cols-1 lg:grid-cols-12 border-b border-line relative z-10">
         {/* LEFT 7 COLUMNS: LIVE MOVING BRAIN MAP (CANVAS + ANATOMICAL SVG) */}
         <div className="lg:col-span-7 border-b lg:border-b-0 lg:border-r border-line bg-[#05070b] flex flex-col justify-between relative overflow-hidden">
-          {/* Top HUD Telemetry Bar */}
-          <div className="px-5 py-3 border-b border-lineSoft flex flex-wrap items-center justify-between gap-2 font-mono text-[11px] text-muted bg-surface/30">
-            <div className="flex items-center gap-2">
+          {/* Top HUD Telemetry Bar (Fixed single-line height so stage never shifts) */}
+          <div className="h-11 px-5 border-b border-lineSoft flex items-center justify-between gap-2 font-mono text-[11px] text-muted bg-surface/30 whitespace-nowrap overflow-hidden">
+            <div className="flex items-center gap-2 shrink-0">
               <span className="h-2 w-2 rounded-full bg-[#4ade80] animate-ping" />
               <span className="text-ink font-semibold uppercase">
                 LIVE CORTICAL TELEMETRY // 60 FPS NEURAL STREAM
               </span>
             </div>
-            <div className="flex items-center gap-3">
-              <span className="text-accent">{activeRegion.coords}</span>
-              <span className="hidden sm:inline border border-line px-2 py-0.5 text-[10px] text-ink">
+            <div className="flex items-center gap-3 overflow-hidden">
+              <span className="text-accent truncate">{activeRegion.coords}</span>
+              <span className="hidden sm:inline border border-line px-2 py-0.5 text-[10px] text-ink shrink-0">
                 7 LOBES · 44 MICRO-NODES
               </span>
             </div>
@@ -833,10 +793,7 @@ export default function BrainLabShowcase({ onSelectProject, onPlaySound }) {
 
               {/* ANATOMICAL BRAIN CONTOURS: LATERAL SIDE-PROFILE VIEW */}
               {viewMode !== 'hemispheres' && (
-                <g
-                  className="transition-opacity duration-500"
-                  style={{ opacity: viewMode === 'connectome' ? 0.38 : 0.95 }}
-                >
+                <g style={{ opacity: viewMode === 'connectome' ? 0.38 : 0.95 }}>
                   {/* Outer Cerebral Cortex Silhouette */}
                   <path
                     d="M 135 235
@@ -943,7 +900,7 @@ export default function BrainLabShowcase({ onSelectProject, onPlaySound }) {
 
               {/* ANATOMICAL BRAIN CONTOURS: TOP-DOWN DUAL-HEMISPHERE VIEW */}
               {viewMode === 'hemispheres' && (
-                <g className="transition-opacity duration-500">
+                <g>
                   {/* Left Hemisphere (Logical / Systems / Linguistic) */}
                   <path
                     d="M 368 78
@@ -1034,9 +991,7 @@ export default function BrainLabShowcase({ onSelectProject, onPlaySound }) {
                     key={region.id}
                     transform={`translate(${pos.x}, ${pos.y})`}
                     onClick={() => handleSelectRegion(region.id)}
-                    onMouseEnter={() => setHoveredId(region.id)}
-                    onMouseLeave={() => setHoveredId(null)}
-                    className="cursor-pointer group/node"
+                    className="cursor-pointer"
                   >
                     {/* Invisible Larger Hit Target for Effortless Clicking */}
                     <circle r="26" fill="transparent" />
@@ -1047,7 +1002,6 @@ export default function BrainLabShowcase({ onSelectProject, onPlaySound }) {
                       fill={isSelected ? `${region.color}28` : 'rgba(9, 11, 17, 0.85)'}
                       stroke={region.color}
                       strokeWidth={isSelected ? 2.2 : isConnected ? 1.5 : 1.1}
-                      className="transition-all duration-300"
                     />
 
                     {/* Inner Core Soma */}
@@ -1056,7 +1010,7 @@ export default function BrainLabShowcase({ onSelectProject, onPlaySound }) {
                       fill={isSelected ? '#ffffff' : region.color}
                     />
 
-                    {/* Node Floating Callout Pill */}
+                    {/* Stationary Node Callout Pill */}
                     <g transform="translate(0, -24)">
                       <rect
                         x="-58"
@@ -1094,7 +1048,7 @@ export default function BrainLabShowcase({ onSelectProject, onPlaySound }) {
             </svg>
           </div>
 
-          {/* Bottom Quick-Select Cortical Strip (7 Nodes) */}
+          {/* Bottom Quick-Select Cortical Strip (7 Stationary Nodes) */}
           <div className="grid grid-cols-2 sm:grid-cols-4 xl:grid-cols-7 gap-px bg-line border-t border-line font-mono text-[11px]">
             {BRAIN_REGIONS.map((region) => {
               const isSelected = region.id === activeRegionId;
@@ -1103,8 +1057,6 @@ export default function BrainLabShowcase({ onSelectProject, onPlaySound }) {
                   key={region.id}
                   type="button"
                   onClick={() => handleSelectRegion(region.id)}
-                  onMouseEnter={() => setHoveredId(region.id)}
-                  onMouseLeave={() => setHoveredId(null)}
                   className={`p-2.5 text-left transition-colors flex flex-col justify-between ${
                     isSelected
                       ? 'bg-accentDim border-t-2 border-accent text-ink'
@@ -1134,30 +1086,30 @@ export default function BrainLabShowcase({ onSelectProject, onPlaySound }) {
           </div>
         </div>
 
-        {/* RIGHT 5 COLUMNS: ACTIVE BRAIN REGION DOSSIER & EXPLANATORY TEXT */}
-        <div className="lg:col-span-5 p-6 sm:p-8 lg:p-10 bg-[#080b11] flex flex-col justify-between space-y-6">
+        {/* RIGHT 5 COLUMNS: ACTIVE BRAIN REGION DOSSIER & EXPLANATORY TEXT (Locked Height) */}
+        <div className="lg:col-span-5 p-6 sm:p-8 lg:p-10 bg-[#080b11] flex flex-col justify-between">
           <div>
             {/* Region Header Telemetry */}
-            <div className="flex flex-wrap items-center justify-between gap-2 pb-4 border-b border-lineSoft font-mono text-xs">
-              <div className="flex items-center gap-2">
+            <div className="flex items-center justify-between gap-2 pb-4 border-b border-lineSoft font-mono text-xs whitespace-nowrap overflow-hidden">
+              <div className="flex items-center gap-2 overflow-hidden">
                 <span
-                  className="px-2 py-0.5 text-[#090b10] font-bold text-[10px] uppercase"
+                  className="px-2 py-0.5 text-[#090b10] font-bold text-[10px] uppercase shrink-0"
                   style={{ backgroundColor: activeRegion.color }}
                 >
                   {activeRegion.code}
                 </span>
-                <span className="text-ink font-bold uppercase tracking-wider">
+                <span className="text-ink font-bold uppercase tracking-wider truncate">
                   {activeRegion.lobe}
                 </span>
               </div>
-              <span className="text-accent font-semibold text-[11px]">
+              <span className="text-accent font-semibold text-[11px] shrink-0">
                 {activeRegion.wave}
               </span>
             </div>
 
             {/* Region Main Title & Greek Principle */}
-            <div className="mt-5">
-              <div className="font-mono text-xs text-accent mb-1">
+            <div className="mt-5 min-h-[84px]">
+              <div className="font-mono text-xs text-accent mb-1 truncate">
                 {activeRegion.greek}
               </div>
               <h4 className="font-display text-2xl sm:text-3xl font-bold text-ink leading-tight">
@@ -1173,7 +1125,7 @@ export default function BrainLabShowcase({ onSelectProject, onPlaySound }) {
               </div>
               <div className="w-full h-1.5 bg-[#05070b] overflow-hidden">
                 <div
-                  className="h-full transition-all duration-500"
+                  className="h-full transition-all duration-300"
                   style={{
                     width: `${activeRegion.load}%`,
                     backgroundColor: activeRegion.color,
@@ -1183,7 +1135,7 @@ export default function BrainLabShowcase({ onSelectProject, onPlaySound }) {
             </div>
 
             {/* Rich Explanatory Narrative Text */}
-            <div className="mt-5 space-y-3 text-sm text-muted leading-relaxed">
+            <div className="mt-5 space-y-3 text-sm text-muted leading-relaxed min-h-[168px]">
               <p className="text-ink font-medium leading-relaxed">
                 {activeRegion.summary}
               </p>
@@ -1193,7 +1145,7 @@ export default function BrainLabShowcase({ onSelectProject, onPlaySound }) {
             </div>
 
             {/* Cognitive & Engineering Outputs */}
-            <div className="mt-6">
+            <div className="mt-5">
               <div className="font-mono text-[11px] text-muted uppercase tracking-wider mb-2.5 flex items-center gap-1.5">
                 <IconSparkles className="w-3.5 h-3.5 text-accent" />
                 <span>What This Brain Region Powers</span>
@@ -1216,8 +1168,8 @@ export default function BrainLabShowcase({ onSelectProject, onPlaySound }) {
           </div>
 
           {/* Connected Lobes & Real Project Links Footer */}
-          <div className="pt-5 border-t border-lineSoft space-y-4 font-mono text-xs">
-            <div>
+          <div className="pt-5 mt-6 border-t border-lineSoft space-y-4 font-mono text-xs">
+            <div className="min-h-[68px]">
               <div className="text-[10px] text-muted uppercase tracking-wider mb-2">
                 SYNAPTIC PATHWAYS (CLICK TO TRACE AXON):
               </div>
