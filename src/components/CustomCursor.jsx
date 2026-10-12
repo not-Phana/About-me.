@@ -700,12 +700,13 @@ export default function CustomCursor() {
 
       if (isTextMode) {
         dot.style.transform = `translate(${mouseX}px, ${mouseY}px) translate(-50%, -50%)`;
-        dot.style.width = '2px';
-        dot.style.height = `${currentTextFontSize}px`;
+        const textBeam = dot.querySelector('.pk-cursor-text-beam');
+        if (textBeam) {
+          textBeam.style.height = `${currentTextFontSize}px`;
+        }
       } else {
-        dot.style.transform = `translate(${mouseX}px, ${mouseY}px) translate(-50%, -50%) rotate(${dotAngle}deg) scale(${dotScaleX.toFixed(3)}, ${dotScaleY.toFixed(3)})`;
-        dot.style.width = '6px';
-        dot.style.height = '6px';
+        const pressScale = isMouseDown ? 0.92 : 1.0;
+        dot.style.transform = `translate(${mouseX}px, ${mouseY}px) scale(${pressScale})`;
       }
 
       // Smooth decay of ring bounce scale towards 1.0
@@ -847,9 +848,29 @@ export default function CustomCursor() {
 
   return (
     <>
-      {/* Layer 9999: Main Dot & Ring */}
+      {/* Layer 9999: Main Multiplayer Pointer & Ring */}
       <div className="cursor-layer-main" aria-hidden="true">
-        <div ref={dotRef} id="pk-cursor-dot" />
+        <div ref={dotRef} id="pk-cursor-dot" className="pk-cursor-multiplayer">
+          <svg
+            className="pk-cursor-arrow"
+            width="22"
+            height="22"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M3 2a1 1 0 0 1 1.6-.75l13.5 10a1 1 0 0 1-.5 1.8l-5.6.8a1 1 0 0 0-.8.7l-2.6 5.5a1 1 0 0 1-1.9-.3L3 2z"
+              fill="#2563eb"
+              stroke="#ffffff"
+              strokeWidth="2.2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+          <div className="pk-cursor-tag">You</div>
+          <div className="pk-cursor-text-beam" />
+        </div>
         <div ref={ringRef} id="pk-cursor-ring">
           <span ref={ringLabelRef} id="pk-cursor-label">VIEW</span>
         </div>
