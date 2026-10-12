@@ -410,6 +410,43 @@ export function IconRadio({ className }) {
   );
 }
 
+export function IconChevronDown({ className }) {
+  return (
+    <svg {...baseProps(className)}>
+      <polyline points="6 9 12 15 18 9" />
+    </svg>
+  );
+}
+
+export function IconCoffee({ className }) {
+  return (
+    <svg {...baseProps(className)}>
+      <path d="M18 8h1a4 4 0 0 1 0 8h-1" />
+      <path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z" />
+      <line x1="6" y1="1" x2="6" y2="4" />
+      <line x1="10" y1="1" x2="10" y2="4" />
+      <line x1="14" y1="1" x2="14" y2="4" />
+    </svg>
+  );
+}
+
+export function IconBug({ className }) {
+  return (
+    <svg {...baseProps(className)}>
+      <rect width="8" height="14" x="8" y="6" rx="4" />
+      <path d="m19 7-3 2" />
+      <path d="m5 7 3 2" />
+      <path d="m19 19-3-2" />
+      <path d="m5 19 3-2" />
+      <path d="M20 13h-4" />
+      <path d="M4 13h4" />
+      <path d="m10 4 1 2" />
+      <path d="m14 4-1 2" />
+    </svg>
+  );
+}
+
+
 
 
 

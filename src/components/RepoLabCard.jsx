@@ -12,6 +12,13 @@ import {
   IconClock,
   IconGitFork,
   IconStar,
+  IconChevronDown,
+  IconKeyboard,
+  IconGamepad,
+  IconPalette,
+  IconCode,
+  IconCoffee,
+  IconBug,
 } from './Icons';
 
 const INCUBATING_PROJECTS = [
@@ -40,6 +47,281 @@ const INCUBATING_PROJECTS = [
     progress: 64,
   },
 ];
+
+const REPO_OPTIONS = [
+  {
+    value: 'PK-Khmer-Type',
+    label: 'PK-Khmer-Type',
+    tag: 'Typing Tutor',
+    desc: '40 Levels / 218 Lessons · JavaScript',
+    icon: IconKeyboard,
+  },
+  {
+    value: 'PK-game',
+    label: 'PK-game',
+    tag: 'NEON PROTOCOL',
+    desc: 'HTML5 Canvas Action Game · Overdrive',
+    icon: IconGamepad,
+  },
+  {
+    value: 'PK-icons',
+    label: 'PK-icons',
+    tag: 'Vector Engine',
+    desc: '100% Crisp Inline SVG Icon Library',
+    icon: IconPalette,
+  },
+  {
+    value: 'About-me.',
+    label: 'About-me.',
+    tag: 'Studio Platform',
+    desc: 'Developer Portfolio & Cyber Engineering Core',
+    icon: IconCode,
+  },
+  {
+    value: 'Phana-cofee-shop',
+    label: 'Phana-cofee-shop',
+    tag: 'Coffee Web App',
+    desc: 'Barista Menu Showcase · HTML/CSS',
+    icon: IconCoffee,
+  },
+  {
+    value: 'github-achievements-run',
+    label: 'github-achievements-run',
+    tag: 'Dev Pipelines',
+    desc: 'Automated GitHub Runner Scripts & Badges',
+    icon: IconTerminal,
+  },
+];
+
+const CATEGORY_OPTIONS = [
+  {
+    value: 'feature',
+    label: 'Feature Proposal',
+    tag: 'NEW FEATURE',
+    desc: 'Suggest a new tool, mechanic, or capability',
+    icon: IconSparkles,
+  },
+  {
+    value: 'bug',
+    label: 'Bug Report',
+    tag: 'DEFECT / FIX',
+    desc: 'Report an issue, glitch, or edge-case',
+    icon: IconBug,
+  },
+  {
+    value: 'design',
+    label: 'UI & Vector Polish',
+    tag: 'AESTHETICS',
+    desc: 'Visual polish, typography, or vector SVG improvements',
+    icon: IconPalette,
+  },
+  {
+    value: 'collab',
+    label: 'Developer Collab',
+    tag: 'PARTNERSHIP',
+    desc: 'Contribute code or pair with human & AI agents',
+    icon: IconGitFork,
+  },
+];
+
+function CyberSelect({
+  value,
+  onChange,
+  options,
+  label,
+  id,
+  onPlaySound,
+}) {
+  const [isOpen, setIsOpen] = useState(false);
+  const [focusedIndex, setFocusedIndex] = useState(-1);
+  const containerRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (containerRef.current && !containerRef.current.contains(e.target)) {
+        setIsOpen(false);
+      }
+    };
+    if (isOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isOpen]);
+
+  const handleKeyDown = (e) => {
+    if (!isOpen) {
+      if (e.key === 'ArrowDown' || e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        setIsOpen(true);
+        onPlaySound?.('switch');
+        const currentIndex = options.findIndex((o) => o.value === value);
+        setFocusedIndex(currentIndex >= 0 ? currentIndex : 0);
+      }
+      return;
+    }
+
+    if (e.key === 'Escape') {
+      e.preventDefault();
+      setIsOpen(false);
+      onPlaySound?.('switch');
+    } else if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      setFocusedIndex((prev) => (prev + 1) % options.length);
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      setFocusedIndex((prev) => (prev - 1 + options.length) % options.length);
+    } else if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      if (focusedIndex >= 0 && focusedIndex < options.length) {
+        onChange(options[focusedIndex].value);
+        setIsOpen(false);
+        onPlaySound?.('switch');
+      }
+    }
+  };
+
+  const selectedOption = options.find((o) => o.value === value) || options[0];
+  const SelectedIcon = selectedOption?.icon;
+
+  return (
+    <div
+      ref={containerRef}
+      onKeyDown={handleKeyDown}
+      className={`relative ${isOpen ? 'z-50' : 'z-20'}`}
+    >
+      {label && (
+        <label
+          htmlFor={id}
+          className="block text-[10px] text-muted uppercase tracking-wider mb-1 font-mono flex items-center justify-between"
+        >
+          <span>{label}</span>
+          <span className="text-[9px] text-accent font-semibold">[CUSTOM HUD]</span>
+        </label>
+      )}
+
+      {/* Trigger Button */}
+      <button
+        type="button"
+        id={id}
+        aria-haspopup="listbox"
+        aria-expanded={isOpen}
+        onClick={() => {
+          onPlaySound?.('switch');
+          setIsOpen(!isOpen);
+          const currentIndex = options.findIndex((o) => o.value === value);
+          setFocusedIndex(currentIndex >= 0 ? currentIndex : 0);
+        }}
+        className={`w-full group/sel relative flex items-center justify-between gap-2.5 px-3 py-2 text-left font-mono text-xs border transition-all duration-200 select-none ${
+          isOpen
+            ? 'border-accent bg-[#0d1017] text-ink shadow-[0_0_14px_rgba(212,165,40,0.22)]'
+            : 'border-line bg-surface/90 hover:bg-surface hover:border-accent/70 text-ink'
+        }`}
+      >
+        <div className="flex items-center gap-2 min-w-0">
+          {SelectedIcon && (
+            <span className="p-1 rounded bg-accent/15 border border-accent/40 text-accent shrink-0">
+              <SelectedIcon className="w-3.5 h-3.5" />
+            </span>
+          )}
+          <div className="truncate flex items-baseline gap-1.5">
+            <span className="font-bold text-ink truncate">
+              {selectedOption?.label}
+            </span>
+            {selectedOption?.tag && (
+              <span className="text-[10px] text-accent font-semibold shrink-0">
+                [{selectedOption.tag}]
+              </span>
+            )}
+          </div>
+        </div>
+
+        <div className="flex items-center gap-1.5 shrink-0 text-muted group-hover/sel:text-accent">
+          <IconChevronDown
+            className={`w-3.5 h-3.5 transition-transform duration-200 ${
+              isOpen ? 'rotate-180 text-accent' : ''
+            }`}
+          />
+        </div>
+      </button>
+
+      {/* Futuristic Floating Options Menu */}
+      {isOpen && (
+        <ul
+          role="listbox"
+          aria-labelledby={id}
+          className="absolute left-0 right-0 top-full mt-1 z-50 bg-[#07090e] border border-accent shadow-[0_24px_50px_rgba(0,0,0,0.98),0_0_24px_rgba(212,165,40,0.25)] rounded-sm divide-y divide-line/60 max-h-[220px] overflow-y-auto animate-in fade-in slide-in-from-top-1 duration-150 p-1"
+        >
+          {options.map((opt, idx) => {
+            const isSelected = opt.value === value;
+            const isFocused = idx === focusedIndex;
+            const ItemIcon = opt.icon;
+            return (
+              <li
+                key={opt.value}
+                role="option"
+                aria-selected={isSelected}
+                onMouseEnter={() => setFocusedIndex(idx)}
+                onClick={() => {
+                  onPlaySound?.('switch');
+                  onChange(opt.value);
+                  setIsOpen(false);
+                }}
+                className={`flex items-center justify-between gap-2.5 px-2.5 py-2 cursor-pointer transition-colors text-xs rounded-sm select-none ${
+                  isSelected
+                    ? 'bg-accent/15 text-accent font-bold border-l-2 border-accent'
+                    : isFocused
+                    ? 'bg-surface text-ink'
+                    : 'text-muted hover:text-ink hover:bg-surface/60'
+                }`}
+              >
+                <div className="flex items-center gap-2 min-w-0">
+                  {ItemIcon && (
+                    <span
+                      className={`p-1 rounded shrink-0 ${
+                        isSelected
+                          ? 'bg-accent text-[#0b0b0c]'
+                          : 'bg-surface border border-line text-muted'
+                      }`}
+                    >
+                      <ItemIcon className="w-3.5 h-3.5" />
+                    </span>
+                  )}
+                  <div className="min-w-0">
+                    <div className="flex items-center gap-1.5 truncate">
+                      <span
+                        className={
+                          isSelected ? 'text-accent' : 'text-ink font-semibold'
+                        }
+                      >
+                        {opt.label}
+                      </span>
+                      {opt.tag && (
+                        <span className="text-[10px] text-accent/80 font-mono">
+                          ({opt.tag})
+                        </span>
+                      )}
+                    </div>
+                    {opt.desc && (
+                      <div className="text-[10px] text-muted truncate mt-0.5">
+                        {opt.desc}
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {isSelected && (
+                  <IconCheck className="w-3.5 h-3.5 text-accent shrink-0 ml-1.5" />
+                )}
+              </li>
+            );
+          })}
+        </ul>
+      )}
+    </div>
+  );
+}
 
 export default function RepoLabCard({ colSpanClass, onPlaySound, repos = [] }) {
   const [activeTab, setActiveTab] = useState('terminal'); // 'terminal' | 'radar' | 'dispatch' | 'clone'
@@ -235,16 +517,16 @@ export default function RepoLabCard({ colSpanClass, onPlaySound, repos = [] }) {
 
   return (
     <div
-      className={`${colSpanClass} spotlight-card card-laser-lift bg-[#090b10] border border-line p-6 sm:p-8 flex flex-col justify-between hover:border-accent/70 transition-all duration-300 relative overflow-hidden group min-h-[380px]`}
+      className={`${colSpanClass} spotlight-card card-laser-lift bg-[#090b10] border border-line p-6 sm:p-8 flex flex-col justify-between hover:border-accent/70 transition-all duration-300 relative group min-h-[380px] overflow-visible`}
     >
       {/* Subtle Ambient Scanline Grid */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-0 opacity-[0.035] bg-[radial-gradient(#d4a528_1px,transparent_1px)] [background-size:16px_16px]"
+        className="pointer-events-none absolute inset-0 opacity-[0.035] bg-[radial-gradient(#d4a528_1px,transparent_1px)] [background-size:16px_16px] rounded-sm"
       />
 
       {/* Top Header & Tab Navigation */}
-      <div className="relative z-10">
+      <div className="relative z-20">
         <div className="flex flex-wrap items-center justify-between gap-3 pb-4 border-b border-lineSoft">
           <div className="flex items-center gap-2.5 font-mono text-xs">
             <span className="relative flex h-2 w-2">
@@ -473,59 +755,46 @@ export default function RepoLabCard({ colSpanClass, onPlaySound, repos = [] }) {
           </div>
         )}
 
-        {/* Tab 3: Quick Issue & Collaboration Dispatcher */}
+        {/* Tab 3: Quick Issue & Collaboration Dispatcher with Custom Cyber Selects */}
         {activeTab === 'dispatch' && (
           <form onSubmit={handleLaunchIssue} className="mt-4 space-y-3 font-mono">
             <div className="text-[11px] text-muted flex items-center justify-between">
               <span>DISPATCH ISSUE OR FEATURE PROPOSAL TO GITHUB</span>
-              <span className="text-accent">DIRECT REPO LINK</span>
+              <span className="text-accent font-semibold">DIRECT REPO LINK</span>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
-              <div>
-                <label className="block text-[10px] text-muted uppercase mb-1">
-                  Target Repository
-                </label>
-                <select
-                  value={dispatchRepo}
-                  onChange={(e) => setDispatchRepo(e.target.value)}
-                  className="w-full border border-line bg-surface px-2.5 py-1.5 text-xs text-ink focus:outline-none focus:border-accent"
-                >
-                  <option value="PK-Khmer-Type">PK-Khmer-Type (Typing Tutor)</option>
-                  <option value="PK-game">PK-game (NEON PROTOCOL)</option>
-                  <option value="PK-icons">PK-icons (Vector Engine)</option>
-                  <option value="About-me.">About-me. (Studio Platform)</option>
-                  <option value="Phana-cofee-shop">Phana-cofee-shop</option>
-                </select>
-              </div>
+            {/* Custom Cyber Dropdowns */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+              <CyberSelect
+                id="dispatch-repo-select"
+                label="Target Repository"
+                value={dispatchRepo}
+                onChange={setDispatchRepo}
+                options={REPO_OPTIONS}
+                onPlaySound={onPlaySound}
+              />
 
-              <div>
-                <label className="block text-[10px] text-muted uppercase mb-1">
-                  Request Category
-                </label>
-                <select
-                  value={dispatchType}
-                  onChange={(e) => setDispatchType(e.target.value)}
-                  className="w-full border border-line bg-surface px-2.5 py-1.5 text-xs text-ink focus:outline-none focus:border-accent"
-                >
-                  <option value="feature">New Feature Proposal</option>
-                  <option value="bug">Bug Report / Defect</option>
-                  <option value="design">Design &amp; UI Improvement</option>
-                  <option value="collab">Developer Collaboration</option>
-                </select>
-              </div>
+              <CyberSelect
+                id="dispatch-category-select"
+                label="Request Category"
+                value={dispatchType}
+                onChange={setDispatchType}
+                options={CATEGORY_OPTIONS}
+                onPlaySound={onPlaySound}
+              />
             </div>
 
             <div>
-              <label className="block text-[10px] text-muted uppercase mb-1">
-                Proposal Summary / Title
+              <label className="block text-[10px] text-muted uppercase tracking-wider mb-1 font-mono flex items-center justify-between">
+                <span>Proposal Summary / Title</span>
+                <span className="text-[9px] text-muted">OPTIONAL DETAILS</span>
               </label>
               <input
                 type="text"
                 value={dispatchTitle}
                 onChange={(e) => setDispatchTitle(e.target.value)}
                 placeholder="e.g. Add phonetic practice drills for Pali Khmer loanwords..."
-                className="w-full border border-line bg-surface px-3 py-1.5 text-xs text-ink focus:outline-none focus:border-accent placeholder:text-muted/60"
+                className="w-full border border-line bg-surface/90 px-3 py-2 text-xs text-ink focus:outline-none focus:border-accent placeholder:text-muted/60 transition-colors"
               />
             </div>
 
@@ -535,7 +804,7 @@ export default function RepoLabCard({ colSpanClass, onPlaySound, repos = [] }) {
               </span>
               <button
                 type="submit"
-                className="inline-flex items-center gap-1.5 bg-accent text-[#0b0b0c] font-bold px-4 py-1.5 text-xs uppercase hover:opacity-90 transition-opacity"
+                className="inline-flex items-center gap-1.5 bg-accent text-[#0b0b0c] font-bold px-4 py-2 text-xs uppercase hover:opacity-90 transition-opacity"
               >
                 <span>Dispatch to GitHub</span>
                 <IconArrowUpRight className="w-3.5 h-3.5" />
@@ -627,7 +896,7 @@ export default function RepoLabCard({ colSpanClass, onPlaySound, repos = [] }) {
       </div>
 
       {/* Card Footer Telemetry Strip */}
-      <div className="mt-5 pt-3 border-t border-lineSoft flex flex-wrap items-center justify-between gap-2 font-mono text-[11px] text-muted relative z-10">
+      <div className="mt-5 pt-3 border-t border-lineSoft flex flex-wrap items-center justify-between gap-2 font-mono text-[11px] text-muted relative z-0">
         <div className="flex items-center gap-3">
           <span className="flex items-center gap-1 text-ink">
             <IconSparkles className="w-3 h-3 text-accent" />
