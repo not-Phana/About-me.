@@ -2,12 +2,12 @@ import React, { useRef, useEffect, useState, useCallback } from 'react';
 
 /**
  * Sculpture3DCanvas
- * Monumental 3D Interactive Exhibition Stage.
+ * Monumental Free-Standing 3D Classical Sculpture Stage (Unboxed).
  * 
  * Features:
- * 1. Deep luxury dark museum gallery background with dynamic chiaroscuro spotlight.
- * 2. Monumental Greek & Latin architectural typography layered BEHIND the sculpture.
- * 3. High-resolution golden Kintsugi marble bust in the FOREGROUND, occluding the letters.
+ * 1. Freestanding, unboxed design: No constraining borders or card boxes holding the statue.
+ * 2. Big & Long Monumental Sculpture Bust: Towering high-resolution Greek marble bust with golden kintsugi seams.
+ * 3. Monumental Typography Layered BEHIND the sculpture: Big classical gold-stroke lettering spanning wide.
  * 4. Butter-smooth multi-layer 3D perspective mouse parallax (differential z-depth).
  * 5. Dynamic auric specular glint sweep across golden kintsugi seams.
  * 6. Interactive modes: Classical Realism, Auric Radiance Glow, and 3D Cyber Mesh.
@@ -73,12 +73,10 @@ export default function Sculpture3DCanvas({
     const tick = () => {
       if (!active) return;
 
-      // Lerp smoothing factor
       const ease = 0.085;
       currentYaw.current += (targetYaw.current - currentYaw.current) * ease;
       currentPitch.current += (targetPitch.current - currentPitch.current) * ease;
 
-      // Update state for UI telemetry
       setDisplayYaw(Math.round(currentYaw.current * 25));
       setDisplayPitch(Math.round(currentPitch.current * 20));
 
@@ -107,7 +105,6 @@ export default function Sculpture3DCanvas({
       targetPitch.current = Math.max(-1.0, Math.min(1.0, targetPitch.current - deltaY * 1.5));
       dragStart.current = { x: e.clientX, y: e.clientY };
     } else {
-      // Gentle tracking when hovering
       targetYaw.current = Math.max(-1, Math.min(1, nx * 0.85));
       targetPitch.current = Math.max(-1, Math.min(1, ny * 0.75));
     }
@@ -135,7 +132,6 @@ export default function Sculpture3DCanvas({
   const handleMouseLeave = useCallback(() => {
     setIsHovered(false);
     setIsDragging(false);
-    // Smoothly return towards resting center
     targetYaw.current = 0.08;
     targetPitch.current = -0.05;
     setSpotlight({ x: 50, y: 40 });
@@ -159,10 +155,10 @@ export default function Sculpture3DCanvas({
   const pitch = currentPitch.current;
 
   // Layer 1: Background Text Parallax (moves opposite / deeper in z)
-  const bgTextTransform = `translate3d(${yaw * -18}px, ${pitch * 14}px, -45px) scale(0.96)`;
+  const bgTextTransform = `translate3d(${yaw * -20}px, ${pitch * 16}px, -50px) scale(0.97)`;
 
   // Layer 2: Foreground Statue Parallax (moves forward and tilts toward cursor)
-  const statueTransform = `perspective(1000px) rotateX(${-pitch * 16}deg) rotateY(${yaw * 20}deg) translate3d(${yaw * 24}px, ${-pitch * 16}px, 35px) scale(1.02)`;
+  const statueTransform = `perspective(1200px) rotateX(${-pitch * 15}deg) rotateY(${yaw * 18}deg) translate3d(${yaw * 28}px, ${-pitch * 18}px, 40px) scale(1.03)`;
 
   // Layer 3: Dynamic specular glint coordinates
   const glintX = Math.round(spotlight.x);
@@ -176,51 +172,44 @@ export default function Sculpture3DCanvas({
       onMouseUp={handleMouseUp}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
-      className={`relative w-full h-full select-none cursor-grab active:cursor-grabbing overflow-hidden border border-[var(--ms-rule-strong)] bg-[#05070a] shadow-[0_30px_70px_rgba(0,0,0,0.95)] ${className}`}
-      style={{ perspective: '1100px', transformStyle: 'preserve-3d' }}
-      title="Click and drag to rotate the statue in 3D, or move cursor to track dynamic lighting"
+      className={`relative w-full h-full flex flex-col items-center justify-center select-none cursor-grab active:cursor-grabbing ${className}`}
+      style={{ perspective: '1200px', transformStyle: 'preserve-3d' }}
+      title="Click and drag to rotate the sculpture in 3D space, or move cursor to track dynamic lighting"
     >
-      {/* 1. Deep Dark Gallery Background & Ambient Chiaroscuro Lighting */}
+      {/* 1. Ambient Gallery Dark Illumination & Chiaroscuro Spotlight (Unboxed) */}
       <div
         className="pointer-events-none absolute inset-0 transition-opacity duration-300"
         style={{
           background: `
-            radial-gradient(ellipse 90% 80% at ${spotlight.x}% ${spotlight.y}%, 
-              ${renderMode === 1 ? 'rgba(212, 165, 40, 0.28)' : 'rgba(212, 165, 40, 0.16)'} 0%, 
-              rgba(212, 165, 40, 0.04) 50%, 
-              rgba(5, 7, 10, 0.98) 85%
-            ),
-            radial-gradient(circle at 50% 90%, rgba(10, 15, 25, 0.9) 0%, #05070a 100%)
+            radial-gradient(ellipse 95% 85% at ${spotlight.x}% ${spotlight.y}%, 
+              ${renderMode === 1 ? 'rgba(212, 165, 40, 0.22)' : 'rgba(212, 165, 40, 0.14)'} 0%, 
+              rgba(212, 165, 40, 0.03) 50%, 
+              transparent 85%
+            )
           `,
         }}
       />
 
-      {/* Subtle Museum Archival Grid Lines */}
+      {/* Rotating Delphic Celestial Orbit Rings (Unbounded Space) */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-0 opacity-[0.06] bg-[linear-gradient(to_right,#d4a528_1px,transparent_1px),linear-gradient(to_bottom,#d4a528_1px,transparent_1px)] bg-[size:32px_32px]"
-      />
-
-      {/* Rotating Delphic Celestial Orbit Rings */}
-      <div
-        aria-hidden="true"
-        className="delphic-ring-spin pointer-events-none absolute -inset-10 rounded-full border border-[var(--ms-bronze)]/15 border-dashed z-0"
+        className="delphic-ring-spin pointer-events-none absolute w-[580px] h-[580px] sm:w-[680px] sm:h-[680px] lg:w-[780px] lg:h-[780px] rounded-full border border-[var(--ms-bronze)]/15 border-dashed z-0"
         style={{
-          transform: `translate3d(${yaw * -8}px, ${pitch * 8}px, -60px)`,
+          transform: `translate3d(${yaw * -10}px, ${pitch * 10}px, -70px)`,
         }}
       />
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-12 rounded-full border border-[var(--ms-bronze)]/10 z-0"
+        className="pointer-events-none absolute w-[420px] h-[420px] sm:w-[500px] sm:h-[500px] lg:w-[580px] lg:h-[580px] rounded-full border border-[var(--ms-bronze)]/10 z-0"
         style={{
-          transform: `translate3d(${yaw * -12}px, ${pitch * 10}px, -50px)`,
+          transform: `translate3d(${yaw * -14}px, ${pitch * 12}px, -60px)`,
         }}
       />
 
       {/* 2. LAYER 1: MONUMENTAL TEXT LAYERED BEHIND THE STATUE */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-0 flex flex-col items-center justify-between pt-12 pb-14 px-4 z-10 overflow-hidden transition-transform duration-75 ease-out select-none"
+        className="pointer-events-none absolute inset-0 flex flex-col items-center justify-between pt-6 sm:pt-10 pb-16 sm:pb-20 px-2 z-10 transition-transform duration-75 ease-out select-none"
         style={{
           transform: bgTextTransform,
           transformStyle: 'preserve-3d',
@@ -228,40 +217,40 @@ export default function Sculpture3DCanvas({
       >
         {/* Giant Monolithic Title (e.g. K I N T S U G I) behind head & hair curls */}
         <div
-          className="font-classical font-black text-center whitespace-nowrap tracking-[0.24em] sm:tracking-[0.34em] leading-none transition-all duration-300"
+          className="font-classical font-black text-center whitespace-nowrap tracking-[0.28em] sm:tracking-[0.40em] leading-none transition-all duration-300"
           style={{
-            fontSize: 'clamp(3.6rem, 10.5vw, 6.2rem)',
+            fontSize: 'clamp(4.2rem, 12vw, 8.8rem)',
             WebkitTextStroke: renderMode === 1 ? '1.8px rgba(250, 204, 21, 0.92)' : '1.5px rgba(212, 165, 40, 0.72)',
             color: renderMode === 1 ? 'rgba(250, 204, 21, 0.22)' : 'rgba(212, 165, 40, 0.12)',
             textShadow: renderMode === 1 
-              ? '0 0 45px rgba(250, 204, 21, 0.5), 0 0 90px rgba(212, 165, 40, 0.25)' 
-              : '0 0 35px rgba(212, 165, 40, 0.35)',
+              ? '0 0 50px rgba(250, 204, 21, 0.5), 0 0 100px rgba(212, 165, 40, 0.25)' 
+              : '0 0 40px rgba(212, 165, 40, 0.35)',
           }}
         >
           {primaryTitle}
         </div>
 
-        {/* Monumental Classical Greek Epigraph behind neck & shoulders */}
+        {/* Monumental Classical Greek Epigraph behind neck & torso */}
         <div
           lang="el"
-          className="font-classical italic font-semibold text-center whitespace-nowrap tracking-[0.16em] sm:tracking-[0.24em] transition-all duration-300"
+          className="font-classical italic font-semibold text-center whitespace-nowrap tracking-[0.18em] sm:tracking-[0.28em] transition-all duration-300"
           style={{
-            fontSize: 'clamp(2.4rem, 7vw, 4.4rem)',
-            WebkitTextStroke: renderMode === 1 ? '1.5px rgba(250, 204, 21, 0.75)' : '1.3px rgba(220, 185, 75, 0.58)',
-            color: renderMode === 1 ? 'rgba(250, 204, 21, 0.16)' : 'rgba(220, 185, 75, 0.10)',
-            textShadow: '0 0 28px rgba(212, 165, 40, 0.28)',
+            fontSize: 'clamp(2.8rem, 8vw, 5.6rem)',
+            WebkitTextStroke: renderMode === 1 ? '1.6px rgba(250, 204, 21, 0.80)' : '1.4px rgba(220, 185, 75, 0.62)',
+            color: renderMode === 1 ? 'rgba(250, 204, 21, 0.18)' : 'rgba(220, 185, 75, 0.12)',
+            textShadow: '0 0 35px rgba(212, 165, 40, 0.30)',
           }}
         >
           {greekEpigraph}
         </div>
 
         {/* Archival Specimen Attribution Watermark */}
-        <div className="font-mono text-[9px] sm:text-[10px] tracking-[0.26em] text-[var(--ms-bronze)]/45 uppercase">
+        <div className="font-mono text-[9.5px] sm:text-[11px] tracking-[0.32em] text-[var(--ms-bronze)]/50 uppercase">
           {secondaryTag}
         </div>
       </div>
 
-      {/* 3. LAYER 2: FOREGROUND STATUE IN FRONT OF THE MONUMENTAL TEXT */}
+      {/* 3. LAYER 2: BIG & TALL FOREGROUND STATUE IN FRONT OF THE MONUMENTAL TEXT */}
       <div
         className="relative w-full h-full flex items-center justify-center z-20 transition-transform duration-75 ease-out pointer-events-none"
         style={{
@@ -269,18 +258,18 @@ export default function Sculpture3DCanvas({
           transformStyle: 'preserve-3d',
         }}
       >
-        {/* Full Sculpture Cutout Bust */}
+        {/* Towering Freestanding Sculpture Cutout Bust */}
         <img
           src={src}
           alt={alt}
           draggable={false}
-          className="w-auto h-[90%] sm:h-[94%] max-w-[96%] object-contain drop-shadow-[0_25px_45px_rgba(0,0,0,0.98)] transition-all duration-300"
+          className="w-auto h-[460px] sm:h-[580px] lg:h-[760px] xl:h-[840px] max-h-[88vh] max-w-[98%] object-contain drop-shadow-[0_35px_70px_rgba(0,0,0,0.98)] transition-all duration-300"
           style={{
             filter: renderMode === 1
-              ? 'drop-shadow(0 25px 50px rgba(0,0,0,0.98)) drop-shadow(0 0 50px rgba(245,195,45,0.5)) contrast(1.08)'
+              ? 'drop-shadow(0 35px 75px rgba(0,0,0,0.98)) drop-shadow(0 0 60px rgba(245,195,45,0.55)) contrast(1.1)'
               : renderMode === 2
-              ? 'drop-shadow(0 20px 40px rgba(0,0,0,0.95)) drop-shadow(0 0 30px rgba(56,189,248,0.35)) hue-rotate(20deg)'
-              : 'drop-shadow(0 22px 45px rgba(0,0,0,0.95)) drop-shadow(0 0 30px rgba(212,165,40,0.28))',
+              ? 'drop-shadow(0 30px 60px rgba(0,0,0,0.95)) drop-shadow(0 0 40px rgba(56,189,248,0.4)) hue-rotate(20deg)'
+              : 'drop-shadow(0 30px 65px rgba(0,0,0,0.96)) drop-shadow(0 0 40px rgba(212,165,40,0.32))',
           }}
         />
 
@@ -289,7 +278,7 @@ export default function Sculpture3DCanvas({
           <div
             className="pointer-events-none absolute inset-0 mix-blend-color-dodge transition-opacity duration-300"
             style={{
-              background: `radial-gradient(circle 220px at ${glintX}% ${glintY}%, rgba(255, 235, 150, 0.45) 0%, rgba(212, 165, 40, 0.15) 45%, transparent 75%)`,
+              background: `radial-gradient(circle 260px at ${glintX}% ${glintY}%, rgba(255, 235, 150, 0.5) 0%, rgba(212, 165, 40, 0.2) 45%, transparent 75%)`,
             }}
           />
         )}
@@ -297,7 +286,7 @@ export default function Sculpture3DCanvas({
         {/* Mode 2: 3D Holographic Wireframe Grid Topology */}
         {renderMode === 2 && (
           <div
-            className="pointer-events-none absolute inset-0 opacity-40 mix-blend-screen bg-[linear-gradient(rgba(56,189,248,0.25)_1px,transparent_1px),linear-gradient(90deg,rgba(56,189,248,0.25)_1px,transparent_1px)] bg-[size:18px_18px]"
+            className="pointer-events-none absolute inset-0 opacity-40 mix-blend-screen bg-[linear-gradient(rgba(56,189,248,0.25)_1px,transparent_1px),linear-gradient(90deg,rgba(56,189,248,0.25)_1px,transparent_1px)] bg-[size:20px_20px]"
             style={{
               maskImage: 'radial-gradient(circle at 50% 50%, black 50%, transparent 85%)',
               WebkitMaskImage: 'radial-gradient(circle at 50% 50%, black 50%, transparent 85%)',
@@ -306,98 +295,94 @@ export default function Sculpture3DCanvas({
         )}
       </div>
 
-      {/* 4. Top 3D HUD Navigation Bar */}
-      <div className="absolute top-0 inset-x-0 p-3 bg-gradient-to-b from-[#05070a]/95 via-[#05070a]/70 to-transparent flex items-center justify-between gap-2 pointer-events-none z-30 font-mono text-[9.5px]">
-        <div className="flex items-center gap-2">
+      {/* 4. Top Floating Minimalist 3D Status */}
+      <div className="absolute top-2 inset-x-0 px-2 flex items-center justify-between gap-2 pointer-events-none z-30 font-mono text-[9.5px]">
+        <div className="flex items-center gap-2 bg-[#06080e]/75 backdrop-blur-sm border border-[var(--ms-rule)] px-2.5 py-1 rounded-full">
           <span className="flex h-2 w-2 relative">
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#d4a528] opacity-75" />
             <span className="relative inline-flex rounded-full h-2 w-2 bg-[#d4a528]" />
           </span>
           <span className="text-ink font-bold tracking-wider">
-            3D DEPTH STAGE
+            3D VOLUMETRIC SCULPTURE
           </span>
           <span className="text-muted hidden sm:inline">
-            // PARALLAX OCCLUSION
+            // FREESTANDING
           </span>
         </div>
 
-        <div className="text-[9px] text-[#4ade80] bg-[#4ade80]/10 border border-[#4ade80]/30 px-2 py-0.5 font-bold tracking-wider">
+        <div className="text-[9px] text-[#4ade80] bg-[#4ade80]/10 border border-[#4ade80]/30 px-2.5 py-1 rounded-full font-bold tracking-wider backdrop-blur-sm">
           REAL-TIME 3D ACTIVE
         </div>
       </div>
 
-      {/* 4 Golden Architectural Corner Brackets */}
-      <span className="absolute top-2 left-2 w-3 h-3 border-t-2 border-l-2 border-[var(--ms-bronze)] pointer-events-none z-30" />
-      <span className="absolute top-2 right-2 w-3 h-3 border-t-2 border-r-2 border-[var(--ms-bronze)] pointer-events-none z-30" />
-      <span className="absolute bottom-2 left-2 w-3 h-3 border-b-2 border-l-2 border-[var(--ms-bronze)] pointer-events-none z-30" />
-      <span className="absolute bottom-2 right-2 w-3 h-3 border-b-2 border-r-2 border-[var(--ms-bronze)] pointer-events-none z-30" />
+      {/* 5. Floating Bottom Minimalist Telemetry & Mode Deck */}
+      <div className="absolute bottom-2 z-30 flex flex-wrap items-center justify-center gap-2 font-mono text-[9.5px]">
+        <div className="flex items-center gap-2 bg-[#06080e]/90 backdrop-blur-md border border-[var(--ms-rule)] px-3 py-1.5 rounded-full shadow-[0_12px_32px_rgba(0,0,0,0.85)]">
+          {/* Real-time Rotation Readout */}
+          <div className="flex items-center gap-2 text-muted pr-2 border-r border-[var(--ms-rule)]">
+            <span className="text-accent font-semibold">
+              YAW: {displayYaw >= 0 ? `+${displayYaw}` : displayYaw}°
+            </span>
+            <span>·</span>
+            <span className="text-[#38bdf8] font-semibold">
+              PITCH: {displayPitch >= 0 ? `+${displayPitch}` : displayPitch}°
+            </span>
+          </div>
 
-      {/* 5. Bottom 3D Telemetry Controls & Render Mode Deck */}
-      <div className="absolute bottom-0 inset-x-0 p-3 bg-gradient-to-t from-[#05070a]/98 via-[#05070a]/80 to-transparent flex flex-wrap items-center justify-between gap-2 z-30 font-mono text-[9.5px]">
-        {/* Real-time Rotation Readout */}
-        <div className="flex items-center gap-2 text-muted">
-          <span className="text-accent font-semibold">
-            YAW: {displayYaw >= 0 ? `+${displayYaw}` : displayYaw}°
-          </span>
-          <span>·</span>
-          <span className="text-[#38bdf8] font-semibold">
-            PITCH: {displayPitch >= 0 ? `+${displayPitch}` : displayPitch}°
-          </span>
-        </div>
+          {/* 3D Mode Selector Buttons */}
+          <div className="flex items-center gap-1">
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                handleSwitchMode(0);
+              }}
+              className={`px-2 py-0.5 rounded-full text-[9px] font-bold transition-all ${
+                renderMode === 0
+                  ? 'border border-[var(--ms-bronze)] bg-[var(--ms-bronze)] text-[#08080a]'
+                  : 'border border-transparent text-muted hover:text-ink'
+              }`}
+            >
+              REALISM
+            </button>
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                handleSwitchMode(1);
+              }}
+              className={`px-2 py-0.5 rounded-full text-[9px] font-bold transition-all ${
+                renderMode === 1
+                  ? 'border border-[#facc15] bg-[#facc15] text-[#08080a]'
+                  : 'border border-transparent text-muted hover:text-ink'
+              }`}
+            >
+              AURIC GLOW
+            </button>
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                handleSwitchMode(2);
+              }}
+              className={`px-2 py-0.5 rounded-full text-[9px] font-bold transition-all ${
+                renderMode === 2
+                  ? 'border border-[#38bdf8] bg-[#38bdf8] text-[#08080a]'
+                  : 'border border-transparent text-muted hover:text-ink'
+              }`}
+            >
+              3D MESH
+            </button>
 
-        {/* 3D Mode Selector Buttons */}
-        <div className="flex items-center gap-1">
-          <button
-            type="button"
-            onClick={(e) => {
-              e.stopPropagation();
-              handleSwitchMode(0);
-            }}
-            className={`px-2 py-0.5 border text-[9px] font-bold transition-all ${
-              renderMode === 0
-                ? 'border-[var(--ms-bronze)] bg-[var(--ms-bronze)] text-[#08080a]'
-                : 'border-lineSoft bg-[#0a0d14]/80 text-muted hover:text-ink'
-            }`}
-          >
-            REALISM
-          </button>
-          <button
-            type="button"
-            onClick={(e) => {
-              e.stopPropagation();
-              handleSwitchMode(1);
-            }}
-            className={`px-2 py-0.5 border text-[9px] font-bold transition-all ${
-              renderMode === 1
-                ? 'border-[#facc15] bg-[#facc15] text-[#08080a]'
-                : 'border-lineSoft bg-[#0a0d14]/80 text-muted hover:text-ink'
-            }`}
-          >
-            AURIC GLOW
-          </button>
-          <button
-            type="button"
-            onClick={(e) => {
-              e.stopPropagation();
-              handleSwitchMode(2);
-            }}
-            className={`px-2 py-0.5 border text-[9px] font-bold transition-all ${
-              renderMode === 2
-                ? 'border-[#38bdf8] bg-[#38bdf8] text-[#08080a]'
-                : 'border-lineSoft bg-[#0a0d14]/80 text-muted hover:text-ink'
-            }`}
-          >
-            3D MESH
-          </button>
-
-          <button
-            type="button"
-            onClick={handleReset}
-            className="px-2 py-0.5 border border-lineSoft bg-[#0a0d14]/80 text-muted hover:text-accent hover:border-accent text-[9px] transition-colors ml-1"
-            title="Reset 3D camera angle to center"
-          >
-            RESET
-          </button>
+            <button
+              type="button"
+              onClick={handleReset}
+              className="px-2 py-0.5 rounded-full border border-lineSoft text-muted hover:text-accent hover:border-accent text-[9px] transition-colors ml-1"
+              title="Reset 3D camera angle to center"
+            >
+              RESET
+            </button>
+          </div>
         </div>
       </div>
     </div>

@@ -520,25 +520,16 @@ export default function AboutSection({ onExploreProjects, onPlaySound }) {
               </span>
             </div>
 
-            {/* Expanded Centerpiece Monumental 3D Volumetric Stage */}
-            <div className="relative z-10 my-4 sm:my-6 w-full flex flex-col items-center justify-center">
-              <div className="relative w-full aspect-[4/5] sm:aspect-square max-w-[480px] sm:max-w-[520px] rounded-xs shadow-[0_25px_60px_rgba(0,0,0,0.95),0_0_35px_rgba(212,165,40,0.22)] overflow-hidden">
-                {/* Background Rotating Delphic Orbit Ring */}
-                <div
-                  className="delphic-ring-spin pointer-events-none absolute -inset-8 rounded-full border border-[var(--ms-bronze)]/20 border-dashed select-none z-0"
-                  aria-hidden="true"
-                />
-
-                {/* Interactive Volumetric 3D Stage with Monumental Background Typography */}
-                <Sculpture3DCanvas
-                  src={currentPlate.src}
-                  alt={currentPlate.alt}
-                  plate={currentPlate}
-                  maxim={currentMaxim}
-                  onPlaySound={onPlaySound}
-                  className="relative z-10 w-full h-full"
-                />
-              </div>
+            {/* Monumental Free-Standing 3D Volumetric Sculpture Stage (No Constraining Box) */}
+            <div className="relative z-10 my-4 lg:my-6 w-full flex-1 flex flex-col items-center justify-center min-h-[500px] sm:min-h-[640px] lg:min-h-[780px] xl:min-h-[860px]">
+              <Sculpture3DCanvas
+                src={currentPlate.src}
+                alt={currentPlate.alt}
+                plate={currentPlate}
+                maxim={currentMaxim}
+                onPlaySound={onPlaySound}
+                className="w-full h-full min-h-[500px] sm:min-h-[640px] lg:min-h-[780px] xl:min-h-[860px]"
+              />
             </div>
 
             {/* Museum Catalogue Plaque & Inscription Decoder */}
