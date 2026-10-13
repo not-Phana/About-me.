@@ -8,6 +8,7 @@ import {
   IconCode,
 } from './Icons';
 import ProjectPreviewVisual from './ProjectPreviewVisual';
+import RealKhmerKeyboard from './RealKhmerKeyboard';
 
 const FLAGSHIP_MODULES = [
   {
@@ -46,7 +47,8 @@ export default function FeaturedProjects({ projects, onSelectProject }) {
   const secondaryFeatured = featured.slice(1);
 
   const [activeSlideIdx, setActiveSlideIdx] = useState(0);
-  const [viewportMode, setViewportMode] = useState('gallery'); // 'gallery' | 'embed' | 'blueprint'
+  const [activeKeyboardLayout, setActiveKeyboardLayout] = useState('nida'); // 'nida' | 'english' | 'standard'
+  const [viewportMode, setViewportMode] = useState('keyboard'); // 'keyboard' | 'embed' | 'blueprint' | 'gallery'
   const [activeModuleIdx, setActiveModuleIdx] = useState(0);
   const [inlineEmbedMap, setInlineEmbedMap] = useState({});
 
@@ -78,9 +80,10 @@ export default function FeaturedProjects({ projects, onSelectProject }) {
         {/* Viewport Mode Switcher */}
         <div className="flex flex-wrap items-center gap-1.5 mt-2 sm:mt-0">
           {[
-            { id: 'gallery', label: '01 // SCREENSHOTS' },
+            { id: 'keyboard', label: '01 // REAL KEYBOARD (NIDA / EN)' },
             { id: 'embed', label: '02 // LIVE INTERACTIVE APP' },
             { id: 'blueprint', label: '03 // SYSTEM BLUEPRINT' },
+            { id: 'gallery', label: '04 // SCREENSHOTS' },
           ].map((tab) => (
             <button
               key={tab.id}
@@ -100,8 +103,63 @@ export default function FeaturedProjects({ projects, onSelectProject }) {
 
       {/* Flagship Product Showcase: PK Khmer Type */}
       <div className="grid grid-cols-1 lg:grid-cols-12 border-b border-line">
-        {/* Left: Product Visual / Live App / System Blueprint */}
+        {/* Left: Real Interactive Keyboard / Live App / System Blueprint / Screenshots */}
         <div className="lg:col-span-7 border-b lg:border-b-0 lg:border-r border-line bg-surface/50 p-6 sm:p-10 flex flex-col justify-between">
+          {viewportMode === 'keyboard' && (
+            <div className="flex flex-col h-full justify-between">
+              <div className="hud-frame">
+                <RealKhmerKeyboard
+                  activeLayoutId={activeKeyboardLayout}
+                  onLayoutChange={(nextId) => setActiveKeyboardLayout(nextId)}
+                  onLaunchEmbed={() => setViewportMode('embed')}
+                />
+              </div>
+
+              {/* Bottom Layout & View Selector Bar */}
+              <div className="mt-4">
+                <div className="flex items-center justify-between font-mono text-[11px] text-muted mb-2">
+                  <span>
+                    SWITCH LIVE KEYBOARD LAYOUT (MICROSOFT KHMER NIDA &amp; ENGLISH)
+                  </span>
+                  <span className="text-accent font-semibold uppercase">
+                    ACTIVE: {activeKeyboardLayout === 'nida' ? 'KHMER NIDA (MICROSOFT)' : activeKeyboardLayout === 'english' ? 'ENGLISH (US QWERTY)' : 'KHMER STANDARD'}
+                  </span>
+                </div>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                  {[
+                    { id: 'nida', label: 'Khmer NiDA (Microsoft)', type: 'layout' },
+                    { id: 'english', label: 'English (US QWERTY)', type: 'layout' },
+                    { id: 'standard', label: 'Khmer Standard', type: 'layout' },
+                    { id: 'gallery', label: 'Studio Screenshots', type: 'mode' },
+                  ].map((item) => {
+                    const isSelected =
+                      item.type === 'layout' && activeKeyboardLayout === item.id;
+                    return (
+                      <button
+                        key={item.id}
+                        type="button"
+                        onClick={() => {
+                          if (item.type === 'layout') {
+                            setActiveKeyboardLayout(item.id);
+                          } else {
+                            setViewportMode('gallery');
+                          }
+                        }}
+                        className={`px-3 py-2 border text-left font-mono text-[11px] transition-colors ${
+                          isSelected
+                            ? 'border-accent bg-accentDim text-ink font-semibold'
+                            : 'border-line bg-bg text-muted hover:text-ink'
+                        }`}
+                      >
+                        {item.label}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+          )}
+
           {viewportMode === 'gallery' && (
             <>
               <div className="hud-frame group relative border border-line bg-[#0b0d12] overflow-hidden aspect-[16/10]">
@@ -116,10 +174,10 @@ export default function FeaturedProjects({ projects, onSelectProject }) {
                 </div>
                 <button
                   type="button"
-                  onClick={() => setViewportMode('embed')}
+                  onClick={() => setViewportMode('keyboard')}
                   className="absolute bottom-3 right-3 bg-invertBg text-invertFg px-3.5 py-1.5 hud-label shadow-card hover:opacity-90 transition-opacity"
                 >
-                  Launch Live Embed -&gt;
+                  Back to Real Keyboard -&gt;
                 </button>
               </div>
 
@@ -175,10 +233,10 @@ export default function FeaturedProjects({ projects, onSelectProject }) {
                 <div className="flex items-center gap-3">
                   <button
                     type="button"
-                    onClick={() => setViewportMode('gallery')}
+                    onClick={() => setViewportMode('keyboard')}
                     className="text-muted hover:text-ink"
                   >
-                    [Back to Screenshots]
+                    [Back to Real Keyboard]
                   </button>
                   <a
                     href={flagship.liveUrl}
