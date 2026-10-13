@@ -77,15 +77,83 @@ export default function GitHubSection({ onPlaySound }) {
 
   const handleSimulateLivePush = (e) => {
     e?.stopPropagation?.();
-    onPlaySound?.('beep');
+    onPlaySound?.('pulse');
     setIsPingingRealTime(true);
-    setSimulatedPushes((prev) => prev + 1);
-    const nowTime = new Date().toLocaleTimeString();
-    setLastSimulatedEvent(
-      `PushEvent [LIVE #${simulatedPushes + 1}] -> not-Phana/About-me. at ${nowTime} (+1 Commit Ingested)`
-    );
-    setTimeout(() => setIsPingingRealTime(false), 900);
+    const nextCount = simulatedPushes + 1;
+    setSimulatedPushes(nextCount);
+    setLastSimulatedEvent({
+      id: `sim-${Date.now()}`,
+      type: 'PushEvent',
+      repo: { name: 'not-Phana/About-me.' },
+      created_at: new Date().toISOString(),
+      payload: {
+        commits: [
+          {
+            message: `Live commit ingested by user simulation (#${nextCount})`,
+          },
+        ],
+        ref: 'refs/heads/main',
+      },
+      isSimulated: true,
+    });
+    setTimeout(() => setIsPingingRealTime(false), 1200);
   };
+
+  const allEvents = useMemo(() => {
+    const list = events ? [...events] : [];
+    if (lastSimulatedEvent) {
+      return [lastSimulatedEvent, ...list];
+    }
+    return list;
+  }, [events, lastSimulatedEvent]);
+
+  const displayEvents = useMemo(() => {
+    const fallbackList = [
+      {
+        id: 'mock-1',
+        type: 'PushEvent',
+        repo: { name: 'not-Phana/About-me.' },
+        created_at: new Date(Date.now() - 4 * 60 * 1000).toISOString(),
+        payload: {
+          commits: [
+            { message: 'feat: real-time GitHub velocity stream & auto-poll telemetry' },
+          ],
+          ref: 'refs/heads/main',
+        },
+      },
+      {
+        id: 'mock-2',
+        type: 'PushEvent',
+        repo: { name: 'Kon-Kurosaki/PK-Khmer-Type' },
+        created_at: new Date(Date.now() - 34 * 60 * 1000).toISOString(),
+        payload: {
+          commits: [
+            { message: 'build: tactile Khmer keyboard hardware layout & audio synth' },
+          ],
+          ref: 'refs/heads/main',
+        },
+      },
+      {
+        id: 'mock-3',
+        type: 'CreateEvent',
+        repo: { name: 'not-Phana/interactive-portfolio' },
+        created_at: new Date(Date.now() - 110 * 60 * 1000).toISOString(),
+        payload: {
+          ref_type: 'tag',
+          ref: 'v2.4.0',
+        },
+      },
+    ];
+
+    if (allEvents && allEvents.length > 0) {
+      const list = [...allEvents];
+      while (list.length < 3) {
+        list.push(fallbackList[list.length]);
+      }
+      return list.slice(0, 3);
+    }
+    return fallbackList;
+  }, [allEvents]);
 
   const originalRepos = useMemo(() => repos.filter((r) => !r.fork), [repos]);
   const baseRepos = repoFilter === 'original' ? originalRepos : repos;
@@ -526,23 +594,44 @@ export default function GitHubSection({ onPlaySound }) {
               {/* Top Telemetry Sub-Header Inside Chart with Live Sim Controls */}
               <div className="flex flex-wrap items-center justify-between gap-2.5 pb-3 mb-3 border-b border-lineSoft font-mono text-[10.5px]">
                 <div className="flex items-center gap-2">
+                  <span className="relative flex h-2 w-2">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#4ade80] opacity-75" />
+                    <span className="relative inline-flex rounded-full h-2 w-2 bg-[#4ade80]" />
+                  </span>
                   <span className="text-ink font-bold uppercase tracking-wider">
                     {selectedMonth
                       ? `FILTERED PERIOD: ${selectedMonth}`
                       : '2026 VELOCITY STREAM // REAL-TIME INGESTION'}
                   </span>
                   {isPingingRealTime && (
-                    <span className="text-[10px] bg-[#4ade80] text-[#090d16] px-1.5 py-0.2 font-bold animate-pulse">
-                      +1 PUSH INGESTED
+                    <span className="text-[9.5px] bg-[#4ade80] text-[#090d16] px-2 py-0.5 font-bold animate-key-burst shadow-sm">
+                      +1 COMMIT INGESTED
                     </span>
                   )}
                 </div>
 
                 <div className="flex flex-wrap items-center gap-2">
+                  {/* Live Auto-Poll Countdown Ticker with Depleting Meter */}
+                  <div
+                    className="flex items-center gap-1.5 border border-line bg-surface px-2.5 py-1 text-muted"
+                    title={`Auto-polling GitHub REST API every 45s (${countdown}s remaining)`}
+                  >
+                    <span className="text-[9px] uppercase tracking-wider text-muted">NEXT SYNC:</span>
+                    <span className="text-[#4ade80] font-bold font-mono w-5 text-right">
+                      {countdown}s
+                    </span>
+                    <div className="w-12 h-1.5 bg-[#14151a] rounded-xs overflow-hidden border border-lineSoft ml-0.5">
+                      <div
+                        className="h-full bg-[#4ade80] transition-all duration-1000"
+                        style={{ width: `${Math.round((countdown / 45) * 100)}%` }}
+                      />
+                    </div>
+                  </div>
+
                   <button
                     type="button"
                     onClick={handleSimulateLivePush}
-                    className="inline-flex items-center gap-1.5 border border-[#4ade80]/60 bg-[#4ade80]/15 hover:bg-[#4ade80]/25 text-[#4ade80] px-2.5 py-0.5 font-bold transition-all hover:scale-105 active:scale-95"
+                    className="inline-flex items-center gap-1.5 border border-[#4ade80]/60 bg-[#4ade80]/15 hover:bg-[#4ade80]/25 text-[#4ade80] px-2.5 py-1 font-bold transition-all hover:scale-105 active:scale-95"
                     title="Simulate an instant real-time git push event to watch the spline curve and October metrics update live"
                   >
                     <IconTerminal className="w-3 h-3" />
@@ -553,7 +642,7 @@ export default function GitHubSection({ onPlaySound }) {
                     type="button"
                     onClick={refresh}
                     disabled={status === 'loading'}
-                    className="inline-flex items-center gap-1.5 border border-line bg-surface hover:border-accent text-ink px-2.5 py-0.5 transition-colors disabled:opacity-50"
+                    className="inline-flex items-center gap-1.5 border border-line bg-surface hover:border-accent text-ink px-2.5 py-1 transition-colors disabled:opacity-50"
                     title="Poll GitHub REST API immediately"
                   >
                     <IconRefresh
@@ -657,9 +746,20 @@ export default function GitHubSection({ onPlaySound }) {
                         <path
                           d="M 58 84 Q 123 92, 188 90 T 318 88 T 448 82 Q 513 78, 578 16 L 643 24"
                           fill="none"
-                          stroke="rgba(56, 189, 248, 0.32)"
-                          strokeWidth="1.25"
+                          stroke="rgba(56, 189, 248, 0.22)"
+                          strokeWidth="1.2"
                           strokeDasharray="4 4"
+                        />
+
+                        {/* Animated Real-Time Ingestion Carrier Wave */}
+                        <path
+                          d={linePath}
+                          fill="none"
+                          stroke="#38bdf8"
+                          strokeWidth="1.8"
+                          strokeDasharray="6 6"
+                          className="animate-stream-flow"
+                          opacity="0.85"
                         />
 
                         {/* Primary Golden Velocity Curve */}
@@ -671,7 +771,7 @@ export default function GitHubSection({ onPlaySound }) {
                           className="transition-all duration-300"
                         />
 
-                        {/* Vertical Drop Bars & Interactive Nodes */}
+                        {/* Vertical Drop Bars, Laser Columns & Interactive Nodes */}
                         {pts.map((p) => {
                           const isActive = p.count > 0;
                           const isSel = selectedMonth === p.key;
@@ -679,6 +779,20 @@ export default function GitHubSection({ onPlaySound }) {
 
                           return (
                             <g key={p.key}>
+                              {/* Laser Scanline Beam on Current Month */}
+                              {isCurrentMonth && (
+                                <line
+                                  x1={p.x}
+                                  y1="6"
+                                  x2={p.x}
+                                  y2="94"
+                                  stroke="#4ade80"
+                                  strokeWidth="1.2"
+                                  strokeDasharray="2 2"
+                                  opacity="0.75"
+                                />
+                              )}
+
                               <line
                                 x1={p.x}
                                 y1={p.y}
@@ -695,6 +809,20 @@ export default function GitHubSection({ onPlaySound }) {
                                 }
                                 strokeWidth={isActive ? '2' : '1'}
                               />
+
+                              {/* Concentric stationary ping ring on current month node */}
+                              {isCurrentMonth && (
+                                <circle
+                                  cx={p.x}
+                                  cy={p.y}
+                                  r="11"
+                                  fill="none"
+                                  stroke="#4ade80"
+                                  strokeWidth="1.4"
+                                  className="radar-blip-ping"
+                                  opacity="0.9"
+                                />
+                              )}
 
                               {isActive && (
                                 <circle
@@ -730,6 +858,34 @@ export default function GitHubSection({ onPlaySound }) {
                                     : 'rgba(158, 150, 137, 0.35)'
                                 }
                               />
+
+                              {/* Floating LIVE [OCT] HUD micro-tag */}
+                              {isCurrentMonth && (
+                                <g transform={`translate(${p.x - 28}, ${Math.max(6, p.y - 18)})`}>
+                                  <rect
+                                    x="0"
+                                    y="0"
+                                    width="56"
+                                    height="13"
+                                    rx="2"
+                                    fill="#090d16"
+                                    stroke="#4ade80"
+                                    strokeWidth="1"
+                                  />
+                                  <circle cx="7" cy="6.5" r="2.2" fill="#4ade80" className="animate-pulse" />
+                                  <text
+                                    x="14"
+                                    y="9.5"
+                                    fill="#4ade80"
+                                    fontSize="8"
+                                    fontFamily="monospace"
+                                    fontWeight="bold"
+                                  >
+                                    LIVE [OCT]
+                                  </text>
+                                </g>
+                              )}
+
                               <text
                                 x={p.x}
                                 y="110"
@@ -756,26 +912,84 @@ export default function GitHubSection({ onPlaySound }) {
                 </svg>
               </div>
 
-              {/* Real-Time Live GitHub Event Stream Ticker Strip */}
-              <div className="mt-2.5 pt-2.5 border-t border-lineSoft flex flex-wrap items-center justify-between gap-2 font-mono text-[10.5px]">
-                <div className="flex items-center gap-2 min-w-0">
-                  <span className="text-accent font-bold">[LIVE FEED]</span>
-                  <span className="text-muted">LATEST EVENT:</span>
-                  <span className="text-[#4ade80] font-semibold truncate">
-                    {lastSimulatedEvent ||
-                      (events && events[0]
-                        ? `${events[0].type.replace('Event', '')} -> ${
-                            events[0].repo?.name || 'PK-Khmer-Type'
-                          } (${formatRelativeTime(events[0].created_at)})`
-                        : 'PushEvent -> not-Phana/About-me. (Just now)')}
-                  </span>
+              {/* Real-Time Multi-Channel Live GitHub Event Stream Deck */}
+              <div className="mt-3 pt-3 border-t border-lineSoft">
+                <div className="flex flex-wrap items-center justify-between gap-2 font-mono text-[10.5px] mb-2.5">
+                  <div className="flex items-center gap-2">
+                    <span className="flex h-2 w-2 relative">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#4ade80] opacity-75" />
+                      <span className="relative inline-flex rounded-full h-2 w-2 bg-[#4ade80]" />
+                    </span>
+                    <span className="text-[#4ade80] font-bold tracking-wider">
+                      [LIVE STREAM DECK // REAL-TIME INGESTION]
+                    </span>
+                  </div>
+                  <div className="text-muted text-[10px] shrink-0">
+                    REST SYNC: <span className="text-ink font-semibold">{lastSynced ? lastSynced.toLocaleTimeString('en-US', { hour12: false }) : 'LIVE'}</span> · AUTO-POLL: <span className="text-[#4ade80] font-semibold">{countdown}s</span>
+                  </div>
                 </div>
-                <div className="text-muted text-[10px] shrink-0">
-                  LAST REST SYNC:{' '}
-                  {lastSynced
-                    ? lastSynced.toLocaleTimeString('en-US', { hour12: false })
-                    : 'LIVE'}{' '}
-                  · 45s AUTO-POLL
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-2 font-mono">
+                  {displayEvents.map((evt, idx) => {
+                    const isNewest = idx === 0;
+                    const isSim = evt.isSimulated;
+                    const eventType = evt.type ? evt.type.replace('Event', '').toUpperCase() : 'PUSH';
+                    const commitMsg =
+                      evt.payload?.commits?.[0]?.message ||
+                      (evt.type === 'CreateEvent'
+                        ? `Branch/tag created: ${evt.payload?.ref || 'main'}`
+                        : 'Repository telemetry & sync pulse');
+                    const repoName = evt.repo?.name || 'not-Phana/About-me.';
+                    const relTime = formatRelativeTime(evt.created_at);
+
+                    return (
+                      <div
+                        key={evt.id || idx}
+                        className={`p-2.5 border transition-all duration-300 relative group overflow-hidden ${
+                          isNewest
+                            ? 'bg-[#090e18] border-[#4ade80]/50 shadow-[0_0_12px_rgba(74,222,128,0.12)]'
+                            : 'bg-[#0b0c10] border-lineSoft hover:border-line'
+                        }`}
+                      >
+                        {isNewest && (
+                          <div className="absolute top-0 right-0 h-1 w-full bg-gradient-to-r from-transparent via-[#4ade80] to-transparent animate-pulse" />
+                        )}
+                        <div className="flex items-center justify-between gap-1 text-[9.5px] mb-1.5">
+                          <div className="flex items-center gap-1.5 min-w-0">
+                            <span
+                              className={`px-1.5 py-0.2 font-bold tracking-wide rounded-[2px] ${
+                                eventType === 'PUSH'
+                                  ? 'bg-[#4ade80]/20 text-[#4ade80] border border-[#4ade80]/40'
+                                  : eventType === 'CREATE'
+                                  ? 'bg-[#38bdf8]/20 text-[#38bdf8] border border-[#38bdf8]/40'
+                                  : 'bg-accent/20 text-accent border border-accent/40'
+                              }`}
+                            >
+                              {eventType}
+                            </span>
+                            <span className="text-muted text-[8.5px]">CH 0{idx + 1}</span>
+                            {isSim && (
+                              <span className="text-[8.5px] text-[#4ade80] font-bold">
+                                [SIMULATED]
+                              </span>
+                            )}
+                          </div>
+                          <span className="text-muted text-[9px] shrink-0 flex items-center gap-1">
+                            {isNewest && (
+                              <span className="w-1.5 h-1.5 rounded-full bg-[#4ade80] animate-ping" />
+                            )}
+                            {relTime}
+                          </span>
+                        </div>
+                        <div className="text-[11px] font-bold text-ink truncate mb-0.5 group-hover:text-accent transition-colors" title={repoName}>
+                          {repoName}
+                        </div>
+                        <div className="text-[10px] text-muted truncate leading-relaxed" title={commitMsg}>
+                          {commitMsg}
+                        </div>
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
 
@@ -807,6 +1021,7 @@ export default function GitHubSection({ onPlaySound }) {
                         ? 1
                         : 0;
 
+                    const isToday = colIdx === 29;
                     const isCurrentCol = monthIdx === 9; // October column
                     const bgClass =
                       activeLevel === 4
@@ -823,13 +1038,21 @@ export default function GitHubSection({ onPlaySound }) {
                       <div
                         key={cellIdx}
                         className={`h-2 rounded-[1px] border ${bgClass} ${
+                          isToday
+                            ? 'ring-1 ring-[#4ade80] shadow-[0_0_6px_rgba(74,222,128,0.4)]'
+                            : ''
+                        } ${
                           isCurrentCol && isPingingRealTime
                             ? 'scale-125 ring-1 ring-[#4ade80] transition-transform'
                             : ''
                         }`}
-                        title={`2026 Cadence Matrix // ${
-                          monthlyActivity[monthIdx]?.label
-                        } (Tier ${activeLevel})`}
+                        title={
+                          isToday
+                            ? `DAY 30 // LIVE INGESTION FOCUS (Tier ${activeLevel})`
+                            : `2026 Cadence Matrix // ${
+                                monthlyActivity[monthIdx]?.label
+                              } (Tier ${activeLevel})`
+                        }
                       />
                     );
                   })}

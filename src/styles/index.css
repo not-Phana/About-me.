@@ -506,6 +506,20 @@ h2.show::after {
   animation: radarPing 2s cubic-bezier(0, 0, 0.2, 1) infinite;
 }
 
+/* Continuous Real-Time Ingestion Carrier Wave Flow */
+@keyframes liveStreamFlow {
+  from {
+    stroke-dashoffset: 0;
+  }
+  to {
+    stroke-dashoffset: -48;
+  }
+}
+
+.animate-stream-flow {
+  animation: liveStreamFlow 1.6s linear infinite;
+}
+
 /* Punchy Mechanical Keycap Character Burst */
 @keyframes keyBurst {
   0% {
