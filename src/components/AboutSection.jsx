@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { PROFILE } from '../data/profile';
 import { IconArrowRight, IconArrowUpRight } from './Icons';
+import Sculpture3DCanvas from './Sculpture3DCanvas';
 
 const PHILOSOPHY_PRINCIPLES = [
   {
@@ -271,7 +272,7 @@ export default function AboutSection({ onExploreProjects, onPlaySound }) {
         {/* Asymmetrical Editorial Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-12 relative">
           {/* LEFT COLUMN: Personal Biography & Three Principles */}
-          <div className="lg:col-span-7 relative z-10 p-6 sm:p-10 lg:p-14 xl:p-16 lg:border-r border-[var(--ms-rule)] flex flex-col justify-between reveal-on-scroll reveal-delay-1">
+          <div className="lg:col-span-6 relative z-10 p-6 sm:p-10 lg:p-12 xl:p-14 lg:border-r border-[var(--ms-rule)] flex flex-col justify-between reveal-on-scroll reveal-delay-1">
             <div>
               {/* Editorial Section Rubric */}
               <div className="flex items-center gap-3 mb-5">
@@ -427,19 +428,19 @@ export default function AboutSection({ onExploreProjects, onPlaySound }) {
             </div>
           </div>
 
-          {/* RIGHT COLUMN: Classical Marble Sculpture & Museum Plaque */}
+          {/* RIGHT COLUMN: Monumental 3D Classical Marble Sculpture & Museum Plaque */}
           <div
             ref={stageRef}
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
-            className="lg:col-span-5 relative flex flex-col justify-between p-6 sm:p-8 lg:p-10 overflow-hidden bg-[var(--ms-surface)]/30 transition-colors reveal-on-scroll reveal-delay-2"
+            className="lg:col-span-6 relative flex flex-col justify-between p-6 sm:p-8 lg:p-10 xl:p-12 overflow-hidden bg-[var(--ms-surface)]/40 transition-colors reveal-on-scroll reveal-delay-2"
           >
             {/* Dynamic Interactive Gallery Chiaroscuro Spotlight */}
             <div
               aria-hidden="true"
               className="pointer-events-none absolute inset-0 transition-opacity duration-300"
               style={{
-                background: `radial-gradient(circle 320px at ${spotlightPos.x}% ${spotlightPos.y}%, rgba(212, 165, 40, 0.12) 0%, transparent 75%)`,
+                background: `radial-gradient(circle 380px at ${spotlightPos.x}% ${spotlightPos.y}%, rgba(212, 165, 40, 0.14) 0%, transparent 75%)`,
               }}
             />
 
@@ -519,50 +520,24 @@ export default function AboutSection({ onExploreProjects, onPlaySound }) {
               </span>
             </div>
 
-            {/* Centerpiece Sculpture Head / Archival Folio Plate with 3D Perspective Rotation */}
-            <figure className="sculpture-stage relative z-10 my-auto py-6 sm:py-8 flex flex-col items-center justify-center">
-              <div
-                className="relative w-full max-w-[360px] aspect-[4/5] flex items-center justify-center transition-transform duration-150 ease-out"
-                style={{
-                  transform: `perspective(850px) rotateX(${sculptureTilt.rx}deg) rotateY(${sculptureTilt.ry}deg)`,
-                }}
-              >
-                {/* Rotating Delphic halo orbit */}
+            {/* Expanded Centerpiece Monumental 3D Volumetric Stage */}
+            <div className="relative z-10 my-4 sm:my-6 w-full flex flex-col items-center justify-center">
+              <div className="relative w-full aspect-[4/5] sm:aspect-square max-w-[480px] sm:max-w-[520px] rounded-xs shadow-[0_25px_60px_rgba(0,0,0,0.95),0_0_35px_rgba(212,165,40,0.22)] overflow-hidden">
+                {/* Background Rotating Delphic Orbit Ring */}
                 <div
-                  className="delphic-ring-spin pointer-events-none absolute w-[330px] h-[330px] rounded-full border border-[var(--ms-bronze)]/25 border-dashed select-none"
+                  className="delphic-ring-spin pointer-events-none absolute -inset-8 rounded-full border border-[var(--ms-bronze)]/20 border-dashed select-none z-0"
                   aria-hidden="true"
                 />
 
-                {currentPlate.isFramedPlate ? (
-                  <div className="relative w-full max-w-[305px] sm:max-w-[330px] aspect-square rounded-xs p-2 border border-[var(--ms-rule-strong)] bg-[#090b10]/90 shadow-[0_24px_50px_rgba(0,0,0,0.85),0_0_30px_rgba(212,165,40,0.2)] backdrop-blur-md transition-all duration-300 group overflow-hidden">
-                    {/* Inner Archival Matting & Corner Brackets */}
-                    <div className="relative w-full h-full overflow-hidden border border-[var(--ms-bronze)]/40 bg-[#06070a] flex items-center justify-center">
-                      {/* 4 Golden Corner Accents */}
-                      <span className="absolute top-1.5 left-1.5 w-2.5 h-2.5 border-t border-l border-[var(--ms-bronze)] z-10 pointer-events-none" />
-                      <span className="absolute top-1.5 right-1.5 w-2.5 h-2.5 border-t border-r border-[var(--ms-bronze)] z-10 pointer-events-none" />
-                      <span className="absolute bottom-1.5 left-1.5 w-2.5 h-2.5 border-b border-l border-[var(--ms-bronze)] z-10 pointer-events-none" />
-                      <span className="absolute bottom-1.5 right-1.5 w-2.5 h-2.5 border-b border-r border-[var(--ms-bronze)] z-10 pointer-events-none" />
-
-                      <img
-                        key={currentPlate.src}
-                        src={currentPlate.src}
-                        alt={currentPlate.alt}
-                        className="sculpture-floating w-full h-full object-cover select-none transition-transform duration-500 group-hover:scale-[1.03]"
-                      />
-                      {/* Atmospheric vignette */}
-                      <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#06070a]/50 via-transparent to-[#06070a]/25" />
-                    </div>
-                  </div>
-                ) : (
-                  <img
-                    key={currentPlate.src}
-                    src={currentPlate.src}
-                    alt={currentPlate.alt}
-                    className="sculpture-floating sculpture-cutout-shadow w-full h-full object-contain select-none"
-                  />
-                )}
+                {/* Interactive Volumetric 3D WebGL Canvas */}
+                <Sculpture3DCanvas
+                  src={currentPlate.src}
+                  alt={currentPlate.alt}
+                  onPlaySound={onPlaySound}
+                  className="relative z-10 w-full h-full"
+                />
               </div>
-            </figure>
+            </div>
 
             {/* Museum Catalogue Plaque & Inscription Decoder */}
             <div className="relative z-10 border border-[var(--ms-rule-strong)] bg-[var(--ms-surface2)]/95 p-4 sm:p-5 backdrop-blur-sm">
