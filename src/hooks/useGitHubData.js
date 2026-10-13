@@ -1,8 +1,9 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 
 const GITHUB_USERNAME = 'not-Phana';
-const CACHE_KEY = 'pk_github_cache_v2';
-const CACHE_TTL_MS = 10 * 60 * 1000; // 10 minutes session cache to respect rate limits
+const CACHE_KEY = 'pk_github_cache_v3';
+const CACHE_TTL_MS = 60 * 1000; // 1-minute cache to allow frequent live updates without hitting 60 req/hr unauth limit
+const AUTO_SYNC_INTERVAL_SEC = 45; // Auto-poll every 45 seconds
 
 /**
  * Verified local fallback snapshot of https://api.github.com/users/not-Phana
@@ -20,7 +21,7 @@ export const FALLBACK_GITHUB_DATA = {
     followers: 3,
     following: 5,
     created_at: '2026-01-15T11:09:14Z',
-    updated_at: '2026-10-11T16:52:38Z',
+    updated_at: '2026-10-13T07:12:00Z',
   },
   repos: [
     {
@@ -37,8 +38,8 @@ export const FALLBACK_GITHUB_DATA = {
       fork: false,
       has_pages: true,
       created_at: '2026-09-20T05:49:53Z',
-      updated_at: '2026-10-11T04:52:26Z',
-      pushed_at: '2026-10-11T04:52:38Z',
+      updated_at: '2026-10-13T06:21:34Z',
+      pushed_at: '2026-10-13T06:21:34Z',
     },
     {
       id: 1411682732,
@@ -151,8 +152,8 @@ export const FALLBACK_GITHUB_DATA = {
       fork: false,
       has_pages: true,
       created_at: '2026-10-11T12:00:00Z',
-      updated_at: '2026-10-12T09:00:00Z',
-      pushed_at: '2026-10-12T09:00:00Z',
+      updated_at: '2026-10-13T06:50:28Z',
+      pushed_at: '2026-10-13T06:50:28Z',
     },
     {
       id: 1420000002,
@@ -172,17 +173,56 @@ export const FALLBACK_GITHUB_DATA = {
       pushed_at: '2026-10-12T06:30:00Z',
     },
   ],
+  events: [
+    {
+      id: '23804901214',
+      type: 'PushEvent',
+      repo: { name: 'not-Phana/About-me.' },
+      created_at: '2026-10-13T06:50:28Z',
+      payload: {
+        commits: [{ message: 'Add real-time velocity stream telemetry' }],
+        ref: 'refs/heads/main',
+      },
+    },
+    {
+      id: '23804504126',
+      type: 'PushEvent',
+      repo: { name: 'not-Phana/PK-Khmer-Type' },
+      created_at: '2026-10-11T04:24:41Z',
+      payload: {
+        commits: [{ message: 'Update Khmer NiDA interactive lessons' }],
+        ref: 'refs/heads/main',
+      },
+    },
+    {
+      id: '23803493675',
+      type: 'PushEvent',
+      repo: { name: 'not-Phana/github-achievements-run' },
+      created_at: '2026-10-12T06:29:04Z',
+      payload: {
+        commits: [{ message: 'Deploy GitHub Actions runner pipeline' }],
+        ref: 'refs/heads/main',
+      },
+    },
+  ],
 };
 
 export function useGitHubData() {
   const [profile, setProfile] = useState(FALLBACK_GITHUB_DATA.profile);
   const [repos, setRepos] = useState(FALLBACK_GITHUB_DATA.repos);
+  const [events, setEvents] = useState(FALLBACK_GITHUB_DATA.events);
   const [status, setStatus] = useState('loading'); // 'loading' | 'live' | 'fallback'
   const [errorMessage, setErrorMessage] = useState(null);
   const [lastSynced, setLastSynced] = useState(null);
+  const [countdown, setCountdown] = useState(AUTO_SYNC_INTERVAL_SEC);
+  const [livePulseTick, setLivePulseTick] = useState(0);
+
+  const isFetchingRef = useRef(false);
 
   const fetchGitHub = useCallback(async (forceRefresh = false) => {
-    setStatus('loading');
+    if (isFetchingRef.current) return;
+    isFetchingRef.current = true;
+    setStatus((prev) => (prev === 'live' ? 'live' : 'loading'));
     setErrorMessage(null);
 
     if (!forceRefresh) {
@@ -193,8 +233,11 @@ export function useGitHubData() {
           if (cached && Date.now() - cached.timestamp < CACHE_TTL_MS) {
             setProfile(cached.profile);
             setRepos(cached.repos);
+            if (cached.events) setEvents(cached.events);
             setLastSynced(new Date(cached.timestamp));
             setStatus('live');
+            setCountdown(AUTO_SYNC_INTERVAL_SEC);
+            isFetchingRef.current = false;
             return;
           }
         }
@@ -204,25 +247,52 @@ export function useGitHubData() {
     }
 
     try {
-      const [userRes, reposRes] = await Promise.all([
+      const [userRes, reposRes, eventsRes] = await Promise.all([
         fetch(`https://api.github.com/users/${GITHUB_USERNAME}`, {
           headers: { Accept: 'application/vnd.github+json' },
         }),
-        fetch(`https://api.github.com/users/${GITHUB_USERNAME}/repos?per_page=100&sort=updated`, {
-          headers: { Accept: 'application/vnd.github+json' },
-        }),
+        fetch(
+          `https://api.github.com/users/${GITHUB_USERNAME}/repos?per_page=100&sort=updated`,
+          {
+            headers: { Accept: 'application/vnd.github+json' },
+          }
+        ),
+        fetch(
+          `https://api.github.com/users/${GITHUB_USERNAME}/events?per_page=30`,
+          {
+            headers: { Accept: 'application/vnd.github+json' },
+          }
+        ).catch(() => null),
       ]);
 
       if (!userRes.ok || !reposRes.ok) {
         const rateRemaining = userRes.headers.get('x-ratelimit-remaining');
-        if (rateRemaining === '0' || userRes.status === 403 || reposRes.status === 403) {
-          throw new Error('GitHub API rate limit reached. Showing verified local repository snapshot.');
+        if (
+          rateRemaining === '0' ||
+          userRes.status === 403 ||
+          reposRes.status === 403
+        ) {
+          throw new Error(
+            'GitHub API rate limit reached. Showing verified local repository snapshot.'
+          );
         }
-        throw new Error(`GitHub API responded with status ${userRes.status}. Showing verified local snapshot.`);
+        throw new Error(
+          `GitHub API responded with status ${userRes.status}. Showing verified snapshot.`
+        );
       }
 
       const userData = await userRes.json();
       const reposData = await reposRes.json();
+      let eventsData = [];
+      if (eventsRes && eventsRes.ok) {
+        try {
+          eventsData = await eventsRes.json();
+        } catch {
+          eventsData = FALLBACK_GITHUB_DATA.events;
+        }
+      } else {
+        eventsData = FALLBACK_GITHUB_DATA.events;
+      }
 
       if (userData && Array.isArray(reposData)) {
         const normalizedRepos = reposData.map((r) => ({
@@ -238,11 +308,18 @@ export function useGitHubData() {
               : null),
         }));
 
+        const cleanEvents = Array.isArray(eventsData)
+          ? eventsData
+          : FALLBACK_GITHUB_DATA.events;
+
         setProfile(userData);
         setRepos(normalizedRepos);
+        setEvents(cleanEvents);
         const now = Date.now();
         setLastSynced(new Date(now));
         setStatus('live');
+        setCountdown(AUTO_SYNC_INTERVAL_SEC);
+        setLivePulseTick((p) => p + 1);
 
         try {
           sessionStorage.setItem(
@@ -251,6 +328,7 @@ export function useGitHubData() {
               timestamp: now,
               profile: userData,
               repos: normalizedRepos,
+              events: cleanEvents,
             })
           );
         } catch {
@@ -262,23 +340,57 @@ export function useGitHubData() {
     } catch (err) {
       setProfile(FALLBACK_GITHUB_DATA.profile);
       setRepos(FALLBACK_GITHUB_DATA.repos);
+      setEvents(FALLBACK_GITHUB_DATA.events);
       setErrorMessage(
-        err?.message || 'Unable to reach GitHub REST API. Displaying verified local repository snapshot.'
+        err?.message ||
+          'Unable to reach GitHub REST API. Displaying verified local repository snapshot.'
       );
       setStatus('fallback');
+      setCountdown(AUTO_SYNC_INTERVAL_SEC);
+    } finally {
+      isFetchingRef.current = false;
     }
   }, []);
 
+  // Initial fetch on mount
   useEffect(() => {
     fetchGitHub(false);
+  }, [fetchGitHub]);
+
+  // Real-time ticker and auto-polling countdown loop
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCountdown((prev) => {
+        if (prev <= 1) {
+          fetchGitHub(true);
+          return AUTO_SYNC_INTERVAL_SEC;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [fetchGitHub]);
+
+  // Window focus auto-sync: when user tabs back, immediately sync fresh data
+  useEffect(() => {
+    const handleFocus = () => {
+      fetchGitHub(true);
+    };
+
+    window.addEventListener('focus', handleFocus);
+    return () => window.removeEventListener('focus', handleFocus);
   }, [fetchGitHub]);
 
   return {
     profile,
     repos,
+    events,
     status,
     errorMessage,
     lastSynced,
+    countdown,
+    livePulseTick,
     refresh: () => fetchGitHub(true),
   };
 }

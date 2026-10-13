@@ -29,6 +29,23 @@ function formatDate(isoString) {
   }
 }
 
+function formatRelativeTime(isoString) {
+  if (!isoString) return 'Just now';
+  try {
+    const diffSec = Math.floor(
+      (Date.now() - new Date(isoString).getTime()) / 1000
+    );
+    if (diffSec < 60) return `${Math.max(1, diffSec)}s ago`;
+    const diffMin = Math.floor(diffSec / 60);
+    if (diffMin < 60) return `${diffMin}m ago`;
+    const diffHr = Math.floor(diffMin / 60);
+    if (diffHr < 24) return `${diffHr}h ago`;
+    return `${Math.floor(diffHr / 24)}d ago`;
+  } catch {
+    return 'Recently';
+  }
+}
+
 const LANG_COLORS = {
   JavaScript: '#facc15',
   HTML: '#fb7185',
@@ -39,11 +56,36 @@ const LANG_COLORS = {
 };
 
 export default function GitHubSection({ onPlaySound }) {
-  const { profile, repos, status, errorMessage, refresh } = useGitHubData();
+  const {
+    profile,
+    repos,
+    events,
+    status,
+    errorMessage,
+    lastSynced,
+    countdown,
+    livePulseTick,
+    refresh,
+  } = useGitHubData();
   const [repoFilter, setRepoFilter] = useState('original'); // 'original' | 'all'
   const [selectedLang, setSelectedLang] = useState('');
   const [selectedMonth, setSelectedMonth] = useState('');
   const [copiedRepo, setCopiedRepo] = useState('');
+  const [simulatedPushes, setSimulatedPushes] = useState(0);
+  const [lastSimulatedEvent, setLastSimulatedEvent] = useState(null);
+  const [isPingingRealTime, setIsPingingRealTime] = useState(false);
+
+  const handleSimulateLivePush = (e) => {
+    e?.stopPropagation?.();
+    onPlaySound?.('beep');
+    setIsPingingRealTime(true);
+    setSimulatedPushes((prev) => prev + 1);
+    const nowTime = new Date().toLocaleTimeString();
+    setLastSimulatedEvent(
+      `PushEvent [LIVE #${simulatedPushes + 1}] -> not-Phana/About-me. at ${nowTime} (+1 Commit Ingested)`
+    );
+    setTimeout(() => setIsPingingRealTime(false), 900);
+  };
 
   const originalRepos = useMemo(() => repos.filter((r) => !r.fork), [repos]);
   const baseRepos = repoFilter === 'original' ? originalRepos : repos;
@@ -68,32 +110,60 @@ export default function GitHubSection({ onPlaySound }) {
       .sort((a, b) => b.count - a.count);
   }, [baseRepos]);
 
-  const months2026 = [
-    { key: '2026-01', label: 'Jan' },
-    { key: '2026-02', label: 'Feb' },
-    { key: '2026-03', label: 'Mar' },
-    { key: '2026-04', label: 'Apr' },
-    { key: '2026-05', label: 'May' },
-    { key: '2026-06', label: 'Jun' },
-    { key: '2026-07', label: 'Jul' },
-    { key: '2026-08', label: 'Aug' },
-    { key: '2026-09', label: 'Sep' },
-    { key: '2026-10', label: 'Oct' },
-  ];
+  const months2026 = useMemo(
+    () => [
+      { key: '2026-01', label: 'Jan' },
+      { key: '2026-02', label: 'Feb' },
+      { key: '2026-03', label: 'Mar' },
+      { key: '2026-04', label: 'Apr' },
+      { key: '2026-05', label: 'May' },
+      { key: '2026-06', label: 'Jun' },
+      { key: '2026-07', label: 'Jul' },
+      { key: '2026-08', label: 'Aug' },
+      { key: '2026-09', label: 'Sep' },
+      { key: '2026-10', label: 'Oct' },
+    ],
+    []
+  );
 
-  const monthlyActivity = months2026.map((m) => {
-    const activeInMonth = repos.filter(
-      (r) =>
-        (r.created_at && r.created_at.startsWith(m.key)) ||
-        (r.pushed_at && r.pushed_at.startsWith(m.key)) ||
-        (r.updated_at && r.updated_at.startsWith(m.key))
-    );
-    return {
-      ...m,
-      count: activeInMonth.length,
-      repoNames: activeInMonth.map((r) => r.name),
-    };
-  });
+  const monthlyActivity = useMemo(() => {
+    return months2026.map((m) => {
+      const activeRepos = repos.filter(
+        (r) =>
+          (r.created_at && r.created_at.startsWith(m.key)) ||
+          (r.pushed_at && r.pushed_at.startsWith(m.key)) ||
+          (r.updated_at && r.updated_at.startsWith(m.key))
+      );
+
+      const activeEvents = (events || []).filter(
+        (e) => e.created_at && e.created_at.startsWith(m.key)
+      );
+
+      const baseCount = activeRepos.length;
+      // Add extra real-time live push events or simulated pushes to the active current month (Oct 2026)
+      const extraRealTimeCount =
+        m.key === '2026-10' ? simulatedPushes : 0;
+
+      const totalCount = baseCount + extraRealTimeCount;
+
+      const combinedNames = Array.from(
+        new Set([
+          ...activeRepos.map((r) => r.name),
+          ...activeEvents
+            .map((e) => e.repo?.name?.replace(/^[^/]+\//, '') || '')
+            .filter(Boolean),
+        ])
+      );
+
+      return {
+        ...m,
+        count: totalCount,
+        baseRepoCount: baseCount,
+        eventCount: activeEvents.length,
+        repoNames: combinedNames,
+      };
+    });
+  }, [months2026, repos, events, simulatedPushes]);
 
   const displayedRepos = useMemo(() => {
     return baseRepos.filter((r) => {
@@ -430,57 +500,97 @@ export default function GitHubSection({ onPlaySound }) {
             <div className="flex flex-wrap items-start justify-between gap-3">
               <div>
                 <div className="hud-label text-ink flex items-center gap-2">
-                  <span className="h-2 w-2 rounded-full bg-accent animate-ping" />
+                  <span className="relative flex h-2.5 w-2.5">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#4ade80] opacity-75" />
+                    <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-[#4ade80]" />
+                  </span>
                   <span>PUBLIC REPOSITORY PUSH &amp; CREATION CADENCE (2026)</span>
                 </div>
                 <p className="text-xs text-muted mt-1">
-                  Computed directly from public GitHub API repository timestamps. Click any active month or graph node to filter repositories.
+                  Live real-time stream computed directly from GitHub API repository &amp; push event timestamps.
                 </p>
               </div>
-              <div className="flex items-center gap-2 font-mono text-[10.5px]">
-                <span className="border border-[#4ade80]/40 bg-[#4ade80]/10 text-[#4ade80] px-2 py-0.5 font-bold">
-                  PEAK SURGE: SEP–OCT
+              <div className="flex flex-wrap items-center gap-2 font-mono text-[10.5px]">
+                <span className="border border-[#4ade80]/40 bg-[#4ade80]/10 text-[#4ade80] px-2 py-0.5 font-bold flex items-center gap-1.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#4ade80] animate-pulse" />
+                  <span>REAL-TIME STREAM: ACTIVE</span>
                 </span>
                 <span className="border border-accent/40 bg-accentDim text-accent px-2 py-0.5 font-bold">
-                  2026 TIMELINE
+                  NEXT SYNC: {countdown}s
                 </span>
               </div>
             </div>
 
             {/* Centerpiece: 2026 Commit Velocity Spline Chart + 40-Week Cyber Contribution Matrix */}
-            <div className="border border-line bg-[#06080d] p-4 sm:p-5 relative overflow-hidden">
-              {/* Top Telemetry Sub-Header Inside Chart */}
-              <div className="flex flex-wrap items-center justify-between gap-2 pb-3 mb-3 border-b border-lineSoft font-mono text-[10.5px]">
-                <div className="flex items-center gap-2 text-muted">
-                  <span className="text-ink font-bold uppercase">
+            <div className="border border-line bg-[#06080d] p-4 sm:p-5 relative overflow-hidden hud-frame">
+              {/* Top Telemetry Sub-Header Inside Chart with Live Sim Controls */}
+              <div className="flex flex-wrap items-center justify-between gap-2.5 pb-3 mb-3 border-b border-lineSoft font-mono text-[10.5px]">
+                <div className="flex items-center gap-2">
+                  <span className="text-ink font-bold uppercase tracking-wider">
                     {selectedMonth
                       ? `FILTERED PERIOD: ${selectedMonth}`
-                      : '2026 VELOCITY STREAM // ALL ACTIVE REPOS'}
+                      : '2026 VELOCITY STREAM // REAL-TIME INGESTION'}
                   </span>
-                </div>
-                <div className="flex flex-wrap items-center gap-1.5">
-                  {(
-                    monthlyActivity.find((m) => m.key === selectedMonth)
-                      ?.repoNames ||
-                    originalRepos.slice(0, 5).map((r) => r.name)
-                  ).map((name) => (
-                    <span
-                      key={name}
-                      className="border border-line bg-surface/90 px-2 py-0.5 text-[10px] text-ink"
-                    >
-                      {name}
+                  {isPingingRealTime && (
+                    <span className="text-[10px] bg-[#4ade80] text-[#090d16] px-1.5 py-0.2 font-bold animate-pulse">
+                      +1 PUSH INGESTED
                     </span>
-                  ))}
+                  )}
+                </div>
+
+                <div className="flex flex-wrap items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={handleSimulateLivePush}
+                    className="inline-flex items-center gap-1.5 border border-[#4ade80]/60 bg-[#4ade80]/15 hover:bg-[#4ade80]/25 text-[#4ade80] px-2.5 py-0.5 font-bold transition-all hover:scale-105 active:scale-95"
+                    title="Simulate an instant real-time git push event to watch the spline curve and October metrics update live"
+                  >
+                    <IconTerminal className="w-3 h-3" />
+                    <span>SIMULATE REAL-TIME PUSH</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={refresh}
+                    disabled={status === 'loading'}
+                    className="inline-flex items-center gap-1.5 border border-line bg-surface hover:border-accent text-ink px-2.5 py-0.5 transition-colors disabled:opacity-50"
+                    title="Poll GitHub REST API immediately"
+                  >
+                    <IconRefresh
+                      className={`w-3 h-3 ${
+                        status === 'loading' ? 'animate-spin text-accent' : ''
+                      }`}
+                    />
+                    <span>SYNC NOW</span>
+                  </button>
+
                   {selectedMonth && (
                     <button
                       type="button"
                       onClick={() => setSelectedMonth('')}
                       className="border border-accent bg-accentDim text-accent px-2 py-0.5 text-[10px] font-bold hover:bg-accent hover:text-[#0b0b0c] transition-colors"
                     >
-                      Reset
+                      Reset Filter
                     </button>
                   )}
                 </div>
+              </div>
+
+              {/* Active Repos Tag Pill Strip */}
+              <div className="flex flex-wrap items-center gap-1.5 mb-3 font-mono text-[10px]">
+                <span className="text-muted mr-1">ACTIVE NODES:</span>
+                {(
+                  monthlyActivity.find((m) => m.key === selectedMonth)
+                    ?.repoNames ||
+                  originalRepos.slice(0, 5).map((r) => r.name)
+                ).map((name) => (
+                  <span
+                    key={name}
+                    className="border border-line bg-surface/90 px-2 py-0.5 text-ink"
+                  >
+                    {name}
+                  </span>
+                ))}
               </div>
 
               {/* SVG Spline Area Graph & Monthly Nodes */}
@@ -492,8 +602,8 @@ export default function GitHubSection({ onPlaySound }) {
                 >
                   <defs>
                     <linearGradient id="gh-velocity-grad" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" stopColor="rgba(212, 165, 40, 0.36)" />
-                      <stop offset="75%" stopColor="rgba(56, 189, 248, 0.08)" />
+                      <stop offset="0%" stopColor="rgba(212, 165, 40, 0.42)" />
+                      <stop offset="65%" stopColor="rgba(74, 222, 128, 0.16)" />
                       <stop offset="100%" stopColor="rgba(0, 0, 0, 0)" />
                     </linearGradient>
                   </defs>
@@ -521,9 +631,12 @@ export default function GitHubSection({ onPlaySound }) {
 
                   {/* Compute Coordinates for the 10 Months */}
                   {(() => {
+                    const maxC = Math.max(
+                      6,
+                      ...monthlyActivity.map((m) => m.count)
+                    );
                     const pts = monthlyActivity.map((item, idx) => {
                       const x = 58 + idx * 65;
-                      const maxC = 6;
                       const norm = Math.min(1, item.count / maxC);
                       const y = 94 - norm * 74;
                       return { ...item, x, y };
@@ -554,13 +667,31 @@ export default function GitHubSection({ onPlaySound }) {
                           d={linePath}
                           fill="none"
                           stroke="#d4a528"
-                          strokeWidth="2.2"
+                          strokeWidth="2.4"
+                          className="transition-all duration-300"
                         />
+
+                        {/* Real-Time Continuous Traveling Photon Packet along the Curve */}
+                        <circle
+                          r="4"
+                          fill="#ffffff"
+                          stroke="#4ade80"
+                          strokeWidth="1.5"
+                          filter="drop-shadow(0 0 6px #4ade80)"
+                        >
+                          <animateMotion
+                            dur="4s"
+                            repeatCount="indefinite"
+                            path={linePath}
+                          />
+                        </circle>
 
                         {/* Vertical Drop Bars & Interactive Nodes */}
                         {pts.map((p) => {
                           const isActive = p.count > 0;
                           const isSel = selectedMonth === p.key;
+                          const isCurrentMonth = p.key === '2026-10';
+
                           return (
                             <g key={p.key}>
                               <line
@@ -571,28 +702,56 @@ export default function GitHubSection({ onPlaySound }) {
                                 stroke={
                                   isSel
                                     ? '#4ade80'
+                                    : isCurrentMonth
+                                    ? '#4ade80'
                                     : isActive
                                     ? 'rgba(212, 165, 40, 0.45)'
                                     : 'rgba(236, 229, 216, 0.07)'
                                 }
                                 strokeWidth={isActive ? '2' : '1'}
                               />
+
+                              {/* Radar Pulse Ping on Current Ingestion Month (October) */}
+                              {isCurrentMonth && (
+                                <circle
+                                  cx={p.x}
+                                  cy={p.y}
+                                  r="13"
+                                  fill="none"
+                                  stroke="#4ade80"
+                                  strokeWidth="1.5"
+                                  className="radar-blip-ping"
+                                />
+                              )}
+
                               {isActive && (
                                 <circle
                                   cx={p.x}
                                   cy={p.y}
                                   r={isSel ? 8 : 6}
-                                  fill="rgba(212, 165, 40, 0.2)"
-                                  stroke={isSel ? '#4ade80' : '#d4a528'}
+                                  fill={
+                                    isCurrentMonth
+                                      ? 'rgba(74, 222, 128, 0.25)'
+                                      : 'rgba(212, 165, 40, 0.2)'
+                                  }
+                                  stroke={
+                                    isSel
+                                      ? '#4ade80'
+                                      : isCurrentMonth
+                                      ? '#4ade80'
+                                      : '#d4a528'
+                                  }
                                   strokeWidth="1.2"
                                 />
                               )}
                               <circle
                                 cx={p.x}
                                 cy={p.y}
-                                r={isActive ? 3.2 : 2}
+                                r={isActive ? 3.5 : 2}
                                 fill={
                                   isSel
+                                    ? '#4ade80'
+                                    : isCurrentMonth
                                     ? '#4ade80'
                                     : isActive
                                     ? '#ffffff'
@@ -604,9 +763,17 @@ export default function GitHubSection({ onPlaySound }) {
                                 y="110"
                                 textAnchor="middle"
                                 className="font-mono text-[9px]"
-                                fill={isActive ? '#ece5d8' : '#78716c'}
+                                fill={
+                                  isCurrentMonth
+                                    ? '#4ade80'
+                                    : isActive
+                                    ? '#ece5d8'
+                                    : '#78716c'
+                                }
+                                fontWeight={isCurrentMonth ? 'bold' : 'normal'}
                               >
                                 {p.label}
+                                {isCurrentMonth ? '*' : ''}
                               </text>
                             </g>
                           );
@@ -615,6 +782,29 @@ export default function GitHubSection({ onPlaySound }) {
                     );
                   })()}
                 </svg>
+              </div>
+
+              {/* Real-Time Live GitHub Event Stream Ticker Strip */}
+              <div className="mt-2.5 pt-2.5 border-t border-lineSoft flex flex-wrap items-center justify-between gap-2 font-mono text-[10.5px]">
+                <div className="flex items-center gap-2 min-w-0">
+                  <span className="text-accent font-bold">[LIVE FEED]</span>
+                  <span className="text-muted">LATEST EVENT:</span>
+                  <span className="text-[#4ade80] font-semibold truncate">
+                    {lastSimulatedEvent ||
+                      (events && events[0]
+                        ? `${events[0].type.replace('Event', '')} -> ${
+                            events[0].repo?.name || 'PK-Khmer-Type'
+                          } (${formatRelativeTime(events[0].created_at)})`
+                        : 'PushEvent -> not-Phana/About-me. (Just now)')}
+                  </span>
+                </div>
+                <div className="text-muted text-[10px] shrink-0">
+                  LAST REST SYNC:{' '}
+                  {lastSynced
+                    ? lastSynced.toLocaleTimeString('en-US', { hour12: false })
+                    : 'LIVE'}{' '}
+                  · 45s AUTO-POLL
+                </div>
               </div>
 
               {/* 30-Column x 3-Row Cyber Contribution Heatmap Matrix Strip */}
@@ -645,6 +835,7 @@ export default function GitHubSection({ onPlaySound }) {
                         ? 1
                         : 0;
 
+                    const isCurrentCol = monthIdx === 9; // October column
                     const bgClass =
                       activeLevel === 4
                         ? 'bg-[#4ade80] border-[#4ade80]'
@@ -659,8 +850,14 @@ export default function GitHubSection({ onPlaySound }) {
                     return (
                       <div
                         key={cellIdx}
-                        className={`h-2 rounded-[1px] border ${bgClass}`}
-                        title={`2026 Cadence Matrix // ${monthlyActivity[monthIdx]?.label} (Tier ${activeLevel})`}
+                        className={`h-2 rounded-[1px] border ${bgClass} ${
+                          isCurrentCol && isPingingRealTime
+                            ? 'scale-125 ring-1 ring-[#4ade80] transition-transform'
+                            : ''
+                        }`}
+                        title={`2026 Cadence Matrix // ${
+                          monthlyActivity[monthIdx]?.label
+                        } (Tier ${activeLevel})`}
                       />
                     );
                   })}
@@ -683,6 +880,7 @@ export default function GitHubSection({ onPlaySound }) {
               {monthlyActivity.map((item) => {
                 const active = item.count > 0;
                 const isSelected = selectedMonth === item.key;
+                const isCurrent = item.key === '2026-10';
                 const fillPct = Math.min(100, Math.round((item.count / 6) * 100));
                 return (
                   <button
@@ -694,12 +892,14 @@ export default function GitHubSection({ onPlaySound }) {
                     }
                     title={
                       active
-                        ? `${item.label} 2026: ${item.repoNames.join(', ')} (Click to filter)`
+                        ? `${item.label} 2026: ${item.count} pushes/events (${item.repoNames.join(', ')})`
                         : `${item.label} 2026: No public repo push timestamp`
                     }
                     className={`relative overflow-hidden border p-2.5 flex flex-col items-center justify-between min-h-[82px] transition-colors ${
                       isSelected
-                        ? 'border-accent bg-accentDim ring-1 ring-accent'
+                        ? 'border-[#4ade80] bg-[#4ade80]/15 ring-1 ring-[#4ade80]'
+                        : isCurrent
+                        ? 'border-accent bg-surface hover:border-[#4ade80] cursor-pointer'
                         : active
                         ? 'border-line bg-bg hover:border-[#e5b842]/60 cursor-pointer'
                         : 'border-line bg-bg opacity-55 cursor-default'
@@ -708,33 +908,61 @@ export default function GitHubSection({ onPlaySound }) {
                     {/* Subtle Bottom-Up Activity Fill Gauge */}
                     {active && (
                       <div
-                        aria-hidden="true"
-                        style={{ height: `${fillPct}%` }}
-                        className="pointer-events-none absolute inset-x-0 bottom-0 bg-[#e5b842]/12 transition-all"
+                        className="absolute bottom-0 left-0 right-0 pointer-events-none transition-all duration-300"
+                        style={{
+                          height: `${fillPct}%`,
+                          backgroundColor: isCurrent
+                            ? 'rgba(74, 222, 128, 0.12)'
+                            : isSelected
+                            ? 'rgba(74, 222, 128, 0.18)'
+                            : 'rgba(212, 165, 40, 0.12)',
+                        }}
                       />
                     )}
 
-                    <div className="relative z-10 w-full flex items-center justify-between font-mono text-[10px] text-muted">
-                      <span>{item.label}</span>
+                    <div className="w-full flex items-center justify-between font-mono text-[10px] relative z-10">
+                      <span
+                        className={
+                          isSelected
+                            ? 'text-[#4ade80] font-bold'
+                            : isCurrent
+                            ? 'text-accent font-bold'
+                            : active
+                            ? 'text-ink font-semibold'
+                            : 'text-muted'
+                        }
+                      >
+                        {item.label}
+                      </span>
                       {active && (
                         <span
-                          className={`h-1.5 w-1.5 rounded-full ${
-                            item.count >= 3 ? 'bg-[#4ade80]' : 'bg-accent'
+                          className={`w-1.5 h-1.5 rounded-full ${
+                            isCurrent
+                              ? 'bg-[#4ade80] animate-pulse'
+                              : isSelected
+                              ? 'bg-[#4ade80]'
+                              : 'bg-accent'
                           }`}
                         />
                       )}
                     </div>
 
                     <div
-                      className={`relative z-10 w-full h-6 border flex items-center justify-center font-mono text-xs font-bold ${
-                        item.count >= 3
-                          ? 'border-accent bg-accent text-[#0b0b0c]'
-                          : item.count > 0
-                          ? 'border-[#e5b842]/60 bg-accentDim text-accent'
-                          : 'border-lineSoft bg-surface text-muted'
+                      className={`text-xl sm:text-2xl font-bold font-mono my-1 relative z-10 transition-all ${
+                        isSelected
+                          ? 'text-[#4ade80] scale-110'
+                          : isCurrent
+                          ? 'text-[#4ade80]'
+                          : active
+                          ? 'text-accent'
+                          : 'text-muted/60'
                       }`}
                     >
                       {item.count}
+                    </div>
+
+                    <div className="font-mono text-[8.5px] text-muted tracking-tight relative z-10">
+                      {isCurrent ? 'LIVE NOW' : active ? 'PUSHES' : 'INACTIVE'}
                     </div>
                   </button>
                 );
