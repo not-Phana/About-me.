@@ -671,21 +671,6 @@ export default function GitHubSection({ onPlaySound }) {
                           className="transition-all duration-300"
                         />
 
-                        {/* Real-Time Continuous Traveling Photon Packet along the Curve */}
-                        <circle
-                          r="4"
-                          fill="#ffffff"
-                          stroke="#4ade80"
-                          strokeWidth="1.5"
-                          filter="drop-shadow(0 0 6px #4ade80)"
-                        >
-                          <animateMotion
-                            dur="4s"
-                            repeatCount="indefinite"
-                            path={linePath}
-                          />
-                        </circle>
-
                         {/* Vertical Drop Bars & Interactive Nodes */}
                         {pts.map((p) => {
                           const isActive = p.count > 0;
@@ -710,19 +695,6 @@ export default function GitHubSection({ onPlaySound }) {
                                 }
                                 strokeWidth={isActive ? '2' : '1'}
                               />
-
-                              {/* Radar Pulse Ping on Current Ingestion Month (October) */}
-                              {isCurrentMonth && (
-                                <circle
-                                  cx={p.x}
-                                  cy={p.y}
-                                  r="13"
-                                  fill="none"
-                                  stroke="#4ade80"
-                                  strokeWidth="1.5"
-                                  className="radar-blip-ping"
-                                />
-                              )}
 
                               {isActive && (
                                 <circle
