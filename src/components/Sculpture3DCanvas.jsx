@@ -92,27 +92,24 @@ export default function Sculpture3DCanvas({
   }, []);
 
   // Mouse interaction
+  // Mouse interaction: Only rotate when deliberately dragging with mouse pressed down.
+  // The statue remains completely static and calm on hover.
   const handleMouseMove = useCallback((e) => {
     if (!containerRef.current) return;
-    const rect = containerRef.current.getBoundingClientRect();
-    const nx = ((e.clientX - rect.left) / rect.width) * 2 - 1; // -1 to 1
-    const ny = ((e.clientY - rect.top) / rect.height) * 2 - 1; // -1 to 1
 
     if (isDragging) {
+      const rect = containerRef.current.getBoundingClientRect();
       const deltaX = (e.clientX - dragStart.current.x) / rect.width;
       const deltaY = (e.clientY - dragStart.current.y) / rect.height;
       targetYaw.current = Math.max(-1.2, Math.min(1.2, targetYaw.current + deltaX * 1.5));
       targetPitch.current = Math.max(-1.0, Math.min(1.0, targetPitch.current - deltaY * 1.5));
       dragStart.current = { x: e.clientX, y: e.clientY };
-    } else {
-      targetYaw.current = Math.max(-1, Math.min(1, nx * 0.85));
-      targetPitch.current = Math.max(-1, Math.min(1, ny * 0.75));
-    }
 
-    setSpotlight({
-      x: Math.max(10, Math.min(90, ((e.clientX - rect.left) / rect.width) * 100)),
-      y: Math.max(10, Math.min(90, ((e.clientY - rect.top) / rect.height) * 100)),
-    });
+      setSpotlight({
+        x: Math.max(10, Math.min(90, ((e.clientX - rect.left) / rect.width) * 100)),
+        y: Math.max(10, Math.min(90, ((e.clientY - rect.top) / rect.height) * 100)),
+      });
+    }
   }, [isDragging]);
 
   const handleMouseDown = useCallback((e) => {
@@ -132,8 +129,9 @@ export default function Sculpture3DCanvas({
   const handleMouseLeave = useCallback(() => {
     setIsHovered(false);
     setIsDragging(false);
-    targetYaw.current = 0.08;
-    targetPitch.current = -0.05;
+    // Return smoothly to stable center position (no hover drift)
+    targetYaw.current = 0;
+    targetPitch.current = 0;
     setSpotlight({ x: 50, y: 40 });
   }, []);
 
@@ -172,9 +170,9 @@ export default function Sculpture3DCanvas({
       onMouseUp={handleMouseUp}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
-      className={`relative w-full h-full flex flex-col items-center justify-center select-none cursor-grab active:cursor-grabbing ${className}`}
+      className={`relative w-full h-full flex flex-col items-center justify-center select-none ${isDragging ? 'cursor-grabbing' : 'cursor-default'} ${className}`}
       style={{ perspective: '1200px', transformStyle: 'preserve-3d' }}
-      title="Click and drag to rotate the sculpture in 3D space, or move cursor to track dynamic lighting"
+      title="Classical Greek marble bust with golden kintsugi seams"
     >
       {/* 1. Ambient Gallery Dark Illumination & Chiaroscuro Spotlight (Unboxed) */}
       <div
