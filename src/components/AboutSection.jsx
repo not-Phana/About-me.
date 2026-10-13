@@ -65,8 +65,21 @@ const DELPHIC_MAXIMS = [
 
 const SCULPTURE_PLATES = [
   {
-    id: 'frontal',
+    id: 'kintsugi',
     numeral: 'Plate I',
+    shortTitle: 'Auric Kintsugi (Aphrodite)',
+    title: 'Pentelic Marble & Auric Kintsugi · Classical Greek Bust',
+    meta: 'Pentelic marble with gold lacquer repair · Embodying Χαλεπὰ τὰ καλά (Noble Resilience) · Private Collection & Archival Specimen',
+    url: '#about',
+    src: './assets/kintsugi-venus-plate.png',
+    alt: 'Classical Pentelic marble sculpture bust repaired with luminous gold kintsugi seams.',
+    inscription: 'ΧΑΛΕΠΑ ΤΑ ΚΑΛΑ',
+    epoch: 'Hellenistic · Auric Kintsugi',
+    isFramedPlate: true,
+  },
+  {
+    id: 'frontal',
+    numeral: 'Plate II',
     shortTitle: 'Epikouros (Frontal)',
     title: 'Marble Head of Epikouros (Epicurus, 341–270 BCE)',
     meta: 'Pentelic marble · Roman copy of 3rd c. BCE Greek original · The Metropolitan Museum of Art (Acc. 11.90, CC0 Public Domain)',
@@ -78,7 +91,7 @@ const SCULPTURE_PLATES = [
   },
   {
     id: 'profile',
-    numeral: 'Plate II',
+    numeral: 'Plate III',
     shortTitle: 'Epikouros (Profile)',
     title: 'Marble Head of Epikouros — Lateral Study',
     meta: 'Pentelic marble · Three-quarter profile study facing the biography · The Metropolitan Museum of Art (Acc. 11.90, CC0 Public Domain)',
@@ -90,7 +103,7 @@ const SCULPTURE_PLATES = [
   },
   {
     id: 'chrysippos',
-    numeral: 'Plate III',
+    numeral: 'Plate IV',
     shortTitle: 'Chrysippos (Logician)',
     title: 'Marble Portrait Head of Chrysippos (c. 279–206 BCE)',
     meta: 'Fine Greek marble · Pioneer of formal propositional logic · The Metropolitan Museum of Art (Acc. 24.243, CC0 Public Domain)',
@@ -103,8 +116,8 @@ const SCULPTURE_PLATES = [
 ];
 
 export default function AboutSection({ onExploreProjects, onPlaySound }) {
-  const [activePlateId, setActivePlateId] = useState('frontal');
-  const [activeMaximId, setActiveMaximId] = useState('gnothi');
+  const [activePlateId, setActivePlateId] = useState('kintsugi');
+  const [activeMaximId, setActiveMaximId] = useState('chalepa');
   const [showScholiaTranslation, setShowScholiaTranslation] = useState(false);
   const [spotlightPos, setSpotlightPos] = useState({ x: 50, y: 40 });
   const [sculptureTilt, setSculptureTilt] = useState({ rx: 0, ry: 0 });
@@ -128,7 +141,8 @@ export default function AboutSection({ onExploreProjects, onPlaySound }) {
   const handleSelectPlate = (plateId) => {
     onPlaySound?.('keycap');
     setActivePlateId(plateId);
-    if (plateId === 'frontal') setActiveMaximId('gnothi');
+    if (plateId === 'kintsugi') setActiveMaximId('chalepa');
+    else if (plateId === 'frontal') setActiveMaximId('gnothi');
     else if (plateId === 'profile') setActiveMaximId('meden');
     else if (plateId === 'chrysippos') setActiveMaximId('chalepa');
   };
@@ -138,7 +152,7 @@ export default function AboutSection({ onExploreProjects, onPlaySound }) {
     setActiveMaximId(maximId);
     if (maximId === 'gnothi') setActivePlateId('frontal');
     else if (maximId === 'meden') setActivePlateId('profile');
-    else if (maximId === 'chalepa') setActivePlateId('chrysippos');
+    else if (maximId === 'chalepa') setActivePlateId('kintsugi');
   };
 
   const handleMouseMove = (e) => {
@@ -505,7 +519,7 @@ export default function AboutSection({ onExploreProjects, onPlaySound }) {
               </span>
             </div>
 
-            {/* Centerpiece Cutout Marble Sculpture Head with 3D Perspective Rotation */}
+            {/* Centerpiece Sculpture Head / Archival Folio Plate with 3D Perspective Rotation */}
             <figure className="sculpture-stage relative z-10 my-auto py-6 sm:py-8 flex flex-col items-center justify-center">
               <div
                 className="relative w-full max-w-[360px] aspect-[4/5] flex items-center justify-center transition-transform duration-150 ease-out"
@@ -518,12 +532,35 @@ export default function AboutSection({ onExploreProjects, onPlaySound }) {
                   className="delphic-ring-spin pointer-events-none absolute w-[330px] h-[330px] rounded-full border border-[var(--ms-bronze)]/25 border-dashed select-none"
                   aria-hidden="true"
                 />
-                <img
-                  key={currentPlate.src}
-                  src={currentPlate.src}
-                  alt={currentPlate.alt}
-                  className="sculpture-floating sculpture-cutout-shadow w-full h-full object-contain select-none"
-                />
+
+                {currentPlate.isFramedPlate ? (
+                  <div className="relative w-full max-w-[305px] sm:max-w-[330px] aspect-square rounded-xs p-2 border border-[var(--ms-rule-strong)] bg-[#090b10]/90 shadow-[0_24px_50px_rgba(0,0,0,0.85),0_0_30px_rgba(212,165,40,0.2)] backdrop-blur-md transition-all duration-300 group overflow-hidden">
+                    {/* Inner Archival Matting & Corner Brackets */}
+                    <div className="relative w-full h-full overflow-hidden border border-[var(--ms-bronze)]/40 bg-[#06070a] flex items-center justify-center">
+                      {/* 4 Golden Corner Accents */}
+                      <span className="absolute top-1.5 left-1.5 w-2.5 h-2.5 border-t border-l border-[var(--ms-bronze)] z-10 pointer-events-none" />
+                      <span className="absolute top-1.5 right-1.5 w-2.5 h-2.5 border-t border-r border-[var(--ms-bronze)] z-10 pointer-events-none" />
+                      <span className="absolute bottom-1.5 left-1.5 w-2.5 h-2.5 border-b border-l border-[var(--ms-bronze)] z-10 pointer-events-none" />
+                      <span className="absolute bottom-1.5 right-1.5 w-2.5 h-2.5 border-b border-r border-[var(--ms-bronze)] z-10 pointer-events-none" />
+
+                      <img
+                        key={currentPlate.src}
+                        src={currentPlate.src}
+                        alt={currentPlate.alt}
+                        className="sculpture-floating w-full h-full object-cover select-none transition-transform duration-500 group-hover:scale-[1.03]"
+                      />
+                      {/* Atmospheric vignette */}
+                      <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#06070a]/50 via-transparent to-[#06070a]/25" />
+                    </div>
+                  </div>
+                ) : (
+                  <img
+                    key={currentPlate.src}
+                    src={currentPlate.src}
+                    alt={currentPlate.alt}
+                    className="sculpture-floating sculpture-cutout-shadow w-full h-full object-contain select-none"
+                  />
+                )}
               </div>
             </figure>
 
