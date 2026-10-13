@@ -809,9 +809,9 @@ export default function BrainLabShowcase({ onSelectProject, onPlaySound }) {
               <IconBrain className="w-4 h-4 text-accent" />
               <span>NEURAL TOPOGRAPHY // INTERACTIVE MOVING MAP OF MY BRAIN</span>
             </div>
-            <h3 className="font-display text-3xl sm:text-5xl font-bold tracking-tight text-ink">
+            <h2 className="font-display text-3xl sm:text-5xl font-bold tracking-tight text-ink">
               Inside the Mind That Builds.
-            </h3>
+            </h2>
             <p className="mt-4 text-sm sm:text-base text-muted leading-relaxed">
               Every project on this site begins as a pattern of connected thoughts before it ever becomes code.
               This live, moving neural map traces how my brain links{' '}

@@ -439,9 +439,9 @@ export default function FeaturedProjects({ projects, onSelectProject }) {
               <span className="text-accent uppercase">{flagship.category}</span>
             </div>
 
-            <h3 className="font-display text-3xl sm:text-4xl font-bold tracking-tight text-ink">
+            <h2 className="font-display text-3xl sm:text-4xl font-bold tracking-tight text-ink">
               {flagship.name}
-            </h3>
+            </h2>
             <p className="mt-1 font-mono text-xs text-muted">
               {flagship.subtitle}
             </p>

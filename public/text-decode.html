@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Heading Text Decode Reveal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,650;12..96,700&family=Instrument+Sans:wght@400;500&display=swap"
+    rel="stylesheet"
+  />
+  <style>
+    :root {
+      --bg: #0b0d10;
+      --heading: #e7e3d8;
+      --body: #9ca3af;
+      --line: #1c2028;
+      --amber: #c9a227;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      background: var(--bg);
+      color: var(--heading);
+      font-family: "Instrument Sans", system-ui, -apple-system, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    main {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 14vh 24px 28vh;
+    }
+
+    section {
+      min-height: 58vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 48px 0;
+      border-bottom: 1px solid var(--line);
+      opacity: 0;
+      transform: translateY(22px);
+      transition: opacity 0.8s cubic-bezier(0.2, 0.8, 0.2, 1),
+                  transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+
+    section.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    h2 {
+      margin: 0;
+      color: var(--heading);
+      font-family: "Bricolage Grotesque", system-ui, sans-serif;
+      font-weight: 650;
+      font-size: 30px;
+      letter-spacing: -0.028em;
+      line-height: 1.15;
+      font-variant-ligatures: none;
+    }
+
+    h2::after {
+      content: "";
+      display: block;
+      height: 2px;
+      width: 0;
+      margin-top: 14px;
+      background: #c9a227;
+      transition: width .9s cubic-bezier(.2,.8,.2,1) .45s;
+    }
+
+    .show h2::after {
+      width: 46px;
+    }
+
+    section p {
+      margin: 22px 0 0;
+      max-width: 56ch;
+      color: var(--body);
+      font-size: 16px;
+      line-height: 1.65;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      section,
+      section.show {
+        opacity: 1;
+        transform: none;
+        transition: none;
+      }
+
+      h2::after,
+      .show h2::after {
+        width: 46px;
+        transition: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <section>
+      <h2>What you won't find here.</h2>
+      <p>
+        Visible immediately on page load or refresh. Every letter starts as a random glyph and locks into place from left to right, followed by the 46px amber rule.
+      </p>
+    </section>
+
+    <section>
+      <h2>Built from first principles, not templates.</h2>
+      <p>
+        Scroll down to bring each section past the 70% visibility threshold. Spaces and punctuation remain stable so word shapes never jump.
+      </p>
+    </section>
+
+    <section>
+      <h2>Quiet precision over loud decoration.</h2>
+      <p>
+        Each character receives its own lock timestamp: index * 30ms + random 0-190ms, driven by requestAnimationFrame with zero external libraries.
+      </p>
+    </section>
+
+    <section>
+      <h2>Software that respects the craft.</h2>
+      <p>
+        Screen readers always read the clean aria-label, and prefers-reduced-motion skips all scrambling and transitions immediately.
+      </p>
+    </section>
+  </main>
+
+  <script>
+    (() => {
+      const CHARS = "abcdefghijklmnopqrstuvwxyz0123456789<>/_";
+      const KEEP = /^[\s.,!?'’]$/;
+      const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+      function decodeHeading(h2) {
+        if (h2.dataset.decoded === "true") return;
+        h2.dataset.decoded = "true";
+
+        const final = h2.dataset.final ?? h2.textContent;
+
+        if (reducedMotion.matches) {
+          h2.textContent = final;
+          return;
+        }
+
+        const chars = Array.from(final);
+        const lockTimes = chars.map((_, index) => index * 30 + Math.random() * 190);
+        const maxLock = Math.max(0, ...lockTimes);
+        let start = null;
+        let rafId = 0;
+
+        const finish = () => {
+          if (rafId) cancelAnimationFrame(rafId);
+          h2.textContent = final;
+        };
+
+        const safetyTimer = setTimeout(finish, maxLock + 80);
+
+        function frame(now) {
+          if (start === null) start = now;
+          const elapsed = now - start;
+          let output = "";
+          let allLocked = true;
+
+          for (let i = 0; i < chars.length; i++) {
+            const ch = chars[i];
+            if (KEEP.test(ch) || elapsed >= lockTimes[i]) {
+              output += ch;
+            } else {
+              allLocked = false;
+              output += CHARS[Math.floor(Math.random() * CHARS.length)];
+            }
+          }
+
+          if (allLocked) {
+            clearTimeout(safetyTimer);
+            h2.textContent = final;
+          } else {
+            h2.textContent = output;
+            rafId = requestAnimationFrame(frame);
+          }
+        }
+
+        rafId = requestAnimationFrame(frame);
+      }
+
+      function revealHeading(h2) {
+        const section = h2.closest("section");
+        if (section) {
+          section.classList.add("show");
+        } else {
+          h2.parentElement?.classList.add("show");
+        }
+        decodeHeading(h2);
+      }
+
+      function isAtLeast70PercentVisible(el) {
+        const rect = el.getBoundingClientRect();
+        const vh = window.innerHeight || document.documentElement.clientHeight;
+        if (rect.height <= 0) return false;
+        const visibleTop = Math.max(0, rect.top);
+        const visibleBottom = Math.min(vh, rect.bottom);
+        const visibleHeight = Math.max(0, visibleBottom - visibleTop);
+        return visibleHeight / rect.height >= 0.7;
+      }
+
+      function init() {
+        const headings = document.querySelectorAll("h2");
+
+        // 1. Save final text in dataset.final and set aria-label on every h2
+        headings.forEach((h2) => {
+          const final = h2.textContent;
+          h2.dataset.final = final;
+          h2.setAttribute("aria-label", final);
+        });
+
+        // Accessibility: if prefers-reduced-motion is enabled, show everything immediately
+        if (reducedMotion.matches || !("IntersectionObserver" in window)) {
+          headings.forEach((h2) => {
+            revealHeading(h2);
+            h2.textContent = h2.dataset.final;
+          });
+          document.querySelectorAll("section").forEach((sec) => sec.classList.add("show"));
+          return;
+        }
+
+        // 2. IntersectionObserver with threshold 0.7
+        const observer = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                revealHeading(entry.target);
+                observer.unobserve(entry.target);
+              }
+            });
+          },
+          { threshold: 0.7 }
+        );
+
+        headings.forEach((h2) => {
+          if (isAtLeast70PercentVisible(h2)) {
+            revealHeading(h2);
+          } else {
+            observer.observe(h2);
+          }
+        });
+      }
+
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", init, { once: true });
+      } else {
+        init();
+      }
+    })();
+  </script>
+</body>
+</html>

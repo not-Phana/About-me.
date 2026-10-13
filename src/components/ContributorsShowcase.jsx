@@ -94,9 +94,9 @@ export default function ContributorsShowcase({ onPlaySound }) {
               <span className="w-2 h-2 rounded-full bg-accent animate-pulse" />
               <span>THE ALLIANCE // 8 COLLABORATORS · 200 VERIFIED COMMITS</span>
             </div>
-            <h3 className="font-display text-2xl sm:text-4xl font-extrabold tracking-tight text-ink">
+            <h2 className="font-display text-2xl sm:text-4xl font-extrabold tracking-tight text-ink">
               Human Architects, Autonomous Agents &amp; AI Chatbots
-            </h3>
+            </h2>
             <p className="mt-2 text-sm sm:text-base text-muted max-w-3xl leading-relaxed">
               Software engineering is no longer solitary. The PK Studio ecosystem is co-authored across three complementary tiers: human vision, autonomous coding agents with terminal automation, and conversational AI chatbots.
             </p>
