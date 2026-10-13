@@ -72,7 +72,7 @@ const SCULPTURE_PLATES = [
     title: 'Pentelic Marble & Auric Kintsugi · Classical Greek Bust',
     meta: 'Pentelic marble with gold lacquer repair · Embodying Χαλεπὰ τὰ καλά (Noble Resilience) · Private Collection & Archival Specimen',
     url: '#about',
-    src: './assets/kintsugi-venus-plate.png',
+    src: './assets/kintsugi-venus-cutout.png',
     alt: 'Classical Pentelic marble sculpture bust repaired with luminous gold kintsugi seams.',
     inscription: 'ΧΑΛΕΠΑ ΤΑ ΚΑΛΑ',
     epoch: 'Hellenistic · Auric Kintsugi',
@@ -529,10 +529,12 @@ export default function AboutSection({ onExploreProjects, onPlaySound }) {
                   aria-hidden="true"
                 />
 
-                {/* Interactive Volumetric 3D WebGL Canvas */}
+                {/* Interactive Volumetric 3D Stage with Monumental Background Typography */}
                 <Sculpture3DCanvas
                   src={currentPlate.src}
                   alt={currentPlate.alt}
+                  plate={currentPlate}
+                  maxim={currentMaxim}
                   onPlaySound={onPlaySound}
                   className="relative z-10 w-full h-full"
                 />

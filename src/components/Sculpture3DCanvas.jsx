@@ -2,372 +2,171 @@ import React, { useRef, useEffect, useState, useCallback } from 'react';
 
 /**
  * Sculpture3DCanvas
- * Pure WebGL volumetric 3D renderer for classical sculptures.
- * Generates real-time 3D parallax raymarching, normal-map estimation,
- * dynamic directional lighting, auric Kintsugi specular glint, and 3D rotation.
+ * Monumental 3D Interactive Exhibition Stage.
  * 
- * Strict Zero-Emoji Policy: No emojis in UI or comments.
+ * Features:
+ * 1. Deep luxury dark museum gallery background with dynamic chiaroscuro spotlight.
+ * 2. Monumental Greek & Latin architectural typography layered BEHIND the sculpture.
+ * 3. High-resolution golden Kintsugi marble bust in the FOREGROUND, occluding the letters.
+ * 4. Butter-smooth multi-layer 3D perspective mouse parallax (differential z-depth).
+ * 5. Dynamic auric specular glint sweep across golden kintsugi seams.
+ * 6. Interactive modes: Classical Realism, Auric Radiance Glow, and 3D Cyber Mesh.
+ * 
+ * Strict Zero-Emoji Policy: No Unicode emojis anywhere; crisp inline SVGs only.
  */
-
-const VS_SOURCE = `
-attribute vec2 aPosition;
-varying vec2 vUv;
-void main() {
-  vUv = aPosition * 0.5 + 0.5;
-  vUv.y = 1.0 - vUv.y;
-  gl_Position = vec4(aPosition, 0.0, 1.0);
-}
-`;
-
-const FS_SOURCE = `
-precision highp float;
-varying vec2 vUv;
-
-uniform sampler2D uTexture;
-uniform vec2 uRotation; // normalized yaw/pitch from -1 to 1
-uniform vec2 uLight;    // virtual light coordinates
-uniform float uTime;
-uniform int uMode;       // 0: Auric Realism, 1: Gold Radiance, 2: 3D Wireframe
-uniform float uHover;    // 0 to 1
-
-// Heuristic depth map estimator based on luminance, distance from pale background, and anatomy
-float getDepth(vec2 uv) {
-  vec4 col = texture2D(uTexture, uv);
-  // Distance from pale museum marble background
-  float bgDist = length(col.rgb - vec3(0.92, 0.94, 0.95));
-  // Detect golden kintsugi seams (high red/green, low blue)
-  float isGold = step(0.12, col.r - col.b) * step(0.48, col.r + col.g);
-  // Radial distance from center of statue head
-  float centerDist = 1.0 - smoothstep(0.0, 0.65, length(uv - vec2(0.5, 0.44)));
-
-  float depth = smoothstep(0.05, 0.32, bgDist) * (0.6 + 0.4 * centerDist);
-  if (isGold > 0.5) depth += 0.08;
-  return clamp(depth, 0.0, 1.0);
-}
-
-void main() {
-  // 1. Volumetric Parallax Ray Offset
-  float baseDepth = getDepth(vUv);
-  vec2 parallaxOffset = uRotation * (baseDepth * 0.048);
-  vec2 uv = clamp(vUv - parallaxOffset, 0.001, 0.999);
-  
-  float depth = getDepth(uv);
-  vec4 color = texture2D(uTexture, uv);
-
-  // 2. Normal Map Estimation via Finite Differences
-  float eps = 0.0035;
-  float dX = (getDepth(uv + vec2(eps, 0.0)) - getDepth(uv - vec2(eps, 0.0))) * 3.8;
-  float dY = (getDepth(uv + vec2(0.0, eps)) - getDepth(uv - vec2(0.0, eps))) * 3.8;
-  vec3 normal = normalize(vec3(-dX, -dY, 1.0));
-
-  // 3. Dynamic 3D Directional Lighting
-  vec3 lightPos = vec3(uLight.x * 2.0, -uLight.y * 2.0, 1.35);
-  vec3 lightDir = normalize(lightPos - vec3((uv - 0.5) * 2.0, depth * 0.6));
-  vec3 viewDir = vec3(0.0, 0.0, 1.0);
-  vec3 halfDir = normalize(lightDir + viewDir);
-
-  float diff = max(dot(normal, lightDir), 0.0);
-  float spec = pow(max(dot(normal, halfDir), 0.0), 28.0);
-
-  // 4. Auric Kintsugi Glint Isolation
-  float isGold = step(0.125, color.r - color.b) * step(0.46, color.r + color.g);
-  vec3 goldTint = vec3(1.0, 0.84, 0.32);
-
-  // Background Ambient Occlusion Shadow
-  float ao = smoothstep(0.02, 0.16, depth);
-
-  if (uMode == 0) {
-    // Mode 0: Classical Auric Realism
-    vec3 lit = color.rgb * (0.86 + diff * 0.32);
-    // Gold veins specular shimmer
-    lit += goldTint * (spec * 2.2 + diff * 0.4) * isGold;
-    // Subtle marble surface sheen
-    lit += vec3(0.92, 0.95, 1.0) * spec * 0.14 * (1.0 - isGold);
-    gl_FragColor = vec4(lit, 1.0);
-  } else if (uMode == 1) {
-    // Mode 1: Gold Radiance Ingestion Boost
-    vec3 lit = color.rgb * (0.76 + diff * 0.28);
-    float pulse = 0.88 + 0.12 * sin(uTime * 3.2);
-    lit += goldTint * (isGold * 2.6 * pulse + spec * 2.8 * isGold);
-    // Fine kinetic scanline
-    float scan = smoothstep(0.025, 0.0, abs(fract(uv.y * 14.0 - uTime * 0.35) - 0.5));
-    lit += vec3(0.85, 0.7, 0.25) * scan * 0.18;
-    gl_FragColor = vec4(lit, 1.0);
-  } else {
-    // Mode 2: 3D Holographic Wireframe Topology
-    vec3 topo = mix(vec3(0.06, 0.09, 0.14), vec3(0.86, 0.68, 0.22), depth);
-    float grid = step(0.91, fract(uv.x * 55.0)) + step(0.91, fract(uv.y * 55.0));
-    topo += vec3(0.35, 0.75, 1.0) * grid * depth * 0.7;
-    topo += goldTint * isGold * 1.6;
-    gl_FragColor = vec4(topo, 1.0);
-  }
-}
-`;
 
 export default function Sculpture3DCanvas({
   src,
   alt = '3D Classical Sculpture',
+  plate,
+  maxim,
   className = '',
   onPlaySound,
 }) {
-  const canvasRef = useRef(null);
   const containerRef = useRef(null);
 
-  // Mode: 0 = Classical Realism, 1 = Gold Radiance, 2 = 3D Wireframe
+  // Render Modes: 0 = Realism, 1 = Auric Glow, 2 = 3D Mesh
   const [renderMode, setRenderMode] = useState(0);
+  const [isHovered, setIsHovered] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
-  const [yaw, setYaw] = useState(0);
-  const [pitch, setPitch] = useState(0);
-  const [lightPos, setLightPos] = useState({ x: 0.2, y: -0.2 });
 
-  const targetRotation = useRef({ yaw: 0, pitch: 0 });
-  const currentRotation = useRef({ yaw: 0, pitch: 0 });
-  const lastMousePos = useRef({ x: 0, y: 0 });
-  const animationFrameId = useRef(null);
-  const glRef = useRef(null);
-  const uniformsRef = useRef({});
-  const textureRef = useRef(null);
+  // Rotation & Light State
+  const [displayYaw, setDisplayYaw] = useState(0);
+  const [displayPitch, setDisplayPitch] = useState(0);
+  const [spotlight, setSpotlight] = useState({ x: 50, y: 40 });
 
-  // Initialize WebGL
+  // Physics / Lerp interpolation
+  const targetYaw = useRef(0);
+  const targetPitch = useRef(0);
+  const currentYaw = useRef(0);
+  const currentPitch = useRef(0);
+  const dragStart = useRef({ x: 0, y: 0 });
+  const animFrameId = useRef(null);
+
+  // Determine dynamic inscriptions based on plate & maxim
+  const plateId = plate?.id || 'kintsugi';
+  const primaryTitle =
+    plateId === 'kintsugi'
+      ? 'K I N T S U G I'
+      : plateId === 'frontal'
+      ? 'E P I C U R U S'
+      : plateId === 'profile'
+      ? 'A T A R A X I A'
+      : 'C H R Y S I P P O S';
+
+  const greekEpigraph =
+    plate?.inscription || maxim?.greek || 'ΧΑΛΕΠΑ ΤΑ ΚΑΛΑ';
+
+  const secondaryTag =
+    plateId === 'kintsugi'
+      ? 'PENTELIC MARBLE · AURIC SEAMS · NOBLE RESILIENCE'
+      : plateId === 'frontal'
+      ? 'MET MUSEUM ACC. 11.90 · DELPHIC MAXIM'
+      : plateId === 'profile'
+      ? 'HELLENISTIC STUDY · ATARAXIA & METRON'
+      : 'MET MUSEUM ACC. 24.243 · FORMAL LOGIC';
+
+  // Smooth animation loop using lerp
   useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
+    let active = true;
 
-    const gl =
-      canvas.getContext('webgl', { antialias: true, alpha: false }) ||
-      canvas.getContext('experimental-webgl');
+    const tick = () => {
+      if (!active) return;
 
-    if (!gl) {
-      console.warn('WebGL not supported, falling back to 2D image.');
-      return;
-    }
-    glRef.current = gl;
+      // Lerp smoothing factor
+      const ease = 0.085;
+      currentYaw.current += (targetYaw.current - currentYaw.current) * ease;
+      currentPitch.current += (targetPitch.current - currentPitch.current) * ease;
 
-    // Helper: compile shader
-    function compileShader(srcCode, type) {
-      const shader = gl.createShader(type);
-      gl.shaderSource(shader, srcCode);
-      gl.compileShader(shader);
-      if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-        console.error('Shader compile error:', gl.getShaderInfoLog(shader));
-        gl.deleteShader(shader);
-        return null;
-      }
-      return shader;
-    }
+      // Update state for UI telemetry
+      setDisplayYaw(Math.round(currentYaw.current * 25));
+      setDisplayPitch(Math.round(currentPitch.current * 20));
 
-    const vs = compileShader(VS_SOURCE, gl.VERTEX_SHADER);
-    const fs = compileShader(FS_SOURCE, gl.FRAGMENT_SHADER);
-    if (!vs || !fs) return;
-
-    const program = gl.createProgram();
-    gl.attachShader(program, vs);
-    gl.attachShader(program, fs);
-    gl.linkProgram(program);
-
-    if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
-      console.error('Program link error:', gl.getProgramInfoLog(program));
-      return;
-    }
-    gl.useProgram(program);
-
-    // Quad geometry (2 triangles covering full clip space)
-    const vertices = new Float32Array([
-      -1.0, -1.0,
-       1.0, -1.0,
-      -1.0,  1.0,
-      -1.0,  1.0,
-       1.0, -1.0,
-       1.0,  1.0,
-    ]);
-    const vbo = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, vbo);
-    gl.bufferData(gl.ARRAY_BUFFER, vertices, gl.STATIC_DRAW);
-
-    const aPos = gl.getAttribLocation(program, 'aPosition');
-    gl.enableVertexAttribArray(aPos);
-    gl.vertexAttribPointer(aPos, 2, gl.FLOAT, false, 0, 0);
-
-    // Store uniform locations
-    uniformsRef.current = {
-      uTexture: gl.getUniformLocation(program, 'uTexture'),
-      uRotation: gl.getUniformLocation(program, 'uRotation'),
-      uLight: gl.getUniformLocation(program, 'uLight'),
-      uTime: gl.getUniformLocation(program, 'uTime'),
-      uMode: gl.getUniformLocation(program, 'uMode'),
-      uHover: gl.getUniformLocation(program, 'uHover'),
+      animFrameId.current = requestAnimationFrame(tick);
     };
 
-    // Load initial image texture
-    const texture = gl.createTexture();
-    textureRef.current = texture;
-    gl.bindTexture(gl.TEXTURE_2D, texture);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-
-    // Placeholder 1x1 black pixel while loading
-    gl.texImage2D(
-      gl.TEXTURE_2D,
-      0,
-      gl.RGBA,
-      1,
-      1,
-      0,
-      gl.RGBA,
-      gl.UNSIGNED_BYTE,
-      new Uint8Array([20, 22, 28, 255])
-    );
+    animFrameId.current = requestAnimationFrame(tick);
 
     return () => {
-      if (gl) {
-        gl.deleteProgram(program);
-        gl.deleteShader(vs);
-        gl.deleteShader(fs);
-        gl.deleteBuffer(vbo);
-        gl.deleteTexture(texture);
-      }
+      active = false;
+      if (animFrameId.current) cancelAnimationFrame(animFrameId.current);
     };
   }, []);
 
-  // Update texture when `src` changes
-  useEffect(() => {
-    const gl = glRef.current;
-    const texture = textureRef.current;
-    if (!gl || !texture || !src) return;
-
-    const img = new Image();
-    img.crossOrigin = 'anonymous';
-    img.src = src;
-    img.onload = () => {
-      gl.bindTexture(gl.TEXTURE_2D, texture);
-      gl.texImage2D(
-        gl.TEXTURE_2D,
-        0,
-        gl.RGBA,
-        gl.RGBA,
-        gl.UNSIGNED_BYTE,
-        img
-      );
-    };
-  }, [src]);
-
-  // Main Render Loop with inertia dampening and 60 FPS requestAnimationFrame
-  useEffect(() => {
-    const gl = glRef.current;
-    const canvas = canvasRef.current;
-    if (!gl || !canvas) return;
-
-    let startTime = performance.now();
-
-    const render = () => {
-      const now = performance.now();
-      const elapsed = (now - startTime) / 1000;
-
-      // Handle canvas resize
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
-      const displayWidth = Math.floor(canvas.clientWidth * dpr);
-      const displayHeight = Math.floor(canvas.clientHeight * dpr);
-
-      if (canvas.width !== displayWidth || canvas.height !== displayHeight) {
-        canvas.width = displayWidth;
-        canvas.height = displayHeight;
-        gl.viewport(0, 0, displayWidth, displayHeight);
-      }
-
-      // Smooth inertia lerp towards target rotation
-      currentRotation.current.yaw +=
-        (targetRotation.current.yaw - currentRotation.current.yaw) * 0.12;
-      currentRotation.current.pitch +=
-        (targetRotation.current.pitch - currentRotation.current.pitch) * 0.12;
-
-      // Update state for HUD display
-      setYaw(Math.round(currentRotation.current.yaw * 25 * 10) / 10);
-      setPitch(Math.round(currentRotation.current.pitch * 25 * 10) / 10);
-
-      // Pass uniforms
-      const u = uniformsRef.current;
-      gl.uniform1i(u.uTexture, 0);
-      gl.uniform2f(
-        u.uRotation,
-        currentRotation.current.yaw,
-        currentRotation.current.pitch
-      );
-      gl.uniform2f(u.uLight, lightPos.x, lightPos.y);
-      gl.uniform1f(u.uTime, elapsed);
-      gl.uniform1i(u.uMode, renderMode);
-      gl.uniform1f(u.uHover, 1.0);
-
-      // Draw quad
-      gl.drawArrays(gl.TRIANGLES, 0, 6);
-
-      animationFrameId.current = requestAnimationFrame(render);
-    };
-
-    animationFrameId.current = requestAnimationFrame(render);
-    return () => {
-      if (animationFrameId.current) {
-        cancelAnimationFrame(animationFrameId.current);
-      }
-    };
-  }, [renderMode, lightPos]);
-
-  // Interactive mouse move / drag handlers
+  // Mouse interaction
   const handleMouseMove = useCallback((e) => {
     if (!containerRef.current) return;
     const rect = containerRef.current.getBoundingClientRect();
-    const nx = (e.clientX - rect.left) / rect.width;
-    const ny = (e.clientY - rect.top) / rect.height;
-
-    // Light moves in real 3D
-    setLightPos({
-      x: (nx - 0.5) * 2.2,
-      y: (ny - 0.5) * 2.2,
-    });
+    const nx = ((e.clientX - rect.left) / rect.width) * 2 - 1; // -1 to 1
+    const ny = ((e.clientY - rect.top) / rect.height) * 2 - 1; // -1 to 1
 
     if (isDragging) {
-      const dx = (e.clientX - lastMousePos.current.x) / rect.width;
-      const dy = (e.clientY - lastMousePos.current.y) / rect.height;
-      targetRotation.current.yaw = Math.max(-1.4, Math.min(1.4, targetRotation.current.yaw + dx * 2.8));
-      targetRotation.current.pitch = Math.max(-1.4, Math.min(1.4, targetRotation.current.pitch - dy * 2.8));
-      lastMousePos.current = { x: e.clientX, y: e.clientY };
+      const deltaX = (e.clientX - dragStart.current.x) / rect.width;
+      const deltaY = (e.clientY - dragStart.current.y) / rect.height;
+      targetYaw.current = Math.max(-1.2, Math.min(1.2, targetYaw.current + deltaX * 1.5));
+      targetPitch.current = Math.max(-1.0, Math.min(1.0, targetPitch.current - deltaY * 1.5));
+      dragStart.current = { x: e.clientX, y: e.clientY };
     } else {
-      // Natural 3D mouse parallax
-      targetRotation.current.yaw = (nx - 0.5) * 1.25;
-      targetRotation.current.pitch = (ny - 0.5) * 1.1;
+      // Gentle tracking when hovering
+      targetYaw.current = Math.max(-1, Math.min(1, nx * 0.85));
+      targetPitch.current = Math.max(-1, Math.min(1, ny * 0.75));
     }
+
+    setSpotlight({
+      x: Math.max(10, Math.min(90, ((e.clientX - rect.left) / rect.width) * 100)),
+      y: Math.max(10, Math.min(90, ((e.clientY - rect.top) / rect.height) * 100)),
+    });
   }, [isDragging]);
 
   const handleMouseDown = useCallback((e) => {
     setIsDragging(true);
-    lastMousePos.current = { x: e.clientX, y: e.clientY };
-  }, []);
+    dragStart.current = { x: e.clientX, y: e.clientY };
+    onPlaySound?.('switch');
+  }, [onPlaySound]);
 
   const handleMouseUp = useCallback(() => {
     setIsDragging(false);
   }, []);
 
-  const handleMouseLeave = useCallback(() => {
-    setIsDragging(false);
-    // Smoothly return towards resting center angle
-    targetRotation.current.yaw = 0.08;
-    targetRotation.current.pitch = -0.05;
-    setLightPos({ x: 0.25, y: -0.2 });
+  const handleMouseEnter = useCallback(() => {
+    setIsHovered(true);
   }, []);
 
-  const handleResetCamera = useCallback((e) => {
+  const handleMouseLeave = useCallback(() => {
+    setIsHovered(false);
+    setIsDragging(false);
+    // Smoothly return towards resting center
+    targetYaw.current = 0.08;
+    targetPitch.current = -0.05;
+    setSpotlight({ x: 50, y: 40 });
+  }, []);
+
+  const handleReset = useCallback((e) => {
     e.stopPropagation();
     onPlaySound?.('switch');
-    targetRotation.current.yaw = 0;
-    targetRotation.current.pitch = 0;
-    setLightPos({ x: 0.1, y: -0.1 });
+    targetYaw.current = 0;
+    targetPitch.current = 0;
+    setSpotlight({ x: 50, y: 40 });
   }, [onPlaySound]);
 
-  const handleSwitchMode = useCallback((modeIndex) => {
+  const handleSwitchMode = useCallback((modeIdx) => {
     onPlaySound?.('keycap');
-    setRenderMode(modeIndex);
+    setRenderMode(modeIdx);
   }, [onPlaySound]);
+
+  // Derived 3D transform values
+  const yaw = currentYaw.current;
+  const pitch = currentPitch.current;
+
+  // Layer 1: Background Text Parallax (moves opposite / deeper in z)
+  const bgTextTransform = `translate3d(${yaw * -18}px, ${pitch * 14}px, -45px) scale(0.96)`;
+
+  // Layer 2: Foreground Statue Parallax (moves forward and tilts toward cursor)
+  const statueTransform = `perspective(1000px) rotateX(${-pitch * 16}deg) rotateY(${yaw * 20}deg) translate3d(${yaw * 24}px, ${-pitch * 16}px, 35px) scale(1.02)`;
+
+  // Layer 3: Dynamic specular glint coordinates
+  const glintX = Math.round(spotlight.x);
+  const glintY = Math.round(spotlight.y);
 
   return (
     <div
@@ -375,53 +174,174 @@ export default function Sculpture3DCanvas({
       onMouseMove={handleMouseMove}
       onMouseDown={handleMouseDown}
       onMouseUp={handleMouseUp}
+      onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
-      className={`relative w-full h-full select-none cursor-grab active:cursor-grabbing overflow-hidden border border-[var(--ms-rule-strong)] bg-[#04060a] ${className}`}
+      className={`relative w-full h-full select-none cursor-grab active:cursor-grabbing overflow-hidden border border-[var(--ms-rule-strong)] bg-[#05070a] shadow-[0_30px_70px_rgba(0,0,0,0.95)] ${className}`}
+      style={{ perspective: '1100px', transformStyle: 'preserve-3d' }}
       title="Click and drag to rotate the statue in 3D, or move cursor to track dynamic lighting"
     >
-      {/* WebGL 3D Canvas */}
-      <canvas
-        ref={canvasRef}
-        className="w-full h-full object-cover block"
-        aria-label={alt}
+      {/* 1. Deep Dark Gallery Background & Ambient Chiaroscuro Lighting */}
+      <div
+        className="pointer-events-none absolute inset-0 transition-opacity duration-300"
+        style={{
+          background: `
+            radial-gradient(ellipse 90% 80% at ${spotlight.x}% ${spotlight.y}%, 
+              ${renderMode === 1 ? 'rgba(212, 165, 40, 0.28)' : 'rgba(212, 165, 40, 0.16)'} 0%, 
+              rgba(212, 165, 40, 0.04) 50%, 
+              rgba(5, 7, 10, 0.98) 85%
+            ),
+            radial-gradient(circle at 50% 90%, rgba(10, 15, 25, 0.9) 0%, #05070a 100%)
+          `,
+        }}
       />
 
-      {/* Top 3D HUD Navigation Bar */}
-      <div className="absolute top-0 inset-x-0 p-3 bg-gradient-to-b from-[#06080d]/90 to-transparent flex items-center justify-between gap-2 pointer-events-none z-20 font-mono text-[9.5px]">
+      {/* Subtle Museum Archival Grid Lines */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 opacity-[0.06] bg-[linear-gradient(to_right,#d4a528_1px,transparent_1px),linear-gradient(to_bottom,#d4a528_1px,transparent_1px)] bg-[size:32px_32px]"
+      />
+
+      {/* Rotating Delphic Celestial Orbit Rings */}
+      <div
+        aria-hidden="true"
+        className="delphic-ring-spin pointer-events-none absolute -inset-10 rounded-full border border-[var(--ms-bronze)]/15 border-dashed z-0"
+        style={{
+          transform: `translate3d(${yaw * -8}px, ${pitch * 8}px, -60px)`,
+        }}
+      />
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-12 rounded-full border border-[var(--ms-bronze)]/10 z-0"
+        style={{
+          transform: `translate3d(${yaw * -12}px, ${pitch * 10}px, -50px)`,
+        }}
+      />
+
+      {/* 2. LAYER 1: MONUMENTAL TEXT LAYERED BEHIND THE STATUE */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 flex flex-col items-center justify-between pt-12 pb-14 px-4 z-10 overflow-hidden transition-transform duration-75 ease-out select-none"
+        style={{
+          transform: bgTextTransform,
+          transformStyle: 'preserve-3d',
+        }}
+      >
+        {/* Giant Monolithic Title (e.g. K I N T S U G I) behind head & hair curls */}
+        <div
+          className="font-classical font-black text-center whitespace-nowrap tracking-[0.24em] sm:tracking-[0.34em] leading-none transition-all duration-300"
+          style={{
+            fontSize: 'clamp(3.6rem, 10.5vw, 6.2rem)',
+            WebkitTextStroke: renderMode === 1 ? '1.8px rgba(250, 204, 21, 0.92)' : '1.5px rgba(212, 165, 40, 0.72)',
+            color: renderMode === 1 ? 'rgba(250, 204, 21, 0.22)' : 'rgba(212, 165, 40, 0.12)',
+            textShadow: renderMode === 1 
+              ? '0 0 45px rgba(250, 204, 21, 0.5), 0 0 90px rgba(212, 165, 40, 0.25)' 
+              : '0 0 35px rgba(212, 165, 40, 0.35)',
+          }}
+        >
+          {primaryTitle}
+        </div>
+
+        {/* Monumental Classical Greek Epigraph behind neck & shoulders */}
+        <div
+          lang="el"
+          className="font-classical italic font-semibold text-center whitespace-nowrap tracking-[0.16em] sm:tracking-[0.24em] transition-all duration-300"
+          style={{
+            fontSize: 'clamp(2.4rem, 7vw, 4.4rem)',
+            WebkitTextStroke: renderMode === 1 ? '1.5px rgba(250, 204, 21, 0.75)' : '1.3px rgba(220, 185, 75, 0.58)',
+            color: renderMode === 1 ? 'rgba(250, 204, 21, 0.16)' : 'rgba(220, 185, 75, 0.10)',
+            textShadow: '0 0 28px rgba(212, 165, 40, 0.28)',
+          }}
+        >
+          {greekEpigraph}
+        </div>
+
+        {/* Archival Specimen Attribution Watermark */}
+        <div className="font-mono text-[9px] sm:text-[10px] tracking-[0.26em] text-[var(--ms-bronze)]/45 uppercase">
+          {secondaryTag}
+        </div>
+      </div>
+
+      {/* 3. LAYER 2: FOREGROUND STATUE IN FRONT OF THE MONUMENTAL TEXT */}
+      <div
+        className="relative w-full h-full flex items-center justify-center z-20 transition-transform duration-75 ease-out pointer-events-none"
+        style={{
+          transform: statueTransform,
+          transformStyle: 'preserve-3d',
+        }}
+      >
+        {/* Full Sculpture Cutout Bust */}
+        <img
+          src={src}
+          alt={alt}
+          draggable={false}
+          className="w-auto h-[90%] sm:h-[94%] max-w-[96%] object-contain drop-shadow-[0_25px_45px_rgba(0,0,0,0.98)] transition-all duration-300"
+          style={{
+            filter: renderMode === 1
+              ? 'drop-shadow(0 25px 50px rgba(0,0,0,0.98)) drop-shadow(0 0 50px rgba(245,195,45,0.5)) contrast(1.08)'
+              : renderMode === 2
+              ? 'drop-shadow(0 20px 40px rgba(0,0,0,0.95)) drop-shadow(0 0 30px rgba(56,189,248,0.35)) hue-rotate(20deg)'
+              : 'drop-shadow(0 22px 45px rgba(0,0,0,0.95)) drop-shadow(0 0 30px rgba(212,165,40,0.28))',
+          }}
+        />
+
+        {/* Mode 1: Auric Specular Light Glint Sweep across Golden Seams */}
+        {renderMode === 1 && (
+          <div
+            className="pointer-events-none absolute inset-0 mix-blend-color-dodge transition-opacity duration-300"
+            style={{
+              background: `radial-gradient(circle 220px at ${glintX}% ${glintY}%, rgba(255, 235, 150, 0.45) 0%, rgba(212, 165, 40, 0.15) 45%, transparent 75%)`,
+            }}
+          />
+        )}
+
+        {/* Mode 2: 3D Holographic Wireframe Grid Topology */}
+        {renderMode === 2 && (
+          <div
+            className="pointer-events-none absolute inset-0 opacity-40 mix-blend-screen bg-[linear-gradient(rgba(56,189,248,0.25)_1px,transparent_1px),linear-gradient(90deg,rgba(56,189,248,0.25)_1px,transparent_1px)] bg-[size:18px_18px]"
+            style={{
+              maskImage: 'radial-gradient(circle at 50% 50%, black 50%, transparent 85%)',
+              WebkitMaskImage: 'radial-gradient(circle at 50% 50%, black 50%, transparent 85%)',
+            }}
+          />
+        )}
+      </div>
+
+      {/* 4. Top 3D HUD Navigation Bar */}
+      <div className="absolute top-0 inset-x-0 p-3 bg-gradient-to-b from-[#05070a]/95 via-[#05070a]/70 to-transparent flex items-center justify-between gap-2 pointer-events-none z-30 font-mono text-[9.5px]">
         <div className="flex items-center gap-2">
           <span className="flex h-2 w-2 relative">
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#d4a528] opacity-75" />
             <span className="relative inline-flex rounded-full h-2 w-2 bg-[#d4a528]" />
           </span>
           <span className="text-ink font-bold tracking-wider">
-            3D VOLUMETRIC SCANNER
+            3D DEPTH STAGE
           </span>
           <span className="text-muted hidden sm:inline">
-            // GLSL RAYMARCHING
+            // PARALLAX OCCLUSION
           </span>
         </div>
 
-        <div className="text-[9px] text-[#4ade80] bg-[#4ade80]/10 border border-[#4ade80]/30 px-2 py-0.5 font-bold">
-          LIVE 3D SHADER
+        <div className="text-[9px] text-[#4ade80] bg-[#4ade80]/10 border border-[#4ade80]/30 px-2 py-0.5 font-bold tracking-wider">
+          REAL-TIME 3D ACTIVE
         </div>
       </div>
 
       {/* 4 Golden Architectural Corner Brackets */}
-      <span className="absolute top-2 left-2 w-3 h-3 border-t-2 border-l-2 border-[var(--ms-bronze)] pointer-events-none z-20" />
-      <span className="absolute top-2 right-2 w-3 h-3 border-t-2 border-r-2 border-[var(--ms-bronze)] pointer-events-none z-20" />
-      <span className="absolute bottom-2 left-2 w-3 h-3 border-b-2 border-l-2 border-[var(--ms-bronze)] pointer-events-none z-20" />
-      <span className="absolute bottom-2 right-2 w-3 h-3 border-b-2 border-r-2 border-[var(--ms-bronze)] pointer-events-none z-20" />
+      <span className="absolute top-2 left-2 w-3 h-3 border-t-2 border-l-2 border-[var(--ms-bronze)] pointer-events-none z-30" />
+      <span className="absolute top-2 right-2 w-3 h-3 border-t-2 border-r-2 border-[var(--ms-bronze)] pointer-events-none z-30" />
+      <span className="absolute bottom-2 left-2 w-3 h-3 border-b-2 border-l-2 border-[var(--ms-bronze)] pointer-events-none z-30" />
+      <span className="absolute bottom-2 right-2 w-3 h-3 border-b-2 border-r-2 border-[var(--ms-bronze)] pointer-events-none z-30" />
 
-      {/* Bottom 3D Telemetry Controls & Render Mode Deck */}
-      <div className="absolute bottom-0 inset-x-0 p-3 bg-gradient-to-t from-[#04060a]/95 via-[#04060a]/75 to-transparent flex flex-wrap items-center justify-between gap-2 z-20 font-mono text-[9.5px]">
-        {/* Dynamic Rotation Readout */}
+      {/* 5. Bottom 3D Telemetry Controls & Render Mode Deck */}
+      <div className="absolute bottom-0 inset-x-0 p-3 bg-gradient-to-t from-[#05070a]/98 via-[#05070a]/80 to-transparent flex flex-wrap items-center justify-between gap-2 z-30 font-mono text-[9.5px]">
+        {/* Real-time Rotation Readout */}
         <div className="flex items-center gap-2 text-muted">
           <span className="text-accent font-semibold">
-            YAW: {yaw >= 0 ? `+${yaw}` : yaw}°
+            YAW: {displayYaw >= 0 ? `+${displayYaw}` : displayYaw}°
           </span>
           <span>·</span>
           <span className="text-[#38bdf8] font-semibold">
-            PITCH: {pitch >= 0 ? `+${pitch}` : pitch}°
+            PITCH: {displayPitch >= 0 ? `+${displayPitch}` : displayPitch}°
           </span>
         </div>
 
@@ -449,7 +369,7 @@ export default function Sculpture3DCanvas({
             }}
             className={`px-2 py-0.5 border text-[9px] font-bold transition-all ${
               renderMode === 1
-                ? 'border-[#4ade80] bg-[#4ade80] text-[#08080a]'
+                ? 'border-[#facc15] bg-[#facc15] text-[#08080a]'
                 : 'border-lineSoft bg-[#0a0d14]/80 text-muted hover:text-ink'
             }`}
           >
@@ -472,7 +392,7 @@ export default function Sculpture3DCanvas({
 
           <button
             type="button"
-            onClick={handleResetCamera}
+            onClick={handleReset}
             className="px-2 py-0.5 border border-lineSoft bg-[#0a0d14]/80 text-muted hover:text-accent hover:border-accent text-[9px] transition-colors ml-1"
             title="Reset 3D camera angle to center"
           >
