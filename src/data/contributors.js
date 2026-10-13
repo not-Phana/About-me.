@@ -17,24 +17,25 @@ export const CONTRIBUTORS = [
     avatar: './assets/avatar-kon-kurosaki.jpg',
     avatarFallback: 'https://avatars.githubusercontent.com/u/297607780?v=4',
     category: 'human',
-    typeBadge: 'LEAD CONTRIBUTOR',
+    typeBadge: 'LEAD ARCHITECT (ME)',
     badgeTone: 'gold',
-    model: 'Biological Neural Network',
-    role: 'Lead Architect & Full-Stack Core',
+    model: '1 Human Brain · Account #01 (@Kon-Kurosaki)',
+    role: 'Primary Dev Account — Yes, both humans here are me',
     focus: 'Core Engine · Interactive Lessons · UI/UX Systems',
-    status: 'ONLINE // ACTIVE',
+    status: 'ONLINE // SAME HUMAN #01',
     statusDotColor: '#4ade80',
     description:
-      'Lead author with 167 verified commits on PK Khmer Type. Built the core interactive typing engine, 218 lessons, state management, and real-time audio telemetry.',
+      'My primary coding GitHub account (@Kon-Kurosaki) with 168 verified commits on PK Khmer Type. Both @Kon-Kurosaki and @not-Phana are me—one person committing from two GitHub accounts (198/200 combined commits).',
     keyContributions: [
-      '167 verified commits on PK Khmer Type',
-      'Tactile typing engine & 218 interactive lessons',
-      'Full-stack architecture & reactive telemetry'
+      '168 verified commits (198 combined with @not-Phana)',
+      'Same person as @not-Phana — Primary workstation git identity',
+      'Tactile typing engine, 218 lessons & full-stack architecture'
     ],
-    commitsCount: '168 Commits',
-    roleTag: 'HUMAN',
+    commitsCount: '168 Commits (Me #1)',
+    roleTag: 'HUMAN (ME)',
     entityType: 'human',
-    pairedWith: 'Phana (@not-Phana)'
+    samePersonBadge: 'SAME PERSON AS @not-Phana',
+    pairedWith: 'Phana (@not-Phana) — Also Me (My Repo Owner Account)'
   },
   {
     id: 'not-phana',
@@ -44,24 +45,25 @@ export const CONTRIBUTORS = [
     avatar: './assets/avatar-not-phana.jpg',
     avatarFallback: 'https://avatars.githubusercontent.com/u/255106015?v=4',
     category: 'human',
-    typeBadge: 'REPO OWNER',
+    typeBadge: 'REPO OWNER (ALSO ME)',
     badgeTone: 'cyan',
-    model: 'Biological Neural Network',
-    role: 'Repository Owner & Creator',
+    model: '1 Human Brain · Account #02 (@not-Phana)',
+    role: 'Repository Owner Account — Also me on a second account',
     focus: 'Ecosystem Architecture · Repo Hygiene · Releases',
-    status: 'ONLINE // SYNCED',
+    status: 'ONLINE // SAME HUMAN #02',
     statusDotColor: '#38bdf8',
     description:
-      'Official repository owner of not-Phana/PK-Khmer-Type and PK Studio ecosystems with 30 verified commits. Directs public releases, documentation, and web hosting.',
+      'My second GitHub account (@not-Phana) that owns the not-Phana/PK-Khmer-Type and About-me repositories with 30 verified commits. Same human brain as @Kon-Kurosaki—just me switching between two accounts.',
     keyContributions: [
-      '30 verified commits & repository owner',
-      'Public GitHub Pages deployment & domain ops',
-      'Ecosystem integration and community tools'
+      '30 verified commits (198 combined with @Kon-Kurosaki)',
+      'Same person as @Kon-Kurosaki — Repository owner git identity',
+      'Public GitHub Pages deployments, releases & repo management'
     ],
-    commitsCount: '30 Commits',
-    roleTag: 'HUMAN',
+    commitsCount: '30 Commits (Me #2)',
+    roleTag: 'HUMAN (ME)',
     entityType: 'human',
-    pairedWith: 'Phana Kurosaki (@Kon-Kurosaki)'
+    samePersonBadge: 'SAME PERSON AS @Kon-Kurosaki',
+    pairedWith: 'Phana Kurosaki (@Kon-Kurosaki) — Also Me (My Dev Account)'
   },
   {
     id: 'antigravity',

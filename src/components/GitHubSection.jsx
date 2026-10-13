@@ -248,10 +248,10 @@ export default function GitHubSection({ onPlaySound }) {
                   </h3>
                   <div className="mt-1 flex flex-wrap items-center gap-1.5 font-mono text-[10px] text-muted">
                     <span className="border border-accent/40 bg-accentDim text-accent px-1.5 py-0.5">
-                      @not-Phana · Repo Owner
+                      @not-Phana · Repo Owner (Me)
                     </span>
                     <span className="border border-[#38bdf8]/40 bg-[#38bdf8]/10 text-[#38bdf8] px-1.5 py-0.5">
-                      @Kon-Kurosaki · Lead Committer
+                      @Kon-Kurosaki · Lead Dev (Also Me)
                     </span>
                   </div>
                 </div>
@@ -410,7 +410,7 @@ export default function GitHubSection({ onPlaySound }) {
                         </span>
                       </div>
                       <div className="font-mono text-[10px] text-muted truncate">
-                        2 Humans · 3 Coding Agents · 3 AI Chatbots
+                        1 Human (2 Accounts) · 3 Agents · 3 AI Chatbots
                       </div>
                     </div>
                   </div>

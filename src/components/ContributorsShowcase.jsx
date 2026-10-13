@@ -92,13 +92,13 @@ export default function ContributorsShowcase({ onPlaySound }) {
           <div>
             <div className="flex items-center gap-2 font-mono text-[11px] tracking-[0.2em] uppercase text-accent font-bold mb-2">
               <span className="w-2 h-2 rounded-full bg-accent animate-pulse" />
-              <span>THE ALLIANCE // 8 COLLABORATORS · 200 VERIFIED COMMITS</span>
+              <span>THE ALLIANCE // 1 HUMAN (2 ACCOUNTS: 198 COMMITS) · AGENTS &amp; AI</span>
             </div>
             <h2 className="font-display text-2xl sm:text-4xl font-extrabold tracking-tight text-ink">
-              Human Architects, Autonomous Agents &amp; AI Chatbots
+              One Human (Two Accounts), Autonomous Agents &amp; AI Chatbots
             </h2>
             <p className="mt-2 text-sm sm:text-base text-muted max-w-3xl leading-relaxed">
-              Software engineering is no longer solitary. The PK Studio ecosystem is co-authored across three complementary tiers: human vision, autonomous coding agents with terminal automation, and conversational AI chatbots.
+              Both <span className="text-ink font-mono font-semibold">@Kon-Kurosaki</span> and <span className="text-ink font-mono font-semibold">@not-Phana</span> are me—one human architect committing across two GitHub accounts (<span className="text-accent font-mono">198/200</span> verified commits combined), working alongside autonomous coding agents and conversational AI chatbots.
             </p>
           </div>
 
@@ -113,7 +113,7 @@ export default function ContributorsShowcase({ onPlaySound }) {
                   : 'border-line bg-surface text-muted hover:text-ink'
               }`}
             >
-              All Collaborators (8)
+              All Entries (8)
             </button>
             <button
               type="button"
@@ -124,7 +124,7 @@ export default function ContributorsShowcase({ onPlaySound }) {
                   : 'border-line bg-surface text-muted hover:text-ink'
               }`}
             >
-              Human Creators (2)
+              Me · 2 Accounts (2)
             </button>
             <button
               type="button"
@@ -220,7 +220,7 @@ export default function ContributorsShowcase({ onPlaySound }) {
                             ? 'border border-accent/60 bg-accentDim text-accent font-bold'
                             : c.roleTag === 'CHATBOT'
                             ? 'border border-line bg-surface text-muted'
-                            : 'border border-line bg-surface text-ink font-semibold'
+                            : 'border border-accent/50 bg-accentDim text-accent font-bold'
                         }`}
                       >
                         {c.roleTag}
@@ -240,7 +240,7 @@ export default function ContributorsShowcase({ onPlaySound }) {
                   </div>
 
                   {/* Type Badge */}
-                  <div className="mb-3">
+                  <div className="mb-3 flex flex-wrap items-center gap-1.5">
                     <span
                       className={`inline-block font-mono text-[10px] font-bold tracking-wider px-2 py-0.5 rounded-xs uppercase ${
                         c.badgeTone === 'gold'
@@ -269,7 +269,9 @@ export default function ContributorsShowcase({ onPlaySound }) {
                   {/* Counterpart Pill */}
                   <div className="mt-3 pt-2 border-t border-lineSoft flex items-center justify-between font-mono text-[10px] text-muted">
                     <span className="uppercase text-[9px] tracking-wider text-muted">
-                      {c.isFuture
+                      {c.samePersonBadge
+                        ? c.samePersonBadge
+                        : c.isFuture
                         ? 'Future Roadmap Agent'
                         : c.category === 'agent'
                         ? 'Autonomous Agent'
