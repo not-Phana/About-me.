@@ -691,16 +691,18 @@ function buildUnifiedHandSVG(hand, order, thumbF, frames, bases) {
 
 export default function RealKhmerKeyboard({
   activeLayoutId = 'nida',
+  customPrompt,
   onLayoutChange,
-  onLaunchEmbed,
+  liveUrl = 'https://not-phana.github.io/PK-Khmer-Type/',
 }) {
   const [layoutId, setLayoutId] = useState(activeLayoutId || 'nida');
   const [lockedLayer, setLockedLayer] = useState('base'); // 'base' | 'shift' | 'altgr' | 'ctrl'
   const [hoverLayer, setHoverLayer] = useState(null);
   const [physicalLayer, setPhysicalLayer] = useState(null);
   const [handsOn, setHandsOn] = useState(true);
+  const [autoPilot, setAutoPilot] = useState(false);
   const [colorPresetIdx, setColorPresetIdx] = useState(0);
-  const [typedText, setTypedText] = useState('សួស្តីកម្ពុជា');
+  const [typedText, setTypedText] = useState(customPrompt || 'សួស្តីកម្ពុជា');
   const [pressedKeyId, setPressedKeyId] = useState(null);
   const [hoveredKeyId, setHoveredKeyId] = useState(null);
   const [lastKeystrokeInfo, setLastKeystrokeInfo] = useState({
@@ -719,10 +721,17 @@ export default function RealKhmerKeyboard({
   useEffect(() => {
     if (activeLayoutId && KEYBOARD_LAYOUTS[activeLayoutId] && activeLayoutId !== layoutId) {
       setLayoutId(activeLayoutId);
-      setTypedText(KEYBOARD_LAYOUTS[activeLayoutId].samplePrompt);
+      setTypedText(customPrompt || KEYBOARD_LAYOUTS[activeLayoutId].samplePrompt);
       setLockedLayer('base');
     }
-  }, [activeLayoutId, layoutId]);
+  }, [activeLayoutId, layoutId, customPrompt]);
+
+  useEffect(() => {
+    if (customPrompt) {
+      setTypedText('');
+      setAutoPilot(true);
+    }
+  }, [customPrompt]);
 
   const handleSwitchLayout = useCallback(
     (nextId) => {
@@ -737,6 +746,7 @@ export default function RealKhmerKeyboard({
   );
 
   const currentLayout = KEYBOARD_LAYOUTS[layoutId] || KEYBOARD_LAYOUTS.nida;
+  const targetPhrase = customPrompt || currentLayout.samplePrompt;
   const activeLayer = physicalLayer || hoverLayer || lockedLayer || 'base';
   const handColors = HAND_COLOR_PRESETS[colorPresetIdx] || HAND_COLOR_PRESETS[0];
 
@@ -756,7 +766,7 @@ export default function RealKhmerKeyboard({
     return map;
   }, [currentLayout]);
 
-  // Determine the next target key if the user is typing the samplePrompt or hovering/pressing a key
+  // Determine the next target key if the user is typing targetPhrase or hovering/pressing a key
   const activeTarget = useMemo(() => {
     if (pressedKeyId) {
       return { keyId: pressedKeyId, layer: activeLayer };
@@ -764,15 +774,45 @@ export default function RealKhmerKeyboard({
     if (hoveredKeyId) {
       return { keyId: hoveredKeyId, layer: activeLayer };
     }
-    const prompt = currentLayout.samplePrompt;
-    if (prompt && typedText.length < prompt.length && prompt.startsWith(typedText)) {
-      const nextChar = prompt[typedText.length];
+    if (targetPhrase && typedText.length < targetPhrase.length && targetPhrase.startsWith(typedText)) {
+      const nextChar = targetPhrase[typedText.length];
       if (nextChar === ' ') return { keyId: 'space', layer: 'base' };
       if (glyphLookup[nextChar]) return glyphLookup[nextChar];
     }
     // Default showcase target: highlight J ('្' Coeng in NiDA, 'j' in English, 'ញ' in Standard)
     return { keyId: 'j', layer: 'base' };
-  }, [pressedKeyId, hoveredKeyId, currentLayout, typedText, glyphLookup, activeLayer]);
+  }, [pressedKeyId, hoveredKeyId, targetPhrase, typedText, glyphLookup, activeLayer]);
+
+  // Auto-Pilot 3D Hand Typing Loop
+  useEffect(() => {
+    if (!autoPilot) return undefined;
+    const interval = setInterval(() => {
+      setTypedText((prev) => {
+        if (!targetPhrase) return prev;
+        if (prev.length >= targetPhrase.length || !targetPhrase.startsWith(prev)) {
+          return '';
+        }
+        const nextChar = targetPhrase[prev.length];
+        const nextLookup =
+          nextChar === ' ' ? { keyId: 'space', layer: 'base' } : glyphLookup[nextChar];
+        if (nextLookup) {
+          setPressedKeyId(nextLookup.keyId);
+          setLockedLayer(nextLookup.layer || 'base');
+          setTimeout(() => setPressedKeyId(null), 180);
+          setKeystrokeCount((c) => c + 1);
+          setLastKeystrokeInfo({
+            keyId: nextLookup.keyId,
+            glyph: nextChar === ' ' ? 'Space' : nextChar,
+            finger: KEY_FINGER[nextLookup.keyId] || 'ri',
+            codepoint:
+              'U+' + nextChar.codePointAt(0).toString(16).toUpperCase().padStart(4, '0'),
+          });
+        }
+        return prev + nextChar;
+      });
+    }, 340);
+    return () => clearInterval(interval);
+  }, [autoPilot, targetPhrase, glyphLookup]);
 
   const activeFingerId = activeTarget?.keyId ? KEY_FINGER[activeTarget.keyId] : null;
   const activeModifierTarget = useMemo(() => {
@@ -1212,6 +1252,25 @@ export default function RealKhmerKeyboard({
 
           <button
             type="button"
+            onClick={() => {
+              setAutoPilot((v) => {
+                if (!v && typedText.length >= targetPhrase.length) {
+                  setTypedText('');
+                }
+                return !v;
+              });
+            }}
+            className={`px-2.5 py-1.5 border font-mono text-[10px] transition-colors ${
+              autoPilot
+                ? 'border-[#4ade80] bg-[#4ade80]/15 text-[#4ade80] font-semibold'
+                : 'border-line bg-[#080a0f] text-muted hover:text-ink'
+            }`}
+          >
+            Auto-Type: {autoPilot ? 'ON' : 'OFF'}
+          </button>
+
+          <button
+            type="button"
             onClick={() => setHandsOn((v) => !v)}
             className={`px-2.5 py-1.5 border font-mono text-[10px] transition-colors ${
               handsOn
@@ -1321,7 +1380,10 @@ export default function RealKhmerKeyboard({
                         setHoverLayer(null);
                       }
                     }}
-                    onClick={() => triggerKeyInput(k)}
+                    onClick={() => {
+                      setAutoPilot(false);
+                      triggerKeyInput(k);
+                    }}
                     style={{
                       flexGrow: u,
                       flexBasis: `calc((${u} - 1) * 6px)`,
@@ -1576,15 +1638,14 @@ export default function RealKhmerKeyboard({
           </span>
         </div>
 
-        {onLaunchEmbed && (
-          <button
-            type="button"
-            onClick={onLaunchEmbed}
-            className="bg-invertBg text-invertFg px-3 py-1 font-mono text-[10px] font-bold uppercase tracking-wider hover:opacity-90 transition-opacity shrink-0"
-          >
-            Launch Full Studio -&gt;
-          </button>
-        )}
+        <a
+          href={liveUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="bg-invertBg text-invertFg px-3 py-1 font-mono text-[10px] font-bold uppercase tracking-wider hover:opacity-90 transition-opacity shrink-0"
+        >
+          Open Full Desktop Studio -&gt;
+        </a>
       </div>
     </div>
   );

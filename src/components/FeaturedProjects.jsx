@@ -41,22 +41,106 @@ const FLAGSHIP_MODULES = [
   },
 ];
 
+const COENG_CLUSTERS = [
+  {
+    id: 'suostei',
+    word: 'សួស្តីកម្ពុជា',
+    meaning: 'Hello Cambodia · Greeting & Country Name',
+    layout: 'nida',
+    steps: [
+      { key: 'S', glyph: 'ស', finger: 'Left Ring', role: 'Base Consonant' },
+      { key: 'Shift+Y', glyph: 'ួ', finger: 'Right Index', role: 'Dependent Vowel' },
+      { key: 'S', glyph: 'ស', finger: 'Left Ring', role: 'Cluster Base' },
+      { key: 'J', glyph: '្ (Coeng)', finger: 'Right Index', role: 'Subscript Sign U+17D2' },
+      { key: 'T', glyph: 'ត', finger: 'Left Index', role: 'Subscript Consonant' },
+      { key: 'Shift+I', glyph: 'ី', finger: 'Right Middle', role: 'Superscript Vowel' },
+      { key: 'K', glyph: 'ក', finger: 'Right Middle', role: 'Base Consonant' },
+      { key: 'M', glyph: 'ម', finger: 'Right Index', role: 'Cluster Base' },
+      { key: 'J', glyph: '្ (Coeng)', finger: 'Right Index', role: 'Subscript Sign U+17D2' },
+      { key: 'Shift+B', glyph: 'ព', finger: 'Left Index', role: 'Subscript Consonant' },
+      { key: 'U', glyph: 'ុ', finger: 'Right Index', role: 'Subscript Vowel' },
+      { key: 'Shift+C', glyph: 'ជ', finger: 'Left Middle', role: 'Base Consonant' },
+      { key: 'A', glyph: 'ា', finger: 'Left Pinky', role: 'Dependent Vowel' },
+    ],
+  },
+  {
+    id: 'bachek',
+    word: 'បច្ចេកវិទ្យា',
+    meaning: 'Technology & Engineering · Multi-Coeng Stack',
+    layout: 'nida',
+    steps: [
+      { key: 'B', glyph: 'ប', finger: 'Left Index', role: 'Base Consonant' },
+      { key: 'C', glyph: 'ច', finger: 'Left Middle', role: 'Cluster Base' },
+      { key: 'J', glyph: '្ (Coeng)', finger: 'Right Index', role: 'Subscript Sign U+17D2' },
+      { key: 'C', glyph: 'ច', finger: 'Left Middle', role: 'Geminated Subscript' },
+      { key: 'E', glyph: 'េ', finger: 'Left Middle', role: 'Pre-Base Vowel (Typed After)' },
+      { key: 'K', glyph: 'ក', finger: 'Right Middle', role: 'Base Consonant' },
+      { key: 'V', glyph: 'វ', finger: 'Left Index', role: 'Base Consonant' },
+      { key: 'I', glyph: 'ិ', finger: 'Right Middle', role: 'Superscript Vowel' },
+      { key: 'Shift+T', glyph: 'ទ', finger: 'Left Index', role: 'Cluster Base' },
+      { key: 'J', glyph: '្ (Coeng)', finger: 'Right Index', role: 'Subscript Sign U+17D2' },
+      { key: 'Y', glyph: 'យ', finger: 'Right Index', role: 'Medial Subscript' },
+      { key: 'A', glyph: 'ា', finger: 'Left Pinky', role: 'Dependent Vowel' },
+    ],
+  },
+  {
+    id: 'sralanh',
+    word: 'ខ្ញុំស្រឡាញ់កូដ',
+    meaning: 'I Love Coding · Shift + Coeng + Nasal Mark',
+    layout: 'nida',
+    steps: [
+      { key: 'X', glyph: 'ខ', finger: 'Left Ring', role: 'Cluster Base' },
+      { key: 'J', glyph: '្ (Coeng)', finger: 'Right Index', role: 'Subscript Sign U+17D2' },
+      { key: 'Shift+J', glyph: 'ញ', finger: 'Right Index', role: 'Subscript Consonant' },
+      { key: ',', glyph: 'ុំ', finger: 'Right Middle', role: 'Compound Vowel (U+17BB U+17C6)' },
+      { key: 'S', glyph: 'ស', finger: 'Left Ring', role: 'Cluster Base' },
+      { key: 'J', glyph: '្ (Coeng)', finger: 'Right Index', role: 'Subscript Sign U+17D2' },
+      { key: 'R', glyph: 'រ', finger: 'Left Index', role: 'Medial Subscript' },
+      { key: 'Shift+L', glyph: 'ឡ', finger: 'Right Ring', role: 'Voiced Consonant' },
+      { key: 'A', glyph: 'ា', finger: 'Left Pinky', role: 'Dependent Vowel' },
+      { key: 'Shift+J', glyph: 'ញ', finger: 'Right Index', role: 'Final Consonant' },
+      { key: "'", glyph: '់', finger: 'Right Pinky', role: 'Bantoc Diacritic' },
+    ],
+  },
+  {
+    id: 'english-dev',
+    word: 'Phana Kurosaki',
+    meaning: 'English US QWERTY · Shift + Home-Row Precision',
+    layout: 'english',
+    steps: [
+      { key: 'Shift+P', glyph: 'P', finger: 'Right Pinky', role: 'Uppercase Initial' },
+      { key: 'H', glyph: 'h', finger: 'Right Index', role: 'Home Row Reach' },
+      { key: 'A', glyph: 'a', finger: 'Left Pinky', role: 'Home Row Anchor' },
+      { key: 'N', glyph: 'n', finger: 'Right Index', role: 'Bottom Row Reach' },
+      { key: 'A', glyph: 'a', finger: 'Left Pinky', role: 'Home Row Anchor' },
+      { key: 'Space', glyph: '␣', finger: 'Right Thumb', role: 'Word Separator' },
+      { key: 'Shift+K', glyph: 'K', finger: 'Right Middle', role: 'Uppercase Initial' },
+      { key: 'U', glyph: 'u', finger: 'Right Index', role: 'Top Row Reach' },
+      { key: 'R', glyph: 'r', finger: 'Left Index', role: 'Top Row Reach' },
+      { key: 'O', glyph: 'o', finger: 'Right Ring', role: 'Top Row Reach' },
+      { key: 'S', glyph: 's', finger: 'Left Ring', role: 'Home Row Anchor' },
+      { key: 'A', glyph: 'a', finger: 'Left Pinky', role: 'Home Row Anchor' },
+      { key: 'K', glyph: 'k', finger: 'Right Middle', role: 'Home Row Anchor' },
+      { key: 'I', glyph: 'i', finger: 'Right Middle', role: 'Top Row Reach' },
+    ],
+  },
+];
+
 export default function FeaturedProjects({ projects, onSelectProject }) {
   const featured = projects.filter((p) => p.featured);
   const flagship = featured[0]; // PK Khmer Type
   const secondaryFeatured = featured.slice(1);
 
-  const [activeSlideIdx, setActiveSlideIdx] = useState(0);
   const [activeKeyboardLayout, setActiveKeyboardLayout] = useState('nida'); // 'nida' | 'english' | 'standard'
-  const [viewportMode, setViewportMode] = useState('keyboard'); // 'keyboard' | 'embed' | 'blueprint' | 'gallery'
+  const [customKeyboardPrompt, setCustomKeyboardPrompt] = useState('');
+  const [activeClusterIdx, setActiveClusterIdx] = useState(0);
+  const [viewportMode, setViewportMode] = useState('keyboard'); // 'keyboard' | 'lesson-lab' | 'blueprint'
   const [activeModuleIdx, setActiveModuleIdx] = useState(0);
   const [inlineEmbedMap, setInlineEmbedMap] = useState({});
 
   if (!flagship) return null;
 
-  const slides = flagship.gallery?.length
-    ? flagship.gallery
-    : [{ src: flagship.coverImage, caption: flagship.name }];
+  const activeCluster = COENG_CLUSTERS[activeClusterIdx] || COENG_CLUSTERS[0];
 
   const toggleSecondaryEmbed = (projectId) => {
     setInlineEmbedMap((prev) => ({
@@ -77,13 +161,12 @@ export default function FeaturedProjects({ projects, onSelectProject }) {
           </span>
         </div>
 
-        {/* Viewport Mode Switcher */}
+        {/* Viewport Mode Switcher (No cramped iframe or static screenshot tab) */}
         <div className="flex flex-wrap items-center gap-1.5 mt-2 sm:mt-0">
           {[
             { id: 'keyboard', label: '01 // REAL KEYBOARD (NIDA / EN)' },
-            { id: 'embed', label: '02 // LIVE INTERACTIVE APP' },
+            { id: 'lesson-lab', label: '02 // COENG & LESSON LAB' },
             { id: 'blueprint', label: '03 // SYSTEM BLUEPRINT' },
-            { id: 'gallery', label: '04 // SCREENSHOTS' },
           ].map((tab) => (
             <button
               key={tab.id}
@@ -103,26 +186,35 @@ export default function FeaturedProjects({ projects, onSelectProject }) {
 
       {/* Flagship Product Showcase: PK Khmer Type */}
       <div className="grid grid-cols-1 lg:grid-cols-12 border-b border-line">
-        {/* Left: Real Interactive Keyboard / Live App / System Blueprint / Screenshots */}
+        {/* Left: Real Interactive Keyboard / Coeng & Lesson Lab / System Blueprint */}
         <div className="lg:col-span-7 border-b lg:border-b-0 lg:border-r border-line bg-surface/50 p-6 sm:p-10 flex flex-col justify-between">
           {viewportMode === 'keyboard' && (
             <div className="flex flex-col h-full justify-between">
               <div className="hud-frame">
                 <RealKhmerKeyboard
                   activeLayoutId={activeKeyboardLayout}
-                  onLayoutChange={(nextId) => setActiveKeyboardLayout(nextId)}
-                  onLaunchEmbed={() => setViewportMode('embed')}
+                  customPrompt={customKeyboardPrompt}
+                  onLayoutChange={(nextId) => {
+                    setActiveKeyboardLayout(nextId);
+                    setCustomKeyboardPrompt('');
+                  }}
+                  liveUrl={flagship.liveUrl}
                 />
               </div>
 
-              {/* Bottom Layout & View Selector Bar */}
+              {/* Bottom Layout & Lab Selector Bar */}
               <div className="mt-4">
                 <div className="flex items-center justify-between font-mono text-[11px] text-muted mb-2">
                   <span>
                     SWITCH LIVE KEYBOARD LAYOUT (MICROSOFT KHMER NIDA &amp; ENGLISH)
                   </span>
                   <span className="text-accent font-semibold uppercase">
-                    ACTIVE: {activeKeyboardLayout === 'nida' ? 'KHMER NIDA (MICROSOFT)' : activeKeyboardLayout === 'english' ? 'ENGLISH (US QWERTY)' : 'KHMER STANDARD'}
+                    ACTIVE:{' '}
+                    {activeKeyboardLayout === 'nida'
+                      ? 'KHMER NIDA (MICROSOFT)'
+                      : activeKeyboardLayout === 'english'
+                      ? 'ENGLISH (US QWERTY)'
+                      : 'KHMER STANDARD'}
                   </span>
                 </div>
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
@@ -130,7 +222,7 @@ export default function FeaturedProjects({ projects, onSelectProject }) {
                     { id: 'nida', label: 'Khmer NiDA (Microsoft)', type: 'layout' },
                     { id: 'english', label: 'English (US QWERTY)', type: 'layout' },
                     { id: 'standard', label: 'Khmer Standard', type: 'layout' },
-                    { id: 'gallery', label: 'Studio Screenshots', type: 'mode' },
+                    { id: 'lesson-lab', label: 'Coeng & Lesson Lab ->', type: 'mode' },
                   ].map((item) => {
                     const isSelected =
                       item.type === 'layout' && activeKeyboardLayout === item.id;
@@ -141,8 +233,9 @@ export default function FeaturedProjects({ projects, onSelectProject }) {
                         onClick={() => {
                           if (item.type === 'layout') {
                             setActiveKeyboardLayout(item.id);
+                            setCustomKeyboardPrompt('');
                           } else {
-                            setViewportMode('gallery');
+                            setViewportMode('lesson-lab');
                           }
                         }}
                         className={`px-3 py-2 border text-left font-mono text-[11px] transition-colors ${
@@ -160,94 +253,124 @@ export default function FeaturedProjects({ projects, onSelectProject }) {
             </div>
           )}
 
-          {viewportMode === 'gallery' && (
-            <>
-              <div className="hud-frame group relative border border-line bg-[#0b0d12] overflow-hidden aspect-[16/10]">
-                <img
-                  src={slides[activeSlideIdx]?.src || flagship.coverImage}
-                  alt={slides[activeSlideIdx]?.caption || flagship.name}
-                  className="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-[1.015]"
-                />
-                <div className="absolute top-3 left-3 flex items-center gap-2 bg-bg/90 backdrop-blur-sm border border-line px-3 py-1 font-mono text-[11px] text-ink">
-                  <span className="h-2 w-2 rounded-full bg-[#4ade80] beacon-pulse" />
-                  <span>{flagship.status}</span>
+          {viewportMode === 'lesson-lab' && (
+            <div className="flex flex-col h-full justify-between border border-line bg-[#0b0d13] p-5 sm:p-6">
+              <div>
+                <div className="flex flex-wrap items-center justify-between gap-2 border-b border-line pb-3 mb-4">
+                  <div>
+                    <div className="font-mono text-[10.5px] text-accent font-bold uppercase">
+                      KHMER UNICODE &amp; NIDA COENG SUBSCRIPT DECONSTRUCTOR
+                    </div>
+                    <div className="font-mono text-[11px] text-muted mt-0.5">
+                      Inspect how multi-keystroke Khmer clusters &amp; English touch-typing drills map to physical keys.
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setActiveKeyboardLayout(activeCluster.layout);
+                      setCustomKeyboardPrompt(activeCluster.word);
+                      setViewportMode('keyboard');
+                    }}
+                    className="border border-accent bg-accent text-[#0b0b0c] px-3 py-1.5 font-mono text-[10.5px] font-bold uppercase hover:opacity-90 transition-opacity"
+                  >
+                    Auto-Type on Live Keyboard -&gt;
+                  </button>
+                </div>
+
+                {/* Phrase Selector Pills */}
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-4">
+                  {COENG_CLUSTERS.map((cl, idx) => {
+                    const active = idx === activeClusterIdx;
+                    return (
+                      <button
+                        key={cl.id}
+                        type="button"
+                        onClick={() => setActiveClusterIdx(idx)}
+                        className={`p-2.5 border text-left transition-colors ${
+                          active
+                            ? 'border-accent bg-accentDim'
+                            : 'border-line bg-[#10131c] hover:border-ink'
+                        }`}
+                      >
+                        <div
+                          className="text-base font-bold text-ink truncate"
+                          style={{
+                            fontFamily: "'Noto Sans Khmer', 'JetBrains Mono', sans-serif",
+                          }}
+                        >
+                          {cl.word}
+                        </div>
+                        <div className="font-mono text-[9.5px] text-muted uppercase mt-0.5">
+                          {cl.layout === 'nida' ? 'Khmer NiDA' : 'English US'} · {cl.steps.length} Keys
+                        </div>
+                      </button>
+                    );
+                  })}
+                </div>
+
+                {/* Keystroke Sequence Pipeline */}
+                <div className="border border-line bg-[#080a0f] p-3.5">
+                  <div className="flex items-center justify-between font-mono text-[10px] text-muted mb-2.5">
+                    <span>
+                      SEQUENCE PIPELINE //{' '}
+                      <strong className="text-ink">{activeCluster.meaning}</strong>
+                    </span>
+                    <span className="text-[#4ade80]">
+                      {activeCluster.steps.length} KEYSTROKES
+                    </span>
+                  </div>
+                  <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 gap-2">
+                    {activeCluster.steps.map((step, sIdx) => (
+                      <div
+                        key={sIdx}
+                        className="border border-lineSoft bg-[#101420] p-2 flex flex-col justify-between"
+                      >
+                        <div className="flex items-center justify-between font-mono text-[9.5px]">
+                          <span className="text-muted">#{sIdx + 1}</span>
+                          <span className="border border-accent/50 bg-accentDim px-1.5 py-0.2 text-accent font-bold">
+                            {step.key}
+                          </span>
+                        </div>
+                        <div
+                          className="my-1.5 text-lg font-bold text-ink text-center"
+                          style={{
+                            fontFamily: "'Noto Sans Khmer', 'JetBrains Mono', sans-serif",
+                          }}
+                        >
+                          {step.glyph}
+                        </div>
+                        <div className="font-mono text-[9px] text-muted truncate text-center">
+                          {step.finger}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* Bottom 218-Lesson Curriculum Summary Bar */}
+              <div className="mt-4 pt-3 border-t border-line flex flex-wrap items-center justify-between gap-3 font-mono text-[10.5px]">
+                <div className="flex flex-wrap items-center gap-3 text-muted">
+                  <span>
+                    KHMER NIDA: <strong className="text-ink">80 LESSONS</strong>
+                  </span>
+                  <span>·</span>
+                  <span>
+                    KHMER STANDARD: <strong className="text-ink">80 LESSONS</strong>
+                  </span>
+                  <span>·</span>
+                  <span>
+                    ENGLISH QWERTY: <strong className="text-ink">58 LESSONS</strong>
+                  </span>
                 </div>
                 <button
                   type="button"
                   onClick={() => setViewportMode('keyboard')}
-                  className="absolute bottom-3 right-3 bg-invertBg text-invertFg px-3.5 py-1.5 hud-label shadow-card hover:opacity-90 transition-opacity"
+                  className="text-accent hover:underline font-bold"
                 >
-                  Back to Real Keyboard -&gt;
+                  &lt;- Back to Real Keyboard
                 </button>
-              </div>
-
-              {/* Interactive Screenshot Selector for Flagship */}
-              {slides.length > 1 && (
-                <div className="mt-4">
-                  <div className="flex items-center justify-between font-mono text-[11px] text-muted mb-2">
-                    <span>INSPECT KEYBOARD LAYOUTS &amp; STUDIO VIEWS</span>
-                    <span>
-                      0{activeSlideIdx + 1} / 0{slides.length}
-                    </span>
-                  </div>
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-                    {[
-                      'Studio + 3D Hands',
-                      'Khmer Standard',
-                      'Khmer NiDA',
-                      'English QWERTY',
-                    ].map((label, idx) => (
-                      <button
-                        key={label}
-                        type="button"
-                        onClick={() => setActiveSlideIdx(idx)}
-                        className={`px-3 py-2 border text-left font-mono text-[11px] transition-colors ${
-                          activeSlideIdx === idx
-                            ? 'border-accent bg-accentDim text-ink font-semibold'
-                            : 'border-line bg-bg text-muted hover:text-ink'
-                        }`}
-                      >
-                        {label}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </>
-          )}
-
-          {viewportMode === 'embed' && (
-            <div className="flex flex-col h-full justify-between">
-              <div className="hud-frame relative border border-accent bg-[#0b0d12] overflow-hidden aspect-[16/10]">
-                <iframe
-                  src={flagship.liveUrl}
-                  title={`${flagship.name} Live Embedded Application`}
-                  className="w-full h-full border-0"
-                  loading="lazy"
-                />
-              </div>
-              <div className="mt-4 flex flex-wrap items-center justify-between gap-2 border border-line bg-bg px-4 py-2.5 font-mono text-xs">
-                <span className="text-accent">
-                  LIVE SANDBOX // {flagship.liveUrl}
-                </span>
-                <div className="flex items-center gap-3">
-                  <button
-                    type="button"
-                    onClick={() => setViewportMode('keyboard')}
-                    className="text-muted hover:text-ink"
-                  >
-                    [Back to Real Keyboard]
-                  </button>
-                  <a
-                    href={flagship.liveUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-ink hover:text-accent inline-flex items-center gap-1"
-                  >
-                    <span>Full Screen</span>
-                    <IconArrowUpRight className="w-3.5 h-3.5" />
-                  </a>
-                </div>
               </div>
             </div>
           )}
