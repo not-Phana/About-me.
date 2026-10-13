@@ -19,6 +19,7 @@ import {
   IconShield,
   IconFileText,
 } from './Icons';
+import { useRealtime } from '../context/RealtimeContext';
 
 const FOOTER_TECH_DOSSIERS = [
   {
@@ -271,6 +272,8 @@ export default function Footer({ onNavigateHome, onPlaySound }) {
   const [copiedEmail, setCopiedEmail] = useState(false);
   const [hubTab, setHubTab] = useState('both');
   const [expandedLegalIds, setExpandedLegalIds] = useState(new Set());
+  const { clocks, fps, latencyMs, uptimeFormatted, interactions, heartbeat } =
+    useRealtime();
 
   const toggleLegalDetails = (id) => {
     onPlaySound?.('switch');
@@ -847,8 +850,51 @@ export default function Footer({ onNavigateHome, onPlaySound }) {
         </div>
 
 
+        {/* Real-Time Studio Telemetry Deck Strip */}
+        <div className="border-t border-line bg-bg px-6 py-3 sm:px-10 flex flex-wrap items-center justify-between gap-3 font-mono text-[11px] text-muted">
+          <div className="flex flex-wrap items-center gap-3">
+            <span className="flex items-center gap-1.5 text-accent font-bold">
+              <span
+                className={`w-2 h-2 rounded-full bg-[#4ade80] transition-transform duration-300 ${
+                  heartbeat ? 'scale-125 shadow-[0_0_8px_#4ade80]' : 'scale-90'
+                }`}
+              />
+              <span>STUDIO SYS.26 // 100% OPERATIONAL</span>
+            </span>
+            <span className="text-line hidden sm:inline">|</span>
+            <span>
+              PHNOM PENH:{' '}
+              <span className="text-ink font-semibold">{clocks.phnomPenh}</span>
+            </span>
+            <span className="text-line hidden md:inline">|</span>
+            <span className="hidden md:inline">
+              UTC: <span className="text-muted">{clocks.utc}</span>
+            </span>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-3">
+            <span>
+              RENDER PIPELINE:{' '}
+              <span className="text-[#4ade80] font-bold">{fps} FPS</span>
+            </span>
+            <span className="text-line">|</span>
+            <span>
+              PING: <span className="text-ink font-semibold">{latencyMs}ms</span>
+            </span>
+            <span className="text-line hidden sm:inline">|</span>
+            <span className="hidden sm:inline">
+              SESSION UPTIME:{' '}
+              <span className="text-accent font-bold">{uptimeFormatted}</span>
+            </span>
+            <span className="text-line hidden lg:inline">|</span>
+            <span className="hidden lg:inline text-muted">
+              INTERACTIONS: [K: {interactions.keystrokes} · C: {interactions.clicks}]
+            </span>
+          </div>
+        </div>
+
         {/* Bottom Copyright Bar */}
-        <div className="px-6 py-4 sm:px-10 flex flex-col md:flex-row items-center justify-between gap-4 font-mono text-xs text-muted bg-surface/50">
+        <div className="border-t border-line px-6 py-4 sm:px-10 flex flex-col md:flex-row items-center justify-between gap-4 font-mono text-xs text-muted bg-surface/50">
           <div className="flex items-center gap-2">
             <span>&copy; {currentYear} {PROFILE.fullName} ({PROFILE.brand}). All rights reserved.</span>
             <span className="hidden sm:inline text-line">|</span>

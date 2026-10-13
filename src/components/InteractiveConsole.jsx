@@ -10,6 +10,7 @@ import {
   IconCheck,
   IconMousePointer,
 } from './Icons';
+import { useRealtime } from '../context/RealtimeContext';
 
 const CONSOLE_TOPICS = [
   {
@@ -121,6 +122,16 @@ export default function InteractiveConsole({
   const [inputVal, setInputVal] = useState('');
   const [customOutput, setCustomOutput] = useState(null);
 
+  const {
+    clocks,
+    fps,
+    latencyMs,
+    memoryMb,
+    uptimeFormatted,
+    interactions,
+    heartbeat,
+  } = useRealtime();
+
   const currentTopic =
     CONSOLE_TOPICS.find((t) => t.key === activeKey) || CONSOLE_TOPICS[0];
 
@@ -137,7 +148,31 @@ export default function InteractiveConsole({
     onPlaySound?.('keycap');
     setInputVal('');
 
-    if (raw === 'matrix' || raw === 'telemetry') {
+    if (
+      raw === 'realtime' ||
+      raw === 'rt' ||
+      raw === 'live' ||
+      raw === 'telemetry' ||
+      raw === 'ping' ||
+      raw === 'fps' ||
+      raw === 'uptime'
+    ) {
+      onPlaySound?.('pulse');
+      setCustomOutput({
+        command: 'pk realtime --live-telemetry',
+        lines: [
+          `TIMEKEEPING: Phnom Penh [${clocks.phnomPenh}] · UTC [${clocks.utc}] · Local [${clocks.local}]`,
+          `PIPELINE CADENCE: ${fps} FPS · Round-Trip Ping: ${latencyMs}ms · JS Heap Memory: ~${memoryMb} MB`,
+          `SESSION MONITOR: Uptime: ${uptimeFormatted} · Scroll Depth: ${interactions.scrollPct}%`,
+          `INTERACTION METRICS: Keystrokes Logged: ${interactions.keystrokes} · Clicks Logged: ${interactions.clicks}`,
+          `DIAGNOSTIC STATUS: 100% OPERATIONAL · Event Stream Synchronized · Zero Errors`,
+        ],
+        projectSlug: null,
+      });
+      return;
+    }
+
+    if (raw === 'matrix') {
       onPlaySound?.('pulse');
       setCustomOutput({
         command: 'pk sys --architecture-map',
@@ -441,10 +476,20 @@ export default function InteractiveConsole({
                   </span>
                   <span className="inline-block w-2 h-3.5 bg-accent terminal-cursor-blink ml-1 align-middle" />
                 </div>
-                <span className="text-[10px] text-[#4ade80] font-bold flex items-center gap-1.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#4ade80] beacon-pulse inline-block" />
-                  <span>KERNEL: OK</span>
-                </span>
+                <div className="flex items-center gap-2 text-[10px]">
+                  <span className="hidden md:inline text-[#8c9099]">
+                    HEAP: <span className="text-white font-bold">{memoryMb}MB</span>
+                  </span>
+                  <span className="hidden md:inline text-[#2b2f3a]">|</span>
+                  <span className="text-[#4ade80] font-bold flex items-center gap-1.5">
+                    <span
+                      className={`w-1.5 h-1.5 rounded-full bg-[#4ade80] transition-transform duration-300 ${
+                        heartbeat ? 'scale-125' : 'scale-90'
+                      }`}
+                    />
+                    <span>{fps} FPS · LIVE</span>
+                  </span>
+                </div>
               </div>
 
               {/* Output Paragraphs */}
@@ -539,13 +584,13 @@ export default function InteractiveConsole({
               className="relative z-10 mt-8 pt-4 border-t border-[#20232b] flex items-center gap-2.5 text-xs sm:text-sm"
             >
               <span className="text-accent font-bold shrink-0">
-                pk@kon ~ $
+                pk@kon [{clocks.local}] ~ $
               </span>
               <input
                 type="text"
                 value={inputVal}
                 onChange={(e) => setInputVal(e.target.value)}
-                placeholder="Type 'matrix', 'status', 'sfx', 'theme', or 'help'..."
+                placeholder="Type 'realtime', 'matrix', 'status', 'sfx', or 'help'..."
                 aria-label="Interactive console command input"
                 className="w-full bg-transparent text-white placeholder:text-[#525763] focus:outline-none"
               />

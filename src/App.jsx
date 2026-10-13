@@ -17,6 +17,7 @@ import { PROJECTS } from './data/projects';
 import { playTactileClick } from './utils/sound';
 import { useScrollReveal } from './hooks/useScrollReveal';
 import { useBackgroundTextMotion } from './hooks/useBackgroundTextMotion';
+import { RealtimeProvider } from './context/RealtimeContext';
 
 function parseHashRoute(hash) {
   const clean = (hash || '').replace(/^#\/?/, '');
@@ -231,7 +232,8 @@ export default function App() {
       : null;
 
   return (
-    <div className="min-h-screen flex flex-col bg-bg text-ink">
+    <RealtimeProvider>
+      <div className="min-h-screen flex flex-col bg-bg text-ink">
       <CustomCursor />
       <a
         href="#main-content"
@@ -335,5 +337,6 @@ export default function App() {
         onPlaySound={triggerSound}
       />
     </div>
+  </RealtimeProvider>
   );
 }

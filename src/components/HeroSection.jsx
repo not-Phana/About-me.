@@ -11,6 +11,7 @@ import {
   IconGrid,
   IconCheck,
 } from './Icons';
+import { useRealtime } from '../context/RealtimeContext';
 
 // Verified Khmer NiDA keystroke mappings from PK Khmer Type
 const KHMER_DEMO_KEYS = [
@@ -134,6 +135,15 @@ export default function HeroSection({
   onOpenCommandPalette,
 }) {
   const [activeTabId, setActiveTabId] = useState('pk-khmer-type');
+  const {
+    clocks,
+    fps,
+    latencyMs,
+    uptimeFormatted,
+    interactions,
+    heartbeat,
+    eqBands,
+  } = useRealtime();
 
   // State for Mode 1: Interactive Khmer NiDA Keycap Deck
   const [typedBuffer, setTypedBuffer] = useState([
@@ -235,32 +245,52 @@ export default function HeroSection({
       </div>
 
       <div className="relative z-10 mx-auto max-w-[1400px] border-x border-line">
-        {/* Top architectural status bar */}
+        {/* Top architectural real-time telemetry status bar */}
         <div className="hero-enter-1 flex flex-wrap items-center justify-between border-b border-line px-5 py-2.5 sm:px-8 text-xs font-mono text-muted gap-3 bg-surface/40 backdrop-blur-xs">
           <div className="flex items-center gap-2.5">
-            <span className="inline-block h-2 w-2 rounded-full bg-[#4ade80] beacon-pulse" />
+            <span
+              className={`inline-block h-2 w-2 rounded-full bg-[#4ade80] transition-transform duration-300 ${
+                heartbeat ? 'scale-125 shadow-[0_0_8px_#4ade80]' : 'scale-90'
+              }`}
+            />
             <span className="text-ink font-medium">{PROFILE.tagline}</span>
-            {/* Live Audio Frequency Spectrum Telemetry (8-Bar Animated Analyzer) */}
-            <div className="hidden sm:inline-flex items-end gap-[2.5px] h-3.5 ml-2.5 opacity-90" title="Live Hardware Audio Engine Telemetry">
-              <span className="w-1 bg-[#4ade80] rounded-xs animate-eq-1 inline-block" />
-              <span className="w-1 bg-[#4ade80] rounded-xs animate-eq-2 inline-block" />
-              <span className="w-1 bg-[#4ade80] rounded-xs animate-eq-3 inline-block" />
-              <span className="w-1 bg-[#4ade80] rounded-xs animate-eq-4 inline-block" />
-              <span className="w-1 bg-[#4ade80] rounded-xs animate-eq-5 inline-block" />
-              <span className="w-1 bg-[#4ade80] rounded-xs animate-eq-6 inline-block" />
-              <span className="w-1 bg-[#4ade80] rounded-xs animate-eq-7 inline-block" />
-              <span className="w-1 bg-[#4ade80] rounded-xs animate-eq-8 inline-block" />
+
+            {/* Live Audio Frequency Spectrum Telemetry (8-Bar Real-Time Responsive Analyzer) */}
+            <div
+              className="hidden sm:inline-flex items-end gap-[2px] h-3.5 ml-2.5 opacity-90"
+              title="Real-Time Audio Hardware Spectrum Telemetry"
+            >
+              {eqBands.map((pct, idx) => (
+                <span
+                  key={idx}
+                  className="w-1 bg-[#4ade80] rounded-xs transition-all duration-300 inline-block"
+                  style={{ height: `${pct}%` }}
+                />
+              ))}
             </div>
+
+            <span className="hidden xl:inline text-line">|</span>
+            <span className="hidden xl:inline text-accent font-semibold" title="Studio Local Time">
+              PHNOM PENH [{clocks.phnomPenh}]
+            </span>
           </div>
-          <div className="flex items-center gap-4">
-            <span>IDENTITY: {PROFILE.brand} // {PROFILE.fullName.toUpperCase()}</span>
+
+          <div className="flex items-center gap-3 sm:gap-4 font-mono text-[11px]">
+            <span className="hidden lg:inline text-muted" title="Browser Render Loop">
+              PIPELINE: <span className="text-[#4ade80] font-bold">{fps} FPS</span> ·{' '}
+              <span className="text-ink">{latencyMs}ms</span>
+            </span>
+            <span className="hidden sm:inline text-line">|</span>
+            <span className="text-muted" title="Current Visitor Session Uptime">
+              SESSION: <span className="text-accent font-semibold">{uptimeFormatted}</span>
+            </span>
             <span className="hidden md:inline text-line">|</span>
             <button
               type="button"
               onClick={onOpenCommandPalette}
               className="hidden sm:inline text-accent hover:underline"
             >
-              [PRESS CTRL+K FOR QUICK LAUNCHER]
+              [CTRL+K LAUNCHER]
             </button>
           </div>
         </div>

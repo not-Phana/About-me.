@@ -27,6 +27,8 @@ const ACCENT_OPTIONS = [
   { id: 'crimson', color: '#fb7185', label: 'Crimson' },
 ];
 
+import { useRealtime } from '../context/RealtimeContext';
+
 export default function Navbar({
   activeSection,
   onNavigateHome,
@@ -40,24 +42,9 @@ export default function Navbar({
   onOpenCommandPalette,
 }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [clockText, setClockText] = useState(() => {
-    try {
-      return new Date().toLocaleTimeString('en-GB', { hour12: false });
-    } catch {
-      return '00:00:00';
-    }
-  });
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      try {
-        setClockText(new Date().toLocaleTimeString('en-GB', { hour12: false }));
-      } catch {
-        // Ignore locale time error
-      }
-    }, 1000);
-    return () => clearInterval(timer);
-  }, []);
+  const [clockMode, setClockMode] = useState('ict'); // 'ict' | 'local' | 'utc'
+  const { clocks, fps, latencyMs, uptimeFormatted, interactions, heartbeat } =
+    useRealtime();
 
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -169,15 +156,57 @@ export default function Navbar({
             Clean architectural hierarchy with zero collision on any viewport
             ================================================================ */}
         <div className="flex shrink-0 items-stretch">
-          {/* 1. Recessed Telemetry Clock Module (Ultra-wide only) */}
+          {/* 1. Recessed Real-Time Telemetry HUD Deck */}
           <div
-            className="hidden 2xl:flex items-center border-l border-line px-3 bg-surface/40"
-            title="Local studio system clock"
+            className="hidden xl:flex items-center border-l border-line px-3 bg-surface/40"
+            title="Real-Time System Telemetry // Click clock to cycle ICT / Local / UTC"
           >
             <div className="flex items-center gap-2 border border-line bg-bg px-2.5 py-1 font-mono text-[10px] whitespace-nowrap">
-              <span className="h-1.5 w-1.5 rounded-full bg-[#4ade80] beacon-pulse" />
-              <span className="text-ink font-semibold tracking-wider">
-                {clockText}
+              <span
+                className={`h-1.5 w-1.5 rounded-full bg-[#4ade80] transition-transform duration-300 ${
+                  heartbeat ? 'scale-125 shadow-[0_0_8px_#4ade80]' : 'scale-90'
+                }`}
+              />
+
+              <button
+                type="button"
+                onClick={() =>
+                  setClockMode((prev) =>
+                    prev === 'ict' ? 'local' : prev === 'local' ? 'utc' : 'ict'
+                  )
+                }
+                title="Click to toggle timezone"
+                className="text-ink font-semibold tracking-wider hover:text-accent transition-colors"
+              >
+                {clockMode === 'ict'
+                  ? clocks.phnomPenh
+                  : clockMode === 'local'
+                  ? `${clocks.local} LOC`
+                  : clocks.utc}
+              </button>
+
+              <span className="text-line">|</span>
+
+              <span className="text-[#4ade80] font-bold" title="Browser Render Pipeline FPS">
+                {fps} FPS
+              </span>
+
+              <span className="hidden 2xl:inline text-line">|</span>
+
+              <span
+                className="hidden 2xl:inline text-muted hover:text-ink cursor-default"
+                title={`Live Round-Trip Latency: ${latencyMs}ms`}
+              >
+                {latencyMs}ms
+              </span>
+
+              <span className="hidden 2xl:inline text-line">|</span>
+
+              <span
+                className="hidden 2xl:inline text-accent font-semibold"
+                title={`Session Uptime: ${uptimeFormatted}`}
+              >
+                UP {uptimeFormatted}
               </span>
             </div>
           </div>

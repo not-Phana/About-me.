@@ -5,6 +5,7 @@ import {
   IconSparkles,
   IconArrowRight,
 } from './Icons';
+import { useRealtime } from '../context/RealtimeContext';
 
 /**
  * 7 Primary Cortical Macro-Cores of Phana's Brain Map
@@ -331,6 +332,8 @@ export default function BrainLabShowcase({ onSelectProject, onPlaySound }) {
   const [neuralState, setNeuralState] = useState('active'); // 'calm' | 'active' | 'overdrive'
   const [surgeCount, setSurgeCount] = useState(0);
 
+  const { clocks, fps, latencyMs, interactions, heartbeat } = useRealtime();
+
   const canvasRef = useRef(null);
   const mouseRef = useRef({ x: -1000, y: -1000, active: false });
   const reticleRef = useRef({ x: 358, y: 186 });
@@ -341,6 +344,24 @@ export default function BrainLabShowcase({ onSelectProject, onPlaySound }) {
   const activeRegionId = selectedId;
   const activeRegion =
     BRAIN_REGIONS.find((r) => r.id === activeRegionId) || BRAIN_REGIONS[2];
+
+  // Real-time link: User's physical keystrokes & clicks anywhere on the portfolio fire live neural pulses
+  useEffect(() => {
+    if (interactions.keystrokes > 0 || interactions.clicks > 0) {
+      const pathwayIdx = Math.floor(Math.random() * AXON_PATHWAYS.length);
+      const [fromId, toId, curve] = AXON_PATHWAYS[pathwayIdx];
+      pulsesRef.current.push({
+        fromId,
+        toId,
+        curve: curve + (Math.random() * 8 - 4),
+        t: 0,
+        speed: 0.018 + Math.random() * 0.015,
+        color: '#4ade80',
+        size: 2.8,
+        surge: true,
+      });
+    }
+  }, [interactions.keystrokes, interactions.clicks]);
 
   // Trigger a massive multi-hop cascade of neural impulses across all DTI pathways
   const triggerSynapticSurge = () => {
@@ -884,15 +905,22 @@ export default function BrainLabShowcase({ onSelectProject, onPlaySound }) {
           {/* Top HUD Telemetry Bar (Fixed single-line height so stage never shifts) */}
           <div className="h-11 px-5 border-b border-lineSoft flex items-center justify-between gap-2 font-mono text-[11px] text-muted bg-surface/30 whitespace-nowrap overflow-hidden">
             <div className="flex items-center gap-2 shrink-0">
-              <span className="h-2 w-2 rounded-full bg-[#4ade80] animate-ping" />
+              <span
+                className={`h-2 w-2 rounded-full bg-[#4ade80] transition-transform duration-300 ${
+                  heartbeat ? 'scale-125 shadow-[0_0_8px_#4ade80]' : 'scale-90'
+                }`}
+              />
               <span className="text-ink font-semibold uppercase">
-                DTI CONNECTOME STREAM // 119 NEURAL NODES · 45 TRACTS
+                DTI CONNECTOME STREAM // 119 NODES · 45 TRACTS
               </span>
             </div>
             <div className="flex items-center gap-3 overflow-hidden">
-              <span className="text-accent truncate">{activeRegion.coords}</span>
+              <span className="text-accent truncate hidden md:inline">{activeRegion.coords}</span>
               <span className="hidden sm:inline border border-line px-2 py-0.5 text-[10px] text-ink shrink-0">
-                60 FPS REAL-TIME
+                {fps} FPS · {latencyMs}ms
+              </span>
+              <span className="border border-accent/40 bg-accentDim px-2 py-0.5 text-[10px] text-accent shrink-0">
+                {clocks.phnomPenh}
               </span>
             </div>
           </div>
