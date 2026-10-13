@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { PROFILE } from '../data/profile';
 import { PROJECTS } from '../data/projects';
 import InteractiveCanvas from './InteractiveCanvas';
@@ -298,12 +298,47 @@ export default function HeroSection({
 
               <h1 className="hero-enter-3 font-display text-4xl sm:text-6xl xl:text-[4.35rem] font-extrabold tracking-[-0.035em] leading-[1.03] text-ink">
                 {PROFILE.heroHeadlineMain}{' '}
-                <span className="font-serif italic font-normal text-shimmer-gold block sm:inline">
-                  {PROFILE.heroHeadlineAccent}
+                <span
+                  ref={(el) => {
+                    if (el && !el.dataset.underlineInit) {
+                      el.dataset.underlineInit = 'true';
+                      requestAnimationFrame(() => {
+                        el.classList.add('go');
+                      });
+                    }
+                  }}
+                  onClick={(e) => {
+                    const el = e.currentTarget;
+                    el.classList.remove('go');
+                    void el.offsetWidth;
+                    el.classList.add('go');
+                  }}
+                  title="Click to replay hand-drawn underline"
+                  className="headline-wrap cursor-pointer"
+                >
+                  <span className="font-serif italic font-normal text-shimmer-gold">
+                    {PROFILE.heroHeadlineAccent}
+                  </span>
+                  <svg
+                    className="hand-drawn-underline"
+                    viewBox="0 0 300 12"
+                    preserveAspectRatio="none"
+                    aria-hidden="true"
+                  >
+                    <path
+                      d="M4 7 C 60 2, 120 11, 180 5 S 260 3, 296 8"
+                      fill="none"
+                      stroke="#c9a227"
+                      strokeWidth="3"
+                      strokeLinecap="round"
+                      strokeDasharray="340"
+                      strokeDashoffset="340"
+                    />
+                  </svg>
                 </span>
               </h1>
 
-              <p className="hero-enter-4 mt-6 max-w-2xl text-base sm:text-lg text-muted leading-relaxed">
+              <p className="hero-enter-4 mt-8 max-w-2xl text-base sm:text-lg text-muted leading-relaxed">
                 {PROFILE.heroSummary}
               </p>
             </div>

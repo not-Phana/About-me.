@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hand-Drawn Headline Underline</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700&family=Instrument+Sans:wght@400;500&family=JetBrains+Mono:wght@500;600&display=swap"
+    rel="stylesheet"
+  />
+  <style>
+    :root {
+      --bg: #0b0d10;
+      --amber: #c9a227;
+      --text: #e7e3d8;
+      --muted: #8b929e;
+      --line: #1d212a;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: "Instrument Sans", system-ui, -apple-system, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    main {
+      min-height: 100vh;
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 80px 24px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+    }
+
+    .label {
+      font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--amber);
+      margin-bottom: 18px;
+    }
+
+    /* Headline wrapper: inline-block, position: relative */
+    .headline-wrap {
+      display: inline-block;
+      position: relative;
+    }
+
+    h1 {
+      margin: 0;
+      color: var(--text);
+      font-family: "Bricolage Grotesque", system-ui, sans-serif;
+      font-size: clamp(2rem, 5vw, 3.25rem);
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      line-height: 1.12;
+    }
+
+    /* Hand-drawn underline SVG */
+    .headline-wrap svg {
+      position: absolute;
+      left: 1px;
+      bottom: -12px;
+      width: 92%;
+      height: 12px;
+      pointer-events: none;
+      overflow: visible;
+    }
+
+    .headline-wrap svg path {
+      fill: none;
+      stroke: #c9a227;
+      stroke-width: 3;
+      stroke-linecap: round;
+      stroke-dasharray: 340;
+      stroke-dashoffset: 340;
+    }
+
+    @keyframes drawUnderline {
+      from {
+        stroke-dashoffset: 340;
+      }
+      to {
+        stroke-dashoffset: 0;
+      }
+    }
+
+    .headline-wrap.go svg path {
+      stroke-dashoffset: 0;
+      transition: stroke-dashoffset 1s ease 0.3s;
+      animation: drawUnderline 1s ease 0.3s both;
+    }
+
+    .subtitle {
+      margin: 34px 0 0;
+      max-width: 54ch;
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1.65;
+    }
+
+    .controls {
+      margin-top: 28px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .replay-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 14px;
+      background: transparent;
+      color: var(--text);
+      border: 1px solid var(--line);
+      font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: border-color 0.2s ease, color 0.2s ease;
+    }
+
+    .replay-btn:hover,
+    .replay-btn:focus-visible {
+      border-color: var(--amber);
+      color: var(--amber);
+      outline: none;
+    }
+
+    .status-note {
+      font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .headline-wrap svg path,
+      .headline-wrap.go svg path {
+        stroke-dashoffset: 0;
+        transition: none;
+        animation: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <div class="label">01 // EDITORIAL PEN STROKE</div>
+
+    <div class="headline-wrap" id="headlineWrap">
+      <h1>Built by hand, line by line.</h1>
+      <svg
+        viewBox="0 0 300 12"
+        preserveAspectRatio="none"
+        aria-hidden="true"
+      >
+        <path
+          d="M4 7 C 60 2, 120 11, 180 5 S 260 3, 296 8"
+          fill="none"
+          stroke="#c9a227"
+          stroke-width="3"
+          stroke-linecap="round"
+          stroke-dasharray="340"
+          stroke-dashoffset="340"
+        />
+      </svg>
+    </div>
+
+    <p class="subtitle">
+      When the <code>go</code> class is added to the wrapper, the amber SVG path draws itself from left to right over 1s ease after a 0.3s delay.
+    </p>
+
+    <div class="controls">
+      <button type="button" class="replay-btn" id="replayBtn">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <polyline points="23 4 23 10 17 10"></polyline>
+          <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
+        </svg>
+        <span>Replay Stroke</span>
+      </button>
+      <span class="status-note" id="statusNote">STATE: READY</span>
+    </div>
+  </main>
+
+  <script>
+    (() => {
+      const wrap = document.getElementById("headlineWrap");
+      const replayBtn = document.getElementById("replayBtn");
+      const statusNote = document.getElementById("statusNote");
+      const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+      function playStroke() {
+        if (!wrap) return;
+
+        if (reducedMotion.matches) {
+          wrap.classList.add("go");
+          if (statusNote) statusNote.textContent = "STATE: REDUCED MOTION (FINAL)";
+          return;
+        }
+
+        // Remove "go", force layout reflow so the browser commits stroke-dashoffset: 340, then re-add "go"
+        wrap.classList.remove("go");
+        void wrap.offsetWidth;
+        wrap.classList.add("go");
+        if (statusNote) statusNote.textContent = "STATE: DRAWING (.go)";
+      }
+
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", () => {
+          requestAnimationFrame(playStroke);
+        }, { once: true });
+      } else {
+        requestAnimationFrame(playStroke);
+      }
+
+      replayBtn?.addEventListener("click", playStroke);
+    })();
+  </script>
+</body>
+</html>
