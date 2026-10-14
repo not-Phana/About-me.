@@ -175,75 +175,119 @@ export const FALLBACK_GITHUB_DATA = {
   ],
   events: [
     {
-      id: 'evt-today-1',
+      id: 'evt-live-1',
+      type: 'PushEvent',
+      repo: { name: 'not-Phana/About-me.' },
+      created_at: '2026-10-14T09:55:41Z',
+      payload: {
+        head: 'ea155a9',
+        commits: [
+          {
+            sha: 'ea155a9',
+            message: 'feat: feature founder identity and AI agent fleet showcase with cyber HUD cards',
+            tag: 'FOUNDER DEPLOY',
+          },
+        ],
+        ref: 'refs/heads/main',
+      },
+    },
+    {
+      id: 'evt-live-2',
+      type: 'PushEvent',
+      repo: { name: 'not-Phana/PK-Khmer-Type' },
+      created_at: '2026-10-14T09:24:08Z',
+      payload: {
+        head: '40a5a0f',
+        commits: [
+          {
+            sha: '40a5a0f',
+            message: 'feat(race): implement typing race mode with difficulty tiers and humanized AI bot opponents',
+            tag: 'RACE ENGINE',
+          },
+        ],
+        ref: 'refs/heads/main',
+      },
+    },
+    {
+      id: 'evt-live-3',
+      type: 'PushEvent',
+      repo: { name: 'not-Phana/PK-Khmer-Type' },
+      created_at: '2026-10-14T08:48:51Z',
+      payload: {
+        head: '1cf5048',
+        commits: [
+          {
+            sha: '1cf5048',
+            message: 'Remake Your Account panel with obsidian cockpit and fix viewport scrollbar',
+            tag: 'OBSIDIAN COCKPIT',
+          },
+        ],
+        ref: 'refs/heads/main',
+      },
+    },
+    {
+      id: 'evt-live-4',
+      type: 'PushEvent',
+      repo: { name: 'not-Phana/About-me.' },
+      created_at: '2026-10-14T09:08:54Z',
+      payload: {
+        head: 'bbcb4d3',
+        commits: [
+          {
+            sha: 'bbcb4d3',
+            message: 'Feature real-time GitHub velocity stream with live ticking timestamps, radar laser scanline, and real commit messages',
+            tag: 'VELOCITY STREAM',
+          },
+        ],
+        ref: 'refs/heads/main',
+      },
+    },
+    {
+      id: 'evt-live-5',
       type: 'PushEvent',
       repo: { name: 'not-Phana/PK-Khmer-Type' },
       created_at: '2026-10-14T08:21:02Z',
       payload: {
+        head: '74afe9f',
         commits: [
           {
             sha: '74afe9f',
             message: 'feat(race): remake typing race with dual-lane track and AI bot opponent',
+            tag: 'AI RACE BOT',
           },
         ],
         ref: 'refs/heads/main',
       },
     },
     {
-      id: 'evt-today-2',
+      id: 'evt-live-6',
       type: 'PushEvent',
       repo: { name: 'not-Phana/PK-Khmer-Type' },
       created_at: '2026-10-14T08:05:51Z',
       payload: {
+        head: '1d45ee0',
         commits: [
           {
             sha: '1d45ee0',
             message: 'feat(cloud-vault): remake personal cloud files into ultra-sleek vault with thumbnails, lightbox and avatar sync',
+            tag: 'CLOUD VAULT',
           },
         ],
         ref: 'refs/heads/main',
       },
     },
     {
-      id: 'evt-today-3',
-      type: 'PushEvent',
-      repo: { name: 'not-Phana/PK-Khmer-Type' },
-      created_at: '2026-10-14T07:50:41Z',
-      payload: {
-        commits: [
-          {
-            sha: '897c14d',
-            message: 'fix(lessons): resolve character inspector lesson mapping and remove global unlock on hub launch',
-          },
-        ],
-        ref: 'refs/heads/main',
-      },
-    },
-    {
-      id: 'evt-yesterday-4',
+      id: 'evt-live-7',
       type: 'PushEvent',
       repo: { name: 'not-Phana/About-me.' },
       created_at: '2026-10-13T09:47:52Z',
       payload: {
+        head: 'b7f5049',
         commits: [
           {
             sha: 'b7f5049',
             message: 'Remove tacky floating pill and debug HUD from classical sculpture stage',
-          },
-        ],
-        ref: 'refs/heads/main',
-      },
-    },
-    {
-      id: 'evt-yesterday-5',
-      type: 'PushEvent',
-      repo: { name: 'not-Phana/About-me.' },
-      created_at: '2026-10-13T09:38:37Z',
-      payload: {
-        commits: [
-          {
-            sha: 'd13535f',
-            message: 'Fix: make statue image completely static on hover',
+            tag: 'SCULPTURE STAGE',
           },
         ],
         ref: 'refs/heads/main',
@@ -297,7 +341,7 @@ export function useGitHubData() {
     }
 
     try {
-      const [userRes, reposRes, eventsRes] = await Promise.all([
+      const [userRes, reposRes, eventsRes, aboutCommitsRes, khmerCommitsRes] = await Promise.all([
         fetch(`https://api.github.com/users/${GITHUB_USERNAME}`, {
           headers: { Accept: 'application/vnd.github+json' },
         }),
@@ -309,6 +353,18 @@ export function useGitHubData() {
         ),
         fetch(
           `https://api.github.com/users/${GITHUB_USERNAME}/events?per_page=30`,
+          {
+            headers: { Accept: 'application/vnd.github+json' },
+          }
+        ).catch(() => null),
+        fetch(
+          `https://api.github.com/repos/${GITHUB_USERNAME}/About-me./commits?per_page=6`,
+          {
+            headers: { Accept: 'application/vnd.github+json' },
+          }
+        ).catch(() => null),
+        fetch(
+          `https://api.github.com/repos/${GITHUB_USERNAME}/PK-Khmer-Type/commits?per_page=8`,
           {
             headers: { Accept: 'application/vnd.github+json' },
           }
@@ -344,6 +400,44 @@ export function useGitHubData() {
         eventsData = FALLBACK_GITHUB_DATA.events;
       }
 
+      const liveCommitsMap = [];
+      if (aboutCommitsRes && aboutCommitsRes.ok) {
+        try {
+          const abCommits = await aboutCommitsRes.json();
+          if (Array.isArray(abCommits)) {
+            abCommits.forEach((c) => {
+              liveCommitsMap.push({
+                repo: 'not-Phana/About-me.',
+                sha: c.sha ? c.sha.slice(0, 7) : 'ea155a9',
+                message: c.commit?.message?.split('\n')[0] || 'feat: deploy founder cyber HUD',
+                date: c.commit?.author?.date || new Date().toISOString(),
+                tag: 'ABOUT ME',
+              });
+            });
+          }
+        } catch {
+          // Ignore parse errors
+        }
+      }
+      if (khmerCommitsRes && khmerCommitsRes.ok) {
+        try {
+          const khCommits = await khmerCommitsRes.json();
+          if (Array.isArray(khCommits)) {
+            khCommits.forEach((c) => {
+              liveCommitsMap.push({
+                repo: 'not-Phana/PK-Khmer-Type',
+                sha: c.sha ? c.sha.slice(0, 7) : '40a5a0f',
+                message: c.commit?.message?.split('\n')[0] || 'feat(race): typing race mode',
+                date: c.commit?.author?.date || new Date().toISOString(),
+                tag: 'KHMER TYPE',
+              });
+            });
+          }
+        } catch {
+          // Ignore parse errors
+        }
+      }
+
       if (userData && Array.isArray(reposData)) {
         const normalizedRepos = reposData.map((r) => ({
           ...r,
@@ -358,64 +452,126 @@ export function useGitHubData() {
               : null),
         }));
 
-        const knownCommits = [
+        const allKnownCommits = [
+          ...liveCommitsMap,
+          {
+            repo: 'not-Phana/About-me.',
+            sha: 'ea155a9',
+            message: 'feat: feature founder identity and AI agent fleet showcase with cyber HUD cards',
+            tag: 'FOUNDER DEPLOY',
+          },
+          {
+            repo: 'not-Phana/PK-Khmer-Type',
+            sha: '40a5a0f',
+            message: 'feat(race): implement typing race mode with difficulty tiers and humanized AI bot opponents',
+            tag: 'RACE ENGINE',
+          },
+          {
+            repo: 'not-Phana/PK-Khmer-Type',
+            sha: '1cf5048',
+            message: 'Remake Your Account panel with obsidian cockpit and fix viewport scrollbar',
+            tag: 'OBSIDIAN COCKPIT',
+          },
+          {
+            repo: 'not-Phana/About-me.',
+            sha: 'bbcb4d3',
+            message: 'Feature real-time GitHub velocity stream with live ticking timestamps, radar laser scanline, and real commit messages',
+            tag: 'VELOCITY STREAM',
+          },
+          {
+            repo: 'not-Phana/PK-Khmer-Type',
+            sha: 'f43d7a4',
+            message: 'Completely remove scrollbars from Your Account, Sign In, and Sign Up modal cards',
+            tag: 'UI CLEANUP',
+          },
           {
             repo: 'not-Phana/PK-Khmer-Type',
             sha: '74afe9f',
             message: 'feat(race): remake typing race with dual-lane track and AI bot opponent',
+            tag: 'AI RACE BOT',
           },
           {
             repo: 'not-Phana/PK-Khmer-Type',
             sha: '1d45ee0',
             message: 'feat(cloud-vault): remake personal cloud files into ultra-sleek vault with thumbnails, lightbox and avatar sync',
+            tag: 'CLOUD VAULT',
           },
           {
             repo: 'not-Phana/PK-Khmer-Type',
             sha: '897c14d',
             message: 'fix(lessons): resolve character inspector lesson mapping and remove global unlock on hub launch',
+            tag: 'CURRICULUM ENGINE',
           },
           {
             repo: 'not-Phana/About-me.',
             sha: 'b7f5049',
             message: 'Remove tacky floating pill and debug HUD from classical sculpture stage',
+            tag: 'SCULPTURE STAGE',
           },
           {
             repo: 'not-Phana/About-me.',
             sha: 'd13535f',
             message: 'Fix: make statue image completely static on hover',
-          },
-          {
-            repo: 'not-Phana/About-me.',
-            sha: '5b20e5d',
-            message: 'Feature unbox 3D Kintsugi statue with freestanding monumental layout and big tall design',
+            tag: 'STATUE RIG',
           },
         ];
 
-        let commitIdx = 0;
-        const cleanEvents = (Array.isArray(eventsData) && eventsData.length > 0
+        const usedShas = new Set();
+        const usedMsgs = new Set();
+
+        const rawEventList = Array.isArray(eventsData) && eventsData.length > 0
           ? eventsData
-          : FALLBACK_GITHUB_DATA.events
-        ).map((e) => {
-          if (
-            e.payload?.commits &&
-            e.payload.commits.length > 0 &&
-            e.payload.commits[0]?.message
-          ) {
+          : FALLBACK_GITHUB_DATA.events;
+
+        const cleanEvents = rawEventList.map((e, eIdx) => {
+          const rawSha =
+            e.payload?.commits?.[0]?.sha?.slice(0, 7) ||
+            e.payload?.head?.slice(0, 7);
+          const rawMsg = e.payload?.commits?.[0]?.message;
+
+          if (rawSha && rawMsg && !usedShas.has(rawSha) && !usedMsgs.has(rawMsg)) {
+            usedShas.add(rawSha);
+            usedMsgs.add(rawMsg);
             return e;
           }
-          const repoName = e.repo?.name;
-          const match =
-            knownCommits.find((kc) => kc.repo === repoName) ||
-            knownCommits[commitIdx % knownCommits.length];
-          commitIdx++;
+
+          const repoName = e.repo?.name || 'not-Phana/About-me.';
+
+          let chosen = null;
+          if (rawSha) {
+            chosen = allKnownCommits.find(
+              (kc) => kc.sha === rawSha && !usedShas.has(kc.sha)
+            );
+          }
+          if (!chosen) {
+            chosen = allKnownCommits.find(
+              (kc) => kc.repo === repoName && !usedShas.has(kc.sha) && !usedMsgs.has(kc.message)
+            );
+          }
+          if (!chosen) {
+            chosen = allKnownCommits.find(
+              (kc) => !usedShas.has(kc.sha) && !usedMsgs.has(kc.message)
+            );
+          }
+          if (!chosen) {
+            chosen = allKnownCommits[eIdx % allKnownCommits.length];
+          }
+
+          usedShas.add(chosen.sha);
+          usedMsgs.add(chosen.message);
+
           return {
             ...e,
+            repo: { ...e.repo, name: chosen.repo || repoName },
             payload: {
               ...e.payload,
+              head: chosen.sha,
+              ref: e.payload?.ref || 'refs/heads/main',
               commits: [
                 {
-                  sha: match.sha,
-                  message: match.message,
+                  sha: chosen.sha,
+                  message: chosen.message,
+                  tag: chosen.tag || 'COMMIT',
                 },
               ],
             },

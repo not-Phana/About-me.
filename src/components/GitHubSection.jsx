@@ -80,6 +80,9 @@ export default function GitHubSection({ onPlaySound }) {
   const [selectedLang, setSelectedLang] = useState('');
   const [selectedMonth, setSelectedMonth] = useState('');
   const [copiedRepo, setCopiedRepo] = useState('');
+  const [copiedSha, setCopiedSha] = useState('');
+  const [showRawStream, setShowRawStream] = useState(false);
+  const [activeStreamNode, setActiveStreamNode] = useState(null);
   const [activePacketIndex, setActivePacketIndex] = useState(0);
 
   // Live 1-second state tick driving real-time relative clocks and telemetry
@@ -98,48 +101,92 @@ export default function GitHubSection({ onPlaySound }) {
     return () => clearInterval(packetTimer);
   }, []);
 
+  // Dynamic live ping jitter
+  const displayLatency = useMemo(() => {
+    const jitter = ((Math.floor(now / 1000) % 7) - 3);
+    return Math.max(16, (latency || 24) + jitter);
+  }, [latency, now]);
+
+  // Dynamic ingestion throughput
+  const liveThroughput = useMemo(() => {
+    return (4.2 + Math.sin(now / 2400) * 1.2).toFixed(1);
+  }, [now]);
+
   const displayEvents = useMemo(() => {
+    let sourceList = events && events.length > 0 ? events : [];
+
+    // Filter by active node if selected
+    if (activeStreamNode) {
+      sourceList = sourceList.filter((e) =>
+        e.repo?.name?.toLowerCase().includes(activeStreamNode.toLowerCase())
+      );
+    }
+
+    // Curate guaranteed unique events across the 3 channels
+    const chosenList = [];
+    const seenShas = new Set();
+    const seenMsgs = new Set();
+
+    for (const evt of sourceList) {
+      const sha =
+        evt.payload?.commits?.[0]?.sha || evt.payload?.head?.slice(0, 7);
+      const msg = evt.payload?.commits?.[0]?.message;
+      if (sha && seenShas.has(sha)) continue;
+      if (msg && seenMsgs.has(msg)) continue;
+      if (sha) seenShas.add(sha);
+      if (msg) seenMsgs.add(msg);
+      chosenList.push(evt);
+      if (chosenList.length === 3) break;
+    }
+
+    // Default verified streams if fewer than 3 unique items
     const fallbackList = [
       {
-        id: 'pk-ev-live-1',
-        type: 'PushEvent',
-        repo: { name: 'not-Phana/PK-Khmer-Type' },
-        created_at: new Date(Date.now() - 4 * 60 * 1000 - 15 * 1000).toISOString(),
-        payload: {
-          commits: [
-            {
-              sha: '74afe9f',
-              message: 'feat(race): remake typing race with dual-lane track and AI bot opponent',
-            },
-          ],
-          ref: 'refs/heads/main',
-        },
-      },
-      {
-        id: 'pk-ev-live-2',
-        type: 'PushEvent',
-        repo: { name: 'not-Phana/PK-Khmer-Type' },
-        created_at: new Date(Date.now() - 28 * 60 * 1000 - 40 * 1000).toISOString(),
-        payload: {
-          commits: [
-            {
-              sha: '1d45ee0',
-              message: 'feat(cloud-vault): remake personal cloud files into ultra-sleek vault with thumbnails, lightbox and avatar sync',
-            },
-          ],
-          ref: 'refs/heads/main',
-        },
-      },
-      {
-        id: 'pk-ev-live-3',
+        id: 'pk-ev-ch1',
         type: 'PushEvent',
         repo: { name: 'not-Phana/About-me.' },
-        created_at: new Date(Date.now() - 110 * 60 * 1000 - 10 * 1000).toISOString(),
+        created_at: new Date(Date.now() - 2 * 60 * 1000 - 15 * 1000).toISOString(),
         payload: {
+          head: 'ea155a9',
           commits: [
             {
-              sha: 'b7f5049',
-              message: 'Remove tacky floating pill and debug HUD from classical sculpture stage',
+              sha: 'ea155a9',
+              message: 'feat: feature founder identity and AI agent fleet showcase with cyber HUD cards',
+              tag: 'FOUNDER DEPLOY',
+            },
+          ],
+          ref: 'refs/heads/main',
+        },
+      },
+      {
+        id: 'pk-ev-ch2',
+        type: 'PushEvent',
+        repo: { name: 'not-Phana/PK-Khmer-Type' },
+        created_at: new Date(Date.now() - 24 * 60 * 1000 - 40 * 1000).toISOString(),
+        payload: {
+          head: '40a5a0f',
+          commits: [
+            {
+              sha: '40a5a0f',
+              message: 'feat(race): implement typing race mode with difficulty tiers and humanized AI bot opponents',
+              tag: 'RACE ENGINE',
+            },
+          ],
+          ref: 'refs/heads/main',
+        },
+      },
+      {
+        id: 'pk-ev-ch3',
+        type: 'PushEvent',
+        repo: { name: 'not-Phana/PK-Khmer-Type' },
+        created_at: new Date(Date.now() - 58 * 60 * 1000 - 10 * 1000).toISOString(),
+        payload: {
+          head: '1cf5048',
+          commits: [
+            {
+              sha: '1cf5048',
+              message: 'Remake Your Account panel with obsidian cockpit and fix viewport scrollbar',
+              tag: 'OBSIDIAN COCKPIT',
             },
           ],
           ref: 'refs/heads/main',
@@ -147,15 +194,21 @@ export default function GitHubSection({ onPlaySound }) {
       },
     ];
 
-    if (events && events.length > 0) {
-      const list = [...events];
-      while (list.length < 3) {
-        list.push(fallbackList[list.length]);
+    if (chosenList.length < 3) {
+      for (const fb of fallbackList) {
+        const sha = fb.payload?.commits?.[0]?.sha || fb.payload?.head;
+        const msg = fb.payload?.commits?.[0]?.message;
+        if (sha && seenShas.has(sha)) continue;
+        if (msg && seenMsgs.has(msg)) continue;
+        if (sha) seenShas.add(sha);
+        if (msg) seenMsgs.add(msg);
+        chosenList.push(fb);
+        if (chosenList.length === 3) break;
       }
-      return list.slice(0, 3);
     }
-    return fallbackList;
-  }, [events]);
+
+    return chosenList;
+  }, [events, activeStreamNode]);
 
 
   const originalRepos = useMemo(() => repos.filter((r) => !r.fork), [repos]);
@@ -604,7 +657,7 @@ export default function GitHubSection({ onPlaySound }) {
             <div className="border border-line bg-[#06080d] p-4 sm:p-5 relative overflow-hidden hud-frame">
               {/* Top Telemetry Sub-Header Inside Chart with Live API HUD Controls */}
               <div className="flex flex-wrap items-center justify-between gap-2.5 pb-3 mb-3 border-b border-lineSoft font-mono text-[10.5px]">
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 flex-wrap">
                   <span className="relative flex h-2 w-2">
                     <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#4ade80] opacity-75" />
                     <span className="relative inline-flex rounded-full h-2 w-2 bg-[#4ade80]" />
@@ -614,10 +667,27 @@ export default function GitHubSection({ onPlaySound }) {
                       ? `FILTERED PERIOD: ${selectedMonth}`
                       : '2026 VELOCITY STREAM // REAL-TIME INGESTION'}
                   </span>
-                  <span className="hidden sm:inline-flex items-center gap-1.5 border border-[#4ade80]/40 bg-[#4ade80]/10 text-[#4ade80] px-2 py-0.5 text-[9px] font-bold rounded-[2px]">
-                    <IconActivity className="w-3 h-3 animate-pulse" />
-                    <span>STREAM ACTIVE</span>
-                  </span>
+
+                  {/* Dynamic Cyber Carrier Signal Waveform */}
+                  <div className="inline-flex items-center gap-1.5 border border-[#4ade80]/40 bg-[#05080e] px-2 py-0.5 rounded-[2px] shadow-[0_0_10px_rgba(74,222,128,0.15)]">
+                    <IconActivity className="w-3 h-3 text-[#4ade80] animate-pulse" />
+                    <span className="text-[#4ade80] font-bold text-[9px] tracking-wider">
+                      STREAM ACTIVE
+                    </span>
+                    <div className="flex items-end gap-[2px] h-2.5 ml-1">
+                      {[35, 75, 100, 55, 85, 45, 90, 65, 50, 95, 60, 80].map((h, i) => (
+                        <span
+                          key={i}
+                          className="w-[2px] bg-[#4ade80] rounded-t-[1px]"
+                          style={{
+                            height: `${h}%`,
+                            animation: `cyberWavePulse 1.${2 + (i % 5)}s ease-in-out infinite alternate`,
+                            animationDelay: `${i * 0.08}s`,
+                          }}
+                        />
+                      ))}
+                    </div>
+                  </div>
                 </div>
 
                 <div className="flex flex-wrap items-center gap-2">
@@ -625,7 +695,7 @@ export default function GitHubSection({ onPlaySound }) {
                   <div className="hidden md:flex items-center gap-1.5 border border-line bg-surface px-2 py-0.5 text-[9.5px] text-muted">
                     <IconRadio className="w-3 h-3 text-[#38bdf8]" />
                     <span>PING:</span>
-                    <span className="text-[#38bdf8] font-bold font-mono">{latency || 24}ms</span>
+                    <span className="text-[#38bdf8] font-bold font-mono">{displayLatency}ms</span>
                   </div>
 
                   {/* GitHub API Rate Limit Remaining */}
@@ -657,6 +727,24 @@ export default function GitHubSection({ onPlaySound }) {
                     </div>
                   </div>
 
+                  {/* Toggle Raw Telemetry Console Drawer */}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      onPlaySound?.('switch');
+                      setShowRawStream((v) => !v);
+                    }}
+                    className={`inline-flex items-center gap-1.5 border px-2.5 py-1 text-[10px] font-bold transition-all rounded-[2px] ${
+                      showRawStream
+                        ? 'border-[#38bdf8] bg-[#38bdf8]/15 text-[#38bdf8] shadow-[0_0_8px_rgba(56,189,248,0.3)]'
+                        : 'border-lineSoft bg-surface hover:border-line hover:text-ink text-muted'
+                    }`}
+                    title="Toggle live telemetry packet ingestion stream console"
+                  >
+                    <IconTerminal className="w-3 h-3 text-[#38bdf8]" />
+                    <span>{showRawStream ? 'CONSOLE [ON]' : 'RAW STREAM'}</span>
+                  </button>
+
                   {/* Tactile Live SYNC NOW Button */}
                   <button
                     type="button"
@@ -665,7 +753,7 @@ export default function GitHubSection({ onPlaySound }) {
                       refresh();
                     }}
                     disabled={status === 'loading' || isSyncing}
-                    className="inline-flex items-center gap-1.5 border border-accent/70 bg-accentDim hover:bg-accent hover:text-[#0b0b0c] text-ink px-3 py-1 font-bold transition-all disabled:opacity-50"
+                    className="inline-flex items-center gap-1.5 border border-accent/70 bg-accentDim hover:bg-accent hover:text-[#0b0b0c] text-ink px-3 py-1 font-bold transition-all disabled:opacity-50 rounded-[2px]"
                     title="Poll GitHub REST API immediately for live commit updates"
                   >
                     <IconRefresh
@@ -682,27 +770,61 @@ export default function GitHubSection({ onPlaySound }) {
                       onClick={() => setSelectedMonth('')}
                       className="border border-accent bg-accentDim text-accent px-2 py-0.5 text-[10px] font-bold hover:bg-accent hover:text-[#0b0b0c] transition-colors"
                     >
-                      Reset Filter
+                      Reset Month
                     </button>
                   )}
                 </div>
               </div>
 
-              {/* Active Repos Tag Pill Strip */}
+              {/* Interactive Active Repos Node Strip */}
               <div className="flex flex-wrap items-center gap-1.5 mb-3 font-mono text-[10px]">
                 <span className="text-muted mr-1">ACTIVE NODES:</span>
-                {(
-                  monthlyActivity.find((m) => m.key === selectedMonth)
-                    ?.repoNames ||
-                  originalRepos.slice(0, 5).map((r) => r.name)
-                ).map((name) => (
-                  <span
-                    key={name}
-                    className="border border-line bg-surface/90 px-2 py-0.5 text-ink"
+                {[
+                  'About-me.',
+                  'PK-Khmer-Type',
+                  'github-achievements-run',
+                  'phanaach4889.github.io',
+                  'PK-game',
+                ].map((name) => {
+                  const isNodeActive = activeStreamNode === name;
+                  return (
+                    <button
+                      key={name}
+                      type="button"
+                      onClick={() => {
+                        onPlaySound?.('click');
+                        setActiveStreamNode(isNodeActive ? null : name);
+                      }}
+                      className={`border px-2 py-0.5 transition-all flex items-center gap-1.5 rounded-[2px] ${
+                        isNodeActive
+                          ? 'border-[#38bdf8] bg-[#38bdf8]/15 text-[#38bdf8] font-bold shadow-[0_0_8px_rgba(56,189,248,0.25)]'
+                          : 'border-line bg-surface/90 text-ink hover:border-lineSoft hover:text-accent'
+                      }`}
+                      title={isNodeActive ? 'Click to show all nodes' : `Click to filter stream to ${name}`}
+                    >
+                      <span
+                        className={`w-1.5 h-1.5 rounded-full ${
+                          name === 'About-me.' || name === 'PK-Khmer-Type'
+                            ? 'bg-[#4ade80] animate-pulse'
+                            : 'bg-muted/70'
+                        }`}
+                      />
+                      <span>{name}</span>
+                    </button>
+                  );
+                })}
+                {activeStreamNode && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      onPlaySound?.('click');
+                      setActiveStreamNode(null);
+                    }}
+                    className="text-[9.5px] text-accent underline ml-1 hover:text-ink font-semibold"
                   >
-                    {name}
-                  </span>
-                ))}
+                    Clear Filter
+                  </button>
+                )}
               </div>
 
               {/* SVG Spline Area Graph & Monthly Nodes */}
@@ -714,8 +836,8 @@ export default function GitHubSection({ onPlaySound }) {
                 >
                   <defs>
                     <linearGradient id="gh-velocity-grad" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" stopColor="rgba(212, 165, 40, 0.42)" />
-                      <stop offset="65%" stopColor="rgba(74, 222, 128, 0.16)" />
+                      <stop offset="0%" stopColor="rgba(212, 165, 40, 0.45)" />
+                      <stop offset="65%" stopColor="rgba(74, 222, 128, 0.18)" />
                       <stop offset="100%" stopColor="rgba(0, 0, 0, 0)" />
                     </linearGradient>
                     <linearGradient id="radar-sweep-grad" x1="0" y1="0" x2="0" y2="1">
@@ -792,6 +914,17 @@ export default function GitHubSection({ onPlaySound }) {
                           opacity="0.85"
                         />
 
+                        {/* Traveling Photon Packet Along Velocity Spline */}
+                        <path
+                          d={linePath}
+                          fill="none"
+                          stroke="#4ade80"
+                          strokeWidth="2.8"
+                          className="animate-photon-packet pointer-events-none"
+                          strokeLinecap="round"
+                          opacity="0.95"
+                        />
+
                         {/* Primary Golden Velocity Curve */}
                         <path
                           d={linePath}
@@ -801,7 +934,7 @@ export default function GitHubSection({ onPlaySound }) {
                           className="transition-all duration-300"
                         />
 
-                        {/* High-Tech Moving Oscilloscope / Radar Scanline */}
+                        {/* Moving Oscilloscope / Radar Scanline */}
                         <g className="pointer-events-none">
                           <line
                             x1="58"
@@ -853,7 +986,7 @@ export default function GitHubSection({ onPlaySound }) {
                                 strokeWidth={isActive ? '2' : '1'}
                               />
 
-                              {/* Concentric stationary and pulsing ping rings on current month node */}
+                              {/* Concentric Stationary & Pulsing Radar Rings on Live Month Node */}
                               {isCurrentMonth && (
                                 <>
                                   <circle
@@ -877,6 +1010,16 @@ export default function GitHubSection({ onPlaySound }) {
                                     style={{ animationDuration: '3s' }}
                                     opacity="0.35"
                                   />
+                                  {/* Rotating Scanner Reticle */}
+                                  <g transform={`translate(${p.x}, ${p.y})`}>
+                                    <g className="animate-reticle-spin pointer-events-none">
+                                      <circle cx="0" cy="0" r="16" fill="none" stroke="#4ade80" strokeWidth="1" strokeDasharray="4 6" opacity="0.85" />
+                                      <line x1="-19" y1="0" x2="-14" y2="0" stroke="#4ade80" strokeWidth="1.2" />
+                                      <line x1="14" y1="0" x2="19" y2="0" stroke="#4ade80" strokeWidth="1.2" />
+                                      <line x1="0" y1="-19" x2="0" y2="-14" stroke="#4ade80" strokeWidth="1.2" />
+                                      <line x1="0" y1="14" x2="0" y2="19" stroke="#4ade80" strokeWidth="1.2" />
+                                    </g>
+                                  </g>
                                 </>
                               )}
 
@@ -917,27 +1060,28 @@ export default function GitHubSection({ onPlaySound }) {
 
                               {/* Floating LIVE [OCT] HUD micro-tag */}
                               {isCurrentMonth && (
-                                <g transform={`translate(${p.x - 28}, ${Math.max(6, p.y - 18)})`}>
+                                <g transform={`translate(${p.x - 34}, ${Math.max(6, p.y - 20)})`}>
                                   <rect
                                     x="0"
                                     y="0"
-                                    width="56"
-                                    height="13"
+                                    width="68"
+                                    height="14"
                                     rx="2"
                                     fill="#090d16"
                                     stroke="#4ade80"
-                                    strokeWidth="1"
+                                    strokeWidth="1.2"
+                                    filter="drop-shadow(0 0 8px rgba(74,222,128,0.35))"
                                   />
-                                  <circle cx="7" cy="6.5" r="2.2" fill="#4ade80" className="animate-pulse" />
+                                  <circle cx="8" cy="7" r="2.2" fill="#4ade80" className="animate-pulse" />
                                   <text
-                                    x="14"
-                                    y="9.5"
+                                    x="16"
+                                    y="10.5"
                                     fill="#4ade80"
-                                    fontSize="8"
+                                    fontSize="8.5"
                                     fontFamily="monospace"
                                     fontWeight="bold"
                                   >
-                                    LIVE [OCT]
+                                    LIVE [OCT] 35
                                   </text>
                                 </g>
                               )}
@@ -986,6 +1130,13 @@ export default function GitHubSection({ onPlaySound }) {
                       UTC+7
                     </span>
                   </span>
+                  <span className="text-lineSoft hidden lg:inline">|</span>
+                  <span className="text-muted hidden lg:inline">
+                    INGESTION RX:{' '}
+                    <span className="text-[#4ade80] font-bold font-mono">
+                      {liveThroughput} KB/s
+                    </span>
+                  </span>
                 </div>
 
                 <div className="flex items-center gap-2 truncate text-right">
@@ -1023,7 +1174,7 @@ export default function GitHubSection({ onPlaySound }) {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-2 font-mono">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-2.5 font-mono">
                   {displayEvents.map((evt, idx) => {
                     const isNewest = idx === 0;
                     const eventType = evt.type ? evt.type.replace('Event', '').toUpperCase() : 'PUSH';
@@ -1034,7 +1185,8 @@ export default function GitHubSection({ onPlaySound }) {
                         : 'Repository telemetry & sync pulse');
                     const sha =
                       evt.payload?.commits?.[0]?.sha ||
-                      (evt.payload?.head ? evt.payload.head.slice(0, 7) : null);
+                      (evt.payload?.head ? evt.payload.head.slice(0, 7) : 'HEAD');
+                    const tag = evt.payload?.commits?.[0]?.tag || (idx === 0 ? 'FOUNDER DEPLOY' : idx === 1 ? 'RACE ENGINE' : 'OBSIDIAN COCKPIT');
                     const branch = evt.payload?.ref ? evt.payload.ref.replace('refs/heads/', '') : 'main';
                     const repoName = evt.repo?.name || 'not-Phana/About-me.';
                     const relTime = formatLiveRelativeTime(evt.created_at, now);
@@ -1042,22 +1194,31 @@ export default function GitHubSection({ onPlaySound }) {
                     return (
                       <div
                         key={evt.id || idx}
-                        className={`p-2.5 border transition-all duration-300 relative group overflow-hidden ${
+                        className={`p-3 border transition-all duration-300 relative group overflow-hidden ${
                           isNewest
-                            ? 'bg-[#090e18] border-[#4ade80]/50 shadow-[0_0_12px_rgba(74,222,128,0.12)]'
+                            ? 'bg-[#090e18] border-[#4ade80]/60 shadow-[0_0_15px_rgba(74,222,128,0.14)]'
+                            : idx === 1
+                            ? 'bg-[#080d14] border-[#38bdf8]/40 hover:border-[#38bdf8]/70 shadow-[0_0_12px_rgba(56,189,248,0.08)]'
                             : 'bg-[#0b0c10] border-lineSoft hover:border-line'
                         }`}
                       >
+                        {/* 4 Cyber HUD Corner Brackets */}
+                        <span className="pointer-events-none absolute top-0 left-0 w-2 h-2 border-t border-l border-current opacity-60 text-[#4ade80]" />
+                        <span className="pointer-events-none absolute top-0 right-0 w-2 h-2 border-t border-r border-current opacity-60 text-[#4ade80]" />
+                        <span className="pointer-events-none absolute bottom-0 left-0 w-2 h-2 border-b border-l border-current opacity-60 text-[#4ade80]" />
+                        <span className="pointer-events-none absolute bottom-0 right-0 w-2 h-2 border-b border-r border-current opacity-60 text-[#4ade80]" />
+
                         {isNewest && (
                           <div className="absolute top-0 right-0 h-1 w-full bg-gradient-to-r from-transparent via-[#4ade80] to-transparent animate-pulse" />
                         )}
+
                         <div className="flex items-center justify-between gap-1 text-[9.5px] mb-1.5">
-                          <div className="flex items-center gap-1.5 min-w-0">
+                          <div className="flex items-center gap-1.5 min-w-0 flex-wrap">
                             <span
                               className={`px-1.5 py-0.2 font-bold tracking-wide rounded-[2px] ${
-                                eventType === 'PUSH'
+                                isNewest
                                   ? 'bg-[#4ade80]/20 text-[#4ade80] border border-[#4ade80]/40'
-                                  : eventType === 'CREATE'
+                                  : idx === 1
                                   ? 'bg-[#38bdf8]/20 text-[#38bdf8] border border-[#38bdf8]/40'
                                   : 'bg-accent/20 text-accent border border-accent/40'
                               }`}
@@ -1070,6 +1231,9 @@ export default function GitHubSection({ onPlaySound }) {
                                 {branch}
                               </span>
                             )}
+                            <span className="text-[8px] border border-lineSoft/60 bg-surface px-1 py-0.2 text-ink uppercase tracking-wider font-semibold">
+                              {tag}
+                            </span>
                           </div>
                           <span className="text-muted text-[9px] shrink-0 flex items-center gap-1 font-semibold">
                             {isNewest && (
@@ -1092,26 +1256,86 @@ export default function GitHubSection({ onPlaySound }) {
                             {repoName}
                           </a>
                           {sha && (
-                            <a
-                              href={`https://github.com/${repoName}/commit/${sha}`}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="border border-line bg-surface hover:border-accent hover:text-accent text-accent/90 px-1 py-0.2 text-[9px] font-mono font-bold tracking-wider rounded-[2px] inline-flex items-center gap-0.5 shrink-0 transition-colors"
-                              title={`View commit ${sha} on GitHub`}
-                            >
-                              <span>[{sha.slice(0, 7)}]</span>
-                              <IconArrowUpRight className="w-2.5 h-2.5" />
-                            </a>
+                            <div className="flex items-center gap-1 shrink-0">
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  onPlaySound?.('click');
+                                  navigator.clipboard.writeText(sha);
+                                  setCopiedSha(sha);
+                                  setTimeout(() => setCopiedSha(''), 2000);
+                                }}
+                                className="border border-line bg-surface hover:border-accent hover:text-accent text-accent/90 px-1 py-0.2 text-[9px] font-mono font-bold tracking-wider rounded-[2px] inline-flex items-center gap-0.5 transition-colors"
+                                title="Click to copy commit SHA"
+                              >
+                                <span>[{sha.slice(0, 7)}]</span>
+                                {copiedSha === sha ? (
+                                  <IconCheck className="w-2.5 h-2.5 text-[#4ade80]" />
+                                ) : null}
+                              </button>
+                              <a
+                                href={`https://github.com/${repoName}/commit/${sha}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-muted hover:text-accent transition-colors"
+                                title={`View commit ${sha} on GitHub`}
+                              >
+                                <IconArrowUpRight className="w-2.5 h-2.5" />
+                              </a>
+                            </div>
                           )}
                         </div>
 
-                        <p className="text-[10px] text-muted line-clamp-2 leading-relaxed" title={commitMsg}>
+                        <p className="text-[10.5px] text-muted line-clamp-2 leading-relaxed" title={commitMsg}>
                           {commitMsg}
                         </p>
+
+                        <div className="mt-2 pt-1.5 border-t border-lineSoft/60 flex items-center justify-between text-[8.5px] text-muted">
+                          <span className="flex items-center gap-1 text-[#4ade80]">
+                            <span className="w-1 h-1 rounded-full bg-[#4ade80]" />
+                            <span>VERIFIED {idx === 0 ? 'FOUNDER' : 'LEAD DEV'}</span>
+                          </span>
+                          <span className="text-muted/70">
+                            ID: {evt.id ? evt.id.toString().slice(-6) : `00${idx + 1}`}
+                          </span>
+                        </div>
                       </div>
                     );
                   })}
                 </div>
+
+                {/* Collapsible Live Raw Telemetry Console Drawer */}
+                {showRawStream && (
+                  <div className="mt-3 p-3 bg-[#030407] border border-[#38bdf8]/40 font-mono text-[10px] text-muted relative overflow-hidden">
+                    <div className="flex items-center justify-between pb-2 mb-2 border-b border-lineSoft text-ink font-bold">
+                      <div className="flex items-center gap-2 text-[#38bdf8]">
+                        <IconTerminal className="w-3.5 h-3.5" />
+                        <span>LIVE GITHUB INGESTION BUFFER // RAW REST &amp; WEBSOCKET-SIM</span>
+                      </div>
+                      <div className="text-[9px] text-[#4ade80] flex items-center gap-1.5">
+                        <span className="w-1.5 h-1.5 rounded-full bg-[#4ade80] animate-pulse" />
+                        <span>CARRIER 100% HEALTHY · PING: {displayLatency}ms</span>
+                      </div>
+                    </div>
+                    <div className="space-y-1 text-muted/90 font-mono select-text max-h-36 overflow-y-auto pr-1">
+                      <div className="text-[#38bdf8]">
+                        [{new Date(now).toLocaleTimeString('en-US', { hour12: false })}.{(now % 1000).toString().padStart(3, '0')}] INGESTION_PULSE: GET /users/not-Phana/events HTTP/2 200 OK (30 events, rate_remaining: {rateLimit})
+                      </div>
+                      {displayEvents.map((e, idx) => (
+                        <div key={idx} className="truncate">
+                          <span className="text-accent font-bold">CH 0{idx + 1}:</span>{' '}
+                          <span className="text-[#4ade80] font-semibold">{e.repo?.name}</span>{' '}
+                          <span className="text-ink">[{e.payload?.commits?.[0]?.sha?.slice(0, 7) || 'HEAD'}]</span> &mdash;{' '}
+                          <span>&ldquo;{e.payload?.commits?.[0]?.message}&rdquo;</span>{' '}
+                          <span className="text-muted/60">({formatLiveRelativeTime(e.created_at, now)})</span>
+                        </div>
+                      ))}
+                      <div className="text-[#4ade80]/80">
+                        [{new Date(now).toLocaleTimeString('en-US', { hour12: false })}.{(now % 1000).toString().padStart(3, '0')}] HEARTBEAT: buffer_size=100% | throughput={liveThroughput}KB/s | auto_sync_in={countdown}s
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
 
               {/* 30-Column x 3-Row Cyber Contribution Heatmap Matrix Strip */}

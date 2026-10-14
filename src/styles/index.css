@@ -558,6 +558,53 @@ h2.show::after {
   animation: syncPhosphorFlash 0.75s ease-out forwards;
 }
 
+/* Real-Time Cyber Signal Waveform Pulse */
+@keyframes cyberWavePulse {
+  0% {
+    height: 25%;
+    opacity: 0.5;
+  }
+  50% {
+    height: 100%;
+    opacity: 1;
+  }
+  100% {
+    height: 35%;
+    opacity: 0.6;
+  }
+}
+
+/* Rotating Radar Scanner Reticle */
+@keyframes reticleSpin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-reticle-spin {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: reticleSpin 12s linear infinite;
+}
+
+/* Real-Time Ingestion Photon Packet Flow along Velocity Spline */
+@keyframes photonTravel {
+  0% {
+    stroke-dashoffset: 400;
+  }
+  100% {
+    stroke-dashoffset: -400;
+  }
+}
+
+.animate-photon-packet {
+  stroke-dasharray: 20 80;
+  animation: photonTravel 3s linear infinite;
+}
+
 /* Punchy Mechanical Keycap Character Burst */
 @keyframes keyBurst {
   0% {
