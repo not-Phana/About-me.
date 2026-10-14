@@ -17,25 +17,26 @@ export const CONTRIBUTORS = [
     avatar: './assets/avatar-kon-kurosaki.jpg',
     avatarFallback: 'https://avatars.githubusercontent.com/u/297607780?v=4',
     category: 'human',
-    typeBadge: 'LEAD ARCHITECT (ME)',
+    typeBadge: 'FOUNDER & LEAD ARCHITECT (ME)',
     badgeTone: 'gold',
-    model: '1 Human Brain · Account #01 (@Kon-Kurosaki)',
-    role: 'Primary Dev Account — Yes, both humans here are me',
-    focus: 'Core Engine · Interactive Lessons · UI/UX Systems',
-    status: 'ONLINE // SAME HUMAN #01',
+    model: 'Solo Founder · 1 Biological Brain · Workstation Git Identity',
+    role: 'Founder & Lead Architect — Building with AI Agents & Chatbots',
+    focus: 'Core Engine · Interactive Lessons · UI/UX Systems · AI Orchestration',
+    status: 'ONLINE // FOUNDER #01',
     statusDotColor: '#4ade80',
     description:
-      'My primary coding GitHub account (@Kon-Kurosaki) with 168 verified commits on PK Khmer Type. Both @Kon-Kurosaki and @not-Phana are me—one person committing from two GitHub accounts (198/200 combined commits).',
+      'I am the founder and lead biological architect of the PK ecosystem. I build and direct this entire platform paired with autonomous AI agents (for terminal automation, headless testing, and code synthesis) and AI chatbots (for ideation and reasoning). Both @Kon-Kurosaki and @not-Phana are me—one founder committing from two GitHub accounts (198/200 combined commits).',
     keyContributions: [
-      '168 verified commits (198 combined with @not-Phana)',
-      'Same person as @not-Phana — Primary workstation git identity',
+      'Solo Founder & Lead Architect (168 verified commits)',
+      'Building with autonomous AI agents & conversational chatbots',
       'Tactile typing engine, 218 lessons & full-stack architecture'
     ],
-    commitsCount: '168 Commits (Me #1)',
-    roleTag: 'HUMAN (ME)',
+    commitsCount: '168 Commits (Founder #1)',
+    roleTag: 'FOUNDER (ME)',
     entityType: 'human',
     samePersonBadge: 'SAME PERSON AS @not-Phana',
-    pairedWith: 'Phana (@not-Phana) — Also Me (My Repo Owner Account)'
+    pairedWith: 'Phana (@not-Phana) — Also Me (My Repo Owner Account)',
+    founderStatement: 'I am the founder — building with autonomous AI agents and conversational chatbots.'
   },
   {
     id: 'not-phana',
@@ -45,25 +46,26 @@ export const CONTRIBUTORS = [
     avatar: './assets/avatar-not-phana.jpg',
     avatarFallback: 'https://avatars.githubusercontent.com/u/255106015?v=4',
     category: 'human',
-    typeBadge: 'REPO OWNER (ALSO ME)',
+    typeBadge: 'FOUNDER & REPO OWNER (ME)',
     badgeTone: 'cyan',
-    model: '1 Human Brain · Account #02 (@not-Phana)',
-    role: 'Repository Owner Account — Also me on a second account',
-    focus: 'Ecosystem Architecture · Repo Hygiene · Releases',
-    status: 'ONLINE // SAME HUMAN #02',
+    model: 'Solo Founder · 1 Biological Brain · Repository Custodian Identity',
+    role: 'Founder & Repo Custodian — Ecosystem Releases & Infrastructure',
+    focus: 'Ecosystem Architecture · Repo Hygiene · Releases · AI Pipelines',
+    status: 'ONLINE // FOUNDER #02',
     statusDotColor: '#38bdf8',
     description:
-      'My second GitHub account (@not-Phana) that owns the not-Phana/PK-Khmer-Type and About-me repositories with 30 verified commits. Same human brain as @Kon-Kurosaki—just me switching between two accounts.',
+      'My second GitHub account (@not-Phana) that owns the not-Phana/PK-Khmer-Type and About-me repositories with 30 verified commits. Same founder brain as @Kon-Kurosaki—managing production releases, automated pipelines, and cloud sync.',
     keyContributions: [
       '30 verified commits (198 combined with @Kon-Kurosaki)',
-      'Same person as @Kon-Kurosaki — Repository owner git identity',
-      'Public GitHub Pages deployments, releases & repo management'
+      'Repository owner & release management git identity',
+      'Public GitHub Pages deployments, releases & AI integrations'
     ],
-    commitsCount: '30 Commits (Me #2)',
-    roleTag: 'HUMAN (ME)',
+    commitsCount: '30 Commits (Founder #2)',
+    roleTag: 'FOUNDER (ME)',
     entityType: 'human',
     samePersonBadge: 'SAME PERSON AS @Kon-Kurosaki',
-    pairedWith: 'Phana Kurosaki (@Kon-Kurosaki) — Also Me (My Dev Account)'
+    pairedWith: 'Phana Kurosaki (@Kon-Kurosaki) — Also Me (My Dev Account)',
+    founderStatement: 'I am the founder — building with autonomous AI agents and conversational chatbots.'
   },
   {
     id: 'antigravity',

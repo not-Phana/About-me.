@@ -110,32 +110,40 @@ export default function ContributorsShowcase({ onPlaySound }) {
       <div
         key={c.id}
         onClick={() => handleSelect(c.id)}
-        className={`group spotlight-card card-laser-lift border p-5 flex flex-col justify-between transition-all duration-200 cursor-pointer text-left relative ${
+        className={`group spotlight-card card-laser-lift border p-5 flex flex-col justify-between transition-all duration-200 cursor-pointer text-left relative overflow-hidden ${
           isSelected
-            ? 'border-accent bg-surface ring-1 ring-accent/60 shadow-lg'
+            ? 'border-accent bg-surface ring-1 ring-accent/60 shadow-xl'
             : isHuman
-            ? 'border-accent/35 bg-bg/95 hover:border-accent hover:bg-surface/60'
+            ? 'border-accent/40 bg-[#090b10] hover:border-accent hover:bg-surface/70 shadow-md'
             : 'border-line bg-bg hover:border-accent/50 hover:bg-surface/60'
         }`}
       >
+        {/* Cybernetic HUD Corner Notches */}
+        <span className="pointer-events-none absolute top-0 left-0 w-2.5 h-2.5 border-t-2 border-l-2 border-accent/80" />
+        <span className="pointer-events-none absolute top-0 right-0 w-2.5 h-2.5 border-t-2 border-r-2 border-accent/80" />
+        <span className="pointer-events-none absolute bottom-0 left-0 w-2.5 h-2.5 border-b-2 border-l-2 border-accent/80" />
+        <span className="pointer-events-none absolute bottom-0 right-0 w-2.5 h-2.5 border-b-2 border-r-2 border-accent/80" />
+
         {/* Active Indicator Top Border Bar */}
         {isSelected && (
-          <div className="absolute top-0 left-0 right-0 h-0.5 bg-accent" />
+          <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-accent via-[#4ade80] to-[#38bdf8]" />
         )}
 
         <div>
           {/* Top Same-Human Clone Sync Banner for the 2 Human Cards */}
           {isHuman && (
             <div className="mb-3 -mt-1 flex items-center justify-between border-b border-lineSoft pb-2 font-mono text-[9.5px]">
-              <span className="inline-flex items-center gap-1.5 text-accent font-bold tracking-wider">
-                <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
-                <span>
-                  {c.id === 'kon-kurosaki'
-                    ? '1 BRAIN // ACCOUNT #01'
-                    : '1 BRAIN // ACCOUNT #02'}
+              <div className="flex items-center gap-1.5">
+                <span className="px-1.5 py-0.2 bg-accent text-[#0b0b0c] font-black rounded-[2px] tracking-widest text-[8.5px] shadow-[0_0_8px_rgba(212,165,40,0.4)]">
+                  FOUNDER
                 </span>
-              </span>
-              <span className="text-[#38bdf8] font-semibold">
+                <span className="text-accent font-bold tracking-wider">
+                  {c.id === 'kon-kurosaki'
+                    ? 'ACCOUNT #01 // WORKSTATION'
+                    : 'ACCOUNT #02 // REPO OWNER'}
+                </span>
+              </div>
+              <span className="text-[#38bdf8] font-semibold text-[9px] border border-[#38bdf8]/40 bg-[#38bdf8]/10 px-1.5 py-0.2 rounded-[2px]">
                 {c.id === 'kon-kurosaki'
                   ? '== @not-Phana'
                   : '== @Kon-Kurosaki'}
@@ -150,6 +158,10 @@ export default function ContributorsShowcase({ onPlaySound }) {
                 className={`w-14 h-14 sm:w-16 sm:h-16 rounded-full p-0.5 transition-transform duration-300 group-hover:scale-105 ${
                   c.isFuture
                     ? 'ring-2 ring-dashed ring-[#f97316] shadow-[0_0_15px_rgba(249,115,22,0.35)]'
+                    : isHuman && c.id === 'kon-kurosaki'
+                    ? 'ring-2 ring-accent shadow-[0_0_16px_rgba(212,165,40,0.45)]'
+                    : isHuman && c.id === 'not-phana'
+                    ? 'ring-2 ring-[#38bdf8] shadow-[0_0_16px_rgba(56,189,248,0.45)]'
                     : c.badgeTone === 'gold'
                     ? 'ring-2 ring-accent/80 shadow-[0_0_12px_rgba(212,165,40,0.3)]'
                     : c.badgeTone === 'cyan'
@@ -188,14 +200,16 @@ export default function ContributorsShowcase({ onPlaySound }) {
                 <span className="w-1.5 h-1.5 rounded-full bg-[#f97316] animate-pulse" />
                 <span>HORIZON 2026+</span>
               </span>
+            ) : isHuman ? (
+              <span className="font-mono text-[9.5px] px-2 py-0.5 uppercase tracking-wider border border-accent bg-accent text-[#0b0b0c] font-black shadow-[0_0_10px_rgba(212,165,40,0.4)] rounded-[2px]">
+                FOUNDER (ME)
+              </span>
             ) : (
               <span
                 className={`font-mono text-[10px] px-1.5 py-0.5 uppercase tracking-wider ${
                   c.roleTag === 'AGENT'
                     ? 'border border-accent/60 bg-accentDim text-accent font-bold'
-                    : c.roleTag === 'CHATBOT'
-                    ? 'border border-line bg-surface text-muted'
-                    : 'border border-accent/50 bg-accentDim text-accent font-bold'
+                    : 'border border-line bg-surface text-muted'
                 }`}
               >
                 {c.roleTag}
@@ -215,23 +229,37 @@ export default function ContributorsShowcase({ onPlaySound }) {
           </div>
 
           {/* Type Badge */}
-          <div className="mb-3 flex flex-wrap items-center gap-1.5">
+          <div className="mb-2 flex flex-wrap items-center gap-1.5">
             <span
               className={`inline-block font-mono text-[10px] font-bold tracking-wider px-2 py-0.5 rounded-xs uppercase ${
                 c.badgeTone === 'gold'
-                  ? 'bg-accentDim text-accent border border-accent/40'
+                  ? 'bg-accentDim text-accent border border-accent/40 shadow-xs'
                   : c.badgeTone === 'cyan'
-                  ? 'bg-[#38bdf8]/10 text-[#38bdf8] border border-[#38bdf8]/30'
+                  ? 'bg-[#38bdf8]/10 text-[#38bdf8] border border-[#38bdf8]/30 shadow-xs'
                   : c.badgeTone === 'coral'
-                  ? 'bg-[#f97316]/10 text-[#f97316] border border-[#f97316]/30'
+                  ? 'bg-[#f97316]/10 text-[#f97316] border border-[#f97316]/30 shadow-xs'
                   : c.badgeTone === 'violet'
-                  ? 'bg-[#818cf8]/10 text-[#818cf8] border border-[#818cf8]/30'
-                  : 'bg-[#34d399]/10 text-[#34d399] border border-[#34d399]/30'
+                  ? 'bg-[#818cf8]/10 text-[#818cf8] border border-[#818cf8]/30 shadow-xs'
+                  : 'bg-[#34d399]/10 text-[#34d399] border border-[#34d399]/30 shadow-xs'
               }`}
             >
               {c.typeBadge}
             </span>
           </div>
+
+          {/* Special Founder & AI Builder Box for Human Cards */}
+          {isHuman && (
+            <div className="my-2.5 p-2.5 border border-accent/30 bg-[#06080d] rounded-[2px] font-mono text-[10px] relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-12 h-12 bg-accent/5 rounded-full blur-md pointer-events-none" />
+              <div className="flex items-center gap-1.5 text-accent font-bold mb-1">
+                <IconTerminal className="w-3 h-3 text-accent shrink-0" />
+                <span>FOUNDER · DIRECTING AI FLEET</span>
+              </div>
+              <p className="text-ink/80 text-[9.5px] leading-snug">
+                Building with autonomous agents &amp; conversational chatbots.
+              </p>
+            </div>
+          )}
 
           {/* Role & Model */}
           <p className="text-xs text-ink/90 font-medium leading-snug mb-1.5">
@@ -273,7 +301,7 @@ export default function ContributorsShowcase({ onPlaySound }) {
 
           {/* Counterpart Pill */}
           <div className="mt-3 pt-2 border-t border-lineSoft flex items-center justify-between font-mono text-[10px] text-muted">
-            <span className="uppercase text-[9px] tracking-wider text-muted">
+            <span className="uppercase text-[9px] tracking-wider text-muted font-semibold">
               {c.samePersonBadge
                 ? c.samePersonBadge
                 : c.isFuture
@@ -282,7 +310,7 @@ export default function ContributorsShowcase({ onPlaySound }) {
                 ? 'Autonomous Agent'
                 : c.category === 'chatbot'
                 ? 'Conversational Chat'
-                : 'Human Architect'}
+                : 'Founder & Architect'}
             </span>
           </div>
         </div>
@@ -291,7 +319,7 @@ export default function ContributorsShowcase({ onPlaySound }) {
         <div className="mt-4 pt-3 border-t border-lineSoft flex items-center justify-between font-mono text-[11px]">
           <span
             className={
-              c.isFuture ? 'text-[#f97316] font-bold' : 'text-muted'
+              c.isFuture ? 'text-[#f97316] font-bold' : isHuman ? 'text-accent font-bold' : 'text-muted'
             }
           >
             {c.commitsCount}
@@ -337,25 +365,24 @@ export default function ContributorsShowcase({ onPlaySound }) {
             <div className="flex items-center gap-2 font-mono text-[11px] tracking-[0.2em] uppercase text-accent font-bold mb-2">
               <span className="w-2 h-2 rounded-full bg-accent animate-pulse" />
               <span>
-                THE ALLIANCE // 1 HUMAN (2 ACCOUNTS: 198 COMMITS) · AGENTS &amp; AI
+                FOUNDER &amp; AI COLLECTIVE // 1 HUMAN BRAIN (2 ACCOUNTS: 198 COMMITS) · AGENTS · CHATBOTS
               </span>
             </div>
             <h2 className="font-display text-2xl sm:text-4xl font-extrabold tracking-tight text-ink">
-              One Human (Two Accounts), Autonomous Agents &amp; AI Chatbots
+              I Am the Founder — Building with Autonomous AI Agents &amp; Chatbots
             </h2>
             <p className="mt-2 text-sm sm:text-base text-muted max-w-3xl leading-relaxed">
-              Plot twist: those two human accounts—
+              I am the solo founder and lead developer behind the entire PK ecosystem. Both human commit accounts in the git log—
               <span className="text-accent font-mono font-semibold">
                 @Kon-Kurosaki
               </span>{' '}
-              and{' '}
+              (168 commits) and{' '}
               <span className="text-[#38bdf8] font-mono font-semibold">
                 @not-Phana
-              </span>
-              —are both me. One brain committing across two GitHub accounts (
-              <span className="text-ink font-mono font-bold">198/200</span>{' '}
-              verified commits combined), orchestrating autonomous coding agents
-              and AI chatbots.
+              </span>{' '}
+              (30 commits)—are me (
+              <span className="text-ink font-mono font-bold">198 / 200</span>{' '}
+              verified commits, 99.0%). I build and orchestrate this platform by pairing biological human creativity with autonomous terminal agents and conversational AI chatbots.
             </p>
           </div>
 
@@ -370,7 +397,7 @@ export default function ContributorsShowcase({ onPlaySound }) {
                   : 'border-line bg-surface text-muted hover:text-ink'
               }`}
             >
-              All Entries (8)
+              All Collective (8)
             </button>
             <button
               type="button"
@@ -381,7 +408,7 @@ export default function ContributorsShowcase({ onPlaySound }) {
                   : 'border-line bg-surface text-muted hover:text-ink'
               }`}
             >
-              Me · 2 Accounts (2)
+              Founder · 2 Accounts (2)
             </button>
             <button
               type="button"
@@ -405,6 +432,57 @@ export default function ContributorsShowcase({ onPlaySound }) {
             >
               AI Chatbots (3)
             </button>
+          </div>
+        </div>
+
+        {/* Founder Command HUD Ribbon */}
+        <div className="mt-6 border border-accent/60 bg-[#06080d] p-4 sm:p-5 relative overflow-hidden hud-frame">
+          <div className="absolute top-0 right-0 h-full w-1/3 bg-gradient-to-l from-accent/10 to-transparent pointer-events-none" />
+          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 relative z-10">
+            <div className="flex items-start gap-3.5">
+              <div className="w-10 h-10 rounded-full border border-accent bg-accentDim flex items-center justify-center shrink-0 text-accent font-bold font-mono text-sm shadow-[0_0_12px_rgba(212,165,40,0.3)]">
+                PK
+              </div>
+              <div>
+                <div className="flex flex-wrap items-center gap-2 font-mono text-[10.5px]">
+                  <span className="px-2 py-0.5 bg-accent text-[#0b0b0c] font-black uppercase tracking-widest rounded-[2px] shadow-[0_0_8px_rgba(212,165,40,0.4)]">
+                    FOUNDER ARCHITECTURE
+                  </span>
+                  <span className="text-[#4ade80] font-bold flex items-center gap-1.5">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#4ade80] animate-pulse" />
+                    <span>SOLO HUMAN VISION</span>
+                  </span>
+                  <span className="text-muted border border-lineSoft px-1.5 py-0.2">
+                    1 FOUNDER · 3 AGENTS · 3 CHATBOTS
+                  </span>
+                </div>
+                <h3 className="font-display text-lg sm:text-xl font-bold text-ink mt-1">
+                  &ldquo;I am the founder — building with autonomous AI agents and conversational chatbots.&rdquo;
+                </h3>
+                <p className="font-mono text-xs text-muted mt-1 leading-relaxed max-w-3xl">
+                  Every project in this portfolio is founded, architected, and driven by me (Phana Kurosaki).
+                  I command a hybrid development fleet: pairing biological human vision with autonomous coding agents for terminal execution and reasoning chatbots for ideation.
+                </p>
+              </div>
+            </div>
+
+            <div className="flex flex-wrap sm:flex-nowrap items-center gap-2 font-mono text-xs shrink-0">
+              <div className="border border-accent/40 bg-surface/80 p-2.5 text-center min-w-[95px]">
+                <div className="text-[9px] text-muted uppercase">FOUNDER</div>
+                <div className="text-sm font-bold text-accent">1 HUMAN</div>
+                <div className="text-[8.5px] text-muted">2 ACCOUNTS (99%)</div>
+              </div>
+              <div className="border border-[#818cf8]/40 bg-surface/80 p-2.5 text-center min-w-[95px]">
+                <div className="text-[9px] text-muted uppercase">AUTONOMOUS</div>
+                <div className="text-sm font-bold text-[#818cf8]">3 AGENTS</div>
+                <div className="text-[8.5px] text-[#818cf8]">TERMINAL / CLI</div>
+              </div>
+              <div className="border border-[#34d399]/40 bg-surface/80 p-2.5 text-center min-w-[95px]">
+                <div className="text-[9px] text-muted uppercase">REASONING</div>
+                <div className="text-sm font-bold text-[#34d399]">3 CHATBOTS</div>
+                <div className="text-[8.5px] text-[#34d399]">IDEATION &amp; CHAT</div>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -875,7 +953,7 @@ export default function ContributorsShowcase({ onPlaySound }) {
                     ? 'AUTONOMOUS AGENT (TERMINAL & TOOL EXECUTION)'
                     : selectedContributor.category === 'chatbot'
                     ? 'CONVERSATIONAL CHATBOT (WEB & PROMPT INTERFACE)'
-                    : 'HUMAN CREATOR (BOTH ACCOUNTS ARE ME)'}
+                    : 'SOLO FOUNDER (BUILDING WITH AI AGENTS & CHATBOTS)'}
                 </span>
               </div>
               <h4 className="font-display text-xl sm:text-2xl font-bold text-ink">

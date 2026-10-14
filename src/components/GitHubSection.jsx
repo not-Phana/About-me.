@@ -395,6 +395,14 @@ export default function GitHubSection({ onPlaySound }) {
                       @Kon-Kurosaki · Lead Dev (Also Me)
                     </span>
                   </div>
+                  <div className="mt-2 flex flex-wrap items-center gap-1.5 font-mono text-[10px]">
+                    <span className="border border-accent bg-accent text-[#0b0b0c] font-black px-2 py-0.5 rounded-[2px] shadow-[0_0_8px_rgba(212,165,40,0.3)]">
+                      FOUNDER
+                    </span>
+                    <span className="border border-line bg-surface text-ink px-1.5 py-0.5">
+                      BUILDING WITH AI AGENTS &amp; CHATBOTS
+                    </span>
+                  </div>
                 </div>
               </div>
 
@@ -545,13 +553,13 @@ export default function GitHubSection({ onPlaySound }) {
                     </div>
                     <div className="min-w-0">
                       <div className="font-mono text-xs font-bold text-ink group-hover:text-accent transition-colors flex items-center gap-1.5">
-                        <span>Collaborators</span>
+                        <span>Founder &amp; AI Fleet</span>
                         <span className="border border-line bg-accentDim text-accent px-1.5 py-0.2 rounded-full text-[10px] font-bold">
                           8
                         </span>
                       </div>
                       <div className="font-mono text-[10px] text-muted truncate">
-                        1 Human (2 Accounts) · 3 Agents · 3 AI Chatbots
+                        1 Founder (2 Accounts) · 3 Agents · 3 AI Chatbots
                       </div>
                     </div>
                   </div>
