@@ -520,6 +520,44 @@ h2.show::after {
   animation: liveStreamFlow 1.6s linear infinite;
 }
 
+/* Real-Time Continuous Oscilloscope Radar Laser Sweep */
+@keyframes radarSweepLine {
+  0% {
+    transform: translateX(34px);
+    opacity: 0.1;
+  }
+  15% {
+    opacity: 0.95;
+  }
+  85% {
+    opacity: 0.95;
+  }
+  100% {
+    transform: translateX(655px);
+    opacity: 0.1;
+  }
+}
+
+.animate-radar-sweep-line {
+  animation: radarSweepLine 3.4s ease-in-out infinite;
+}
+
+/* Real-Time Ingestion Sync Phosphor Flash */
+@keyframes syncPhosphorFlash {
+  0% {
+    opacity: 0.8;
+    transform: translateY(-100%);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(200%);
+  }
+}
+
+.animate-sync-flash {
+  animation: syncPhosphorFlash 0.75s ease-out forwards;
+}
+
 /* Punchy Mechanical Keycap Character Burst */
 @keyframes keyBurst {
   0% {
@@ -1572,5 +1610,49 @@ h2.show::after {
   animation: contextMenuFadeIn 0.12s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   will-change: transform, opacity;
   box-shadow: 0 20px 45px -10px rgba(0, 0, 0, 0.8), 0 0 15px -3px var(--accent-dim);
+}
+
+/* ==========================================================================
+   Real-Time GitHub Telemetry Animations (Radar Sweep & Sync Flash)
+   ========================================================================== */
+@keyframes radarSweepLine {
+  0% {
+    transform: translateX(0px);
+    opacity: 0;
+  }
+  8% {
+    opacity: 0.95;
+  }
+  88% {
+    opacity: 0.95;
+  }
+  100% {
+    transform: translateX(585px);
+    opacity: 0;
+  }
+}
+
+.animate-radar-sweep-line {
+  animation: radarSweepLine 4.2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  will-change: transform, opacity;
+}
+
+@keyframes syncPhosphorFlash {
+  0% {
+    opacity: 0;
+    transform: translateY(-100%);
+  }
+  50% {
+    opacity: 0.25;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(100%);
+  }
+}
+
+.animate-sync-flash {
+  animation: syncPhosphorFlash 0.75s ease-out 1;
+  pointer-events: none;
 }
 
